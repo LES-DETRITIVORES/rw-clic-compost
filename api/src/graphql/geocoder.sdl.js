@@ -1,12 +1,12 @@
 export const schema = gql`
   type Geocoder {
-    zip: String!
+    query: String!
     address: String!
     longitude: String!
     latitude: String!
   }
 
   type Query {
-    getLocation(zip: String!): Geocoder! @skipAuth
+    getLocation(query: String!): Geocoder! @skipAuth
   }
 `
