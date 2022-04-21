@@ -6918,6 +6918,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:>=8.1.0":
+  version: 17.0.25
+  resolution: "@types/node@npm:17.0.25"
+  checksum: fe957c007afb20b238f82b3dbfd54893dfcb4040c733597220fa215dc2f0faef9440be15f63df8c54895cf8256f3d52c5b8e51a13e97089492db1f2ae613db76
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:^14.0.10":
   version: 14.18.12
   resolution: "@types/node@npm:14.18.12"
@@ -20509,7 +20516,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:6.10.3, qs@npm:^6.10.0":
+"qs@npm:6.10.3, qs@npm:^6.10.0, qs@npm:^6.10.3":
   version: 6.10.3
   resolution: "qs@npm:6.10.3"
   dependencies:
@@ -21558,6 +21565,7 @@ __metadata:
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
     "@redwoodjs/core": 1.0.0
+    stripe: ^8.218.0
   languageName: unknown
   linkType: soft
 
@@ -22798,6 +22806,16 @@ __metadata:
   version: 2.0.1
   resolution: "strip-json-comments@npm:2.0.1"
   checksum: b509231cbdee45064ff4f9fd73609e2bcc4e84a4d508e9dd0f31f70356473fde18abfb5838c17d56fb236f5a06b102ef115438de0600b749e818a35fbbc48c43
+  languageName: node
+  linkType: hard
+
+"stripe@npm:^8.218.0":
+  version: 8.218.0
+  resolution: "stripe@npm:8.218.0"
+  dependencies:
+    "@types/node": ">=8.1.0"
+    qs: ^6.10.3
+  checksum: 833a54cafd667df72e35c1732cf79c610684e6a56114dee971caa81a19b70eb97f45f23661f7e14163a0ac265b0932b5e6b77367f25894c01e48db1bdfa2e9cc
   languageName: node
   linkType: hard
 
