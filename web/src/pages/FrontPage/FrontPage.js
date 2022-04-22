@@ -8,10 +8,11 @@ import SMSCell from 'src/components/SMSCell'
 
 
 const LocationPage = () => {
-  const PRICE_BY_LITER = 0.15
-  const WEEKS_BY_MONTH = 50/12
-  const LITER_BY_MEAL = 1
+  const PRICE_BY_LITER = 0.2
+  const WEEKS_BY_MONTH = 52/12
+  const WEIGHT_BY_MEAL = 0.14
   const WEIGHT_BY_LITER = 1/3
+  const LITER_BY_MEAL = WEIGHT_BY_MEAL/WEIGHT_BY_LITER+0.08 // 0.42 + 0.08 = 0.5
   
   const [location, setLocation] = useState()
   const formLocation = (data) => {
@@ -67,18 +68,18 @@ const LocationPage = () => {
       </Form>
       <p>
         &gt; Nombre de repas : {(meals*WEEKS_BY_MONTH).toFixed(0)} repas par mois <br/>
+        &gt; Poids estimé : {(meals*WEIGHT_BY_MEAL*WEEKS_BY_MONTH).toFixed(0)} kg par mois<br/>
         &gt; Volume estimé : {(meals*LITER_BY_MEAL*WEEKS_BY_MONTH).toFixed(0)} L par mois<br/>
-        &gt; Poids estimé : {(meals*LITER_BY_MEAL*WEIGHT_BY_LITER*WEEKS_BY_MONTH).toFixed(0)} kg par mois<br/>
         &gt; Tarif estimé : {(meals*LITER_BY_MEAL*PRICE_BY_LITER*WEEKS_BY_MONTH).toFixed(2)} € HT par mois<br/>
         &gt; Coût par repas : {(LITER_BY_MEAL*PRICE_BY_LITER).toFixed(2)} € HT
       </p>
       <hr/>
       <Form onSubmit={formService} style={{ fontSize: '2rem' }}>
-        <label htmlfor="service">Prestation :</label>
+        <label htmlfor="service">Prestation :</label><br/>
           <SelectField name="service" multiple={false}>
-            <option>{(meals*LITER_BY_MEAL/22).toFixed(0)}x bioseau 22L par semaine</option>
-            <option>{(meals*LITER_BY_MEAL/120).toFixed(0)}x bac roulant 120L par semaine</option>
-            <option>{(meals*LITER_BY_MEAL/300).toFixed(0)}x caisse palette 300L par semaine</option>
+            <option>{(meals*LITER_BY_MEAL/22).toFixed(0)}x bioseau 22L par semaine - {((meals*LITER_BY_MEAL/22).toFixed(0)*22*PRICE_BY_LITER).toFixed(2)}€</option>
+            <option>{(meals*LITER_BY_MEAL/120).toFixed(0)}x bac roulant 120L par semaine - {((meals*LITER_BY_MEAL/120).toFixed(0)*120*PRICE_BY_LITER).toFixed(2)}€</option>
+            <option>{(meals*LITER_BY_MEAL/500).toFixed(0)}x caisse palette 500L par semaine - {((meals*LITER_BY_MEAL/500).toFixed(0)*500*PRICE_BY_LITER).toFixed(2)}€</option>
           </SelectField>
           <Submit>Choisir</Submit>
       </Form>
