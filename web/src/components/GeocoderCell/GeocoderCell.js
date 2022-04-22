@@ -26,16 +26,10 @@ export const Success = ({ geocoder }) => {
   var distance = turf.distance(from, to, options);
 
   return (
-    <section>
-        <h1>{geocoder.address}</h1>
-        <h2>
-          <p>
-            [{geocoder.longitude}, {geocoder.latitude}]
-          </p>
-          <p>
-            {Math.round(distance)} km from HQ (65 quai de Brazza 33100 Bordeaux)
-          </p>
-        </h2>
-      </section>
+  <p>
+    &gt; Adresse : {geocoder.address}<br/>
+    &gt; Coordonnées : [{geocoder.longitude}, {geocoder.latitude}]<br/>
+    &gt; Distance : {Math.round(distance)} km from HQ (65 quai de Brazza 33100 Bordeaux)<br/>
+  </p>
   )
 }

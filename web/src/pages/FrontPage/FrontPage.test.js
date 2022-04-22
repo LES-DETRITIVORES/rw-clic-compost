@@ -1,11 +1,11 @@
 import { render } from '@redwoodjs/testing'
 
-import LocationPage from './LocationPage'
+import FrontPage from './FrontPage'
 
-describe('LocationPage', () => {
+describe('FrontPage', () => {
   it('renders successfully', () => {
     expect(() => {
-      render(<LocationPage />)
+      render(<FrontPage />)
     }).not.toThrow()
   })
 })

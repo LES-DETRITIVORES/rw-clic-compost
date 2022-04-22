@@ -6,6 +6,8 @@
     "@redwoodjs/api": "1.0.0",
     "@redwoodjs/graphql-server": "1.0.0",
     "@turf/turf": "^6.5.0",
-    "cross-undici-fetch": "^0.1.28"
+    "cross-undici-fetch": "^0.1.28",
+    "stripe": "^8.219.0",
+    "twilio": "^3.76.1"
   }
 }
