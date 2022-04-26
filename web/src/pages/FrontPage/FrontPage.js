@@ -1,5 +1,7 @@
-import { Form, TextField, NumberField, SelectField, Submit } from '@redwoodjs/forms'
+import { Form, TextField, NumberField, Submit } from '@redwoodjs/forms'
 import { useState } from 'react'
+import { RadioGroup } from '@headlessui/react'
+import { CheckIcon } from '@heroicons/react/solid'
 import GeocoderCell from 'src/components/GeocoderCell'
 import CustomerCell from 'src/components/CustomerCell'
 import PaymentMethodCell from 'src/components/PaymentMethodCell'
@@ -50,10 +52,11 @@ const LocationPage = () => {
   }
 
   return (
-    <div className="md:container mx-auto p-4">
-      <h1 className="font-medium">FRONT FUNCTIONS</h1>
-      <p>Localisation &gt; Estimation &gt; Prestation &gt; Client &gt; Moyen de paiement &gt; Paiement &gt; SMS</p>
-      <hr/>
+    <div className="md:container mx-auto p-4 space-y-8">
+      <div>
+        <h1 className="font-medium">FRONT FUNCTIONS</h1>
+        <p>Localisation &gt; Estimation &gt; Prestation &gt; Client &gt; Moyen de paiement &gt; Paiement &gt; SMS</p>
+      </div>
       <div className="md:flex md:flex-row pt-4">
         <div className="md:col-span-1 md:basis-1/3">
           <div>
@@ -104,16 +107,150 @@ const LocationPage = () => {
           </p>
         </div>
         <div className="md:px-4">
-          <Form onSubmit={formService}>
-            <label htmlfor="service" className="text-md font-medium">Prestation :</label><br/>
-            <SelectField name="service" multiple={false} className="text-sm autofill:bg-yellow-200 rounded-md border border-sky-500 p-2">
-              <option>{(meals*LITER_BY_MEAL/22).toFixed(0)}x bioseau 22L par semaine - {((meals*LITER_BY_MEAL/22).toFixed(0)*22*PRICE_BY_LITER).toFixed(2)}€</option>
-              <option>{(meals*LITER_BY_MEAL/120).toFixed(0)}x bac roulant 120L par semaine - {((meals*LITER_BY_MEAL/120).toFixed(0)*120*PRICE_BY_LITER).toFixed(2)}€</option>
-              <option>{(meals*LITER_BY_MEAL/500).toFixed(0)}x caisse palette 500L par semaine - {((meals*LITER_BY_MEAL/500).toFixed(0)*500*PRICE_BY_LITER).toFixed(2)}€</option>
-            </SelectField>
-            <Submit className="text-sm ml-2 border-2 p-2 rounded-md bg-orange-500 text-white">Choisir</Submit>
-          </Form>
-        <ul><li>Offre s&eacute;lectionn&eacute;e : {service}</li></ul>
+          <RadioGroup value={service} onChange={setService} className="space-y-2">
+            <RadioGroup.Label className="text-md font-medium">Offres :</RadioGroup.Label>
+            <RadioGroup.Option value="Bioseau" className={({ active, checked }) =>
+                  `${
+                    active
+                      ? 'ring-2 ring-offset-2 ring-offset-sky-300 ring-white ring-opacity-60'
+                      : ''
+                  }
+                  ${
+                    checked ? 'bg-sky-900 bg-opacity-75 text-white' : 'bg-white'
+                  }
+                    relative rounded-lg shadow-md px-5 py-4 cursor-pointer flex focus:outline-none`
+                }>
+              {({ active, checked }) => (
+                  <>
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center">
+                        <div className="text-sm">
+                          <RadioGroup.Label
+                            as="p"
+                            className={`font-medium  ${
+                              checked ? 'text-white' : 'text-gray-900'
+                            }`}
+                          >
+                            Bioseau 22L
+                          </RadioGroup.Label>
+                          <RadioGroup.Description
+                            as="span"
+                            className={`inline ${
+                              checked ? 'text-sky-100' : 'text-gray-500'
+                            }`}
+                          >
+                            <span>
+                            {(meals*LITER_BY_MEAL/22).toFixed(0)}x bioseau 22L par semaine
+                            </span>{' '}
+                            <span aria-hidden="true">&middot;</span>{' '}
+                            <span>{((meals*LITER_BY_MEAL/22).toFixed(0)*22*PRICE_BY_LITER).toFixed(2)}€</span>
+                          </RadioGroup.Description>
+                        </div>
+                      </div>
+                      {checked && (
+                        <div className="flex-shrink-0 text-white">
+                          <CheckIcon className="w-6 h-6" />
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
+            </RadioGroup.Option>
+            <RadioGroup.Option value="Bac roulant 120L" className={({ active, checked }) =>
+                  `${
+                    active
+                      ? 'ring-2 ring-offset-2 ring-offset-sky-300 ring-white ring-opacity-60'
+                      : ''
+                  }
+                  ${
+                    checked ? 'bg-sky-900 bg-opacity-75 text-white' : 'bg-white'
+                  }
+                    relative rounded-lg shadow-md px-5 py-4 cursor-pointer flex focus:outline-none`
+                }>
+              {({ active, checked }) => (
+                  <>
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center">
+                        <div className="text-sm">
+                          <RadioGroup.Label
+                            as="p"
+                            className={`font-medium  ${
+                              checked ? 'text-white' : 'text-gray-900'
+                            }`}
+                          >
+                            Bac roulant 120L
+                          </RadioGroup.Label>
+                          <RadioGroup.Description
+                            as="span"
+                            className={`inline ${
+                              checked ? 'text-sky-100' : 'text-gray-500'
+                            }`}
+                          >
+                            <span>
+                            {(meals*LITER_BY_MEAL/120).toFixed(0)}x bac roulant 120L par semaine
+                            </span>{' '}
+                            <span aria-hidden="true">&middot;</span>{' '}
+                            <span>{((meals*LITER_BY_MEAL/120).toFixed(0)*120*PRICE_BY_LITER).toFixed(2)}€</span>
+                          </RadioGroup.Description>
+                        </div>
+                      </div>
+                      {checked && (
+                        <div className="flex-shrink-0 text-white">
+                          <CheckIcon className="w-6 h-6" />
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
+            </RadioGroup.Option>
+            <RadioGroup.Option value="Caisse palette 500L" className={({ active, checked }) =>
+                  `${
+                    active
+                      ? 'ring-2 ring-offset-2 ring-offset-sky-300 ring-white ring-opacity-60'
+                      : ''
+                  }
+                  ${
+                    checked ? 'bg-sky-900 bg-opacity-75 text-white' : 'bg-white'
+                  }
+                    relative rounded-lg shadow-md px-5 py-4 cursor-pointer flex focus:outline-none`
+                }>
+              {({ active, checked }) => (
+                  <>
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center">
+                        <div className="text-sm">
+                          <RadioGroup.Label
+                            as="p"
+                            className={`font-medium  ${
+                              checked ? 'text-white' : 'text-gray-900'
+                            }`}
+                          >
+                            Caisse palette 500L
+                          </RadioGroup.Label>
+                          <RadioGroup.Description
+                            as="span"
+                            className={`inline ${
+                              checked ? 'text-sky-100' : 'text-gray-500'
+                            }`}
+                          >
+                            <span>
+                            {(meals*LITER_BY_MEAL/120).toFixed(0)}x caisse palette 500L par semaine
+                            </span>{' '}
+                            <span aria-hidden="true">&middot;</span>{' '}
+                            <span>{((meals*LITER_BY_MEAL/500).toFixed(0)*500*PRICE_BY_LITER).toFixed(2)}€</span>
+                          </RadioGroup.Description>
+                        </div>
+                      </div>
+                      {checked && (
+                        <div className="flex-shrink-0 text-white">
+                          <CheckIcon className="w-6 h-6" />
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
+            </RadioGroup.Option>
+          </RadioGroup>
         </div>
       </div>
       <div className="md:flex md:flex-row pt-4">
