@@ -9,6 +9,13 @@ export const schema = gql`
     id: String!
   }
 
+  type SEPAMethod {
+    name: String!
+    email: String!
+    iban: String!    
+    id: String!
+  }
+
   type Payment {
     query: Int!
     id: String!
@@ -17,6 +24,7 @@ export const schema = gql`
   type Query {
     addCustomer(query: String!): Customer! @skipAuth
     addPaymentMethod(query: String!): PaymentMethod! @skipAuth
+    addSEPAMethod(name: String!, email: String!, iban: String!): SEPAMethod! @skipAuth
     addPayment(query: Int!): Payment! @skipAuth
   }
 `

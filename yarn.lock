@@ -4991,6 +4991,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@stripe/react-stripe-js@npm:^1.7.2":
+  version: 1.7.2
+  resolution: "@stripe/react-stripe-js@npm:1.7.2"
+  dependencies:
+    prop-types: ^15.7.2
+  peerDependencies:
+    "@stripe/stripe-js": ^1.26.0
+    react: ^16.8.0 || ^17.0.0
+    react-dom: ^16.8.0 || ^17.0.0
+  checksum: 527a08473e19d373458770456e3fdc96605059144fefb85afa6d84e473f0d33e9dc2d1a0eb5c67e8feaf6dcfbd5783616c67995d0873ad19abcdb34a846807df
+  languageName: node
+  linkType: hard
+
+"@stripe/stripe-js@npm:^1.29.0":
+  version: 1.29.0
+  resolution: "@stripe/stripe-js@npm:1.29.0"
+  checksum: c83c788214af7c5922c3025de68c25e2987defbc671337e701bd51c2774088cc916fa3462e1d04e9d698abddf14a8c83d1cf91f4c1dd29371e50cd9c9f0871c3
+  languageName: node
+  linkType: hard
+
 "@szmarczak/http-timer@npm:^1.1.2":
   version: 1.1.2
   resolution: "@szmarczak/http-timer@npm:1.1.2"
@@ -24828,6 +24848,8 @@ __metadata:
     "@redwoodjs/forms": 1.0.0
     "@redwoodjs/router": 1.0.0
     "@redwoodjs/web": 1.0.0
+    "@stripe/react-stripe-js": ^1.7.2
+    "@stripe/stripe-js": ^1.29.0
     autoprefixer: ^10.4.4
     postcss: ^8.4.12
     postcss-loader: ^6.2.1

@@ -5,8 +5,11 @@ import { CheckIcon } from '@heroicons/react/solid'
 import GeocoderCell from 'src/components/GeocoderCell'
 import CustomerCell from 'src/components/CustomerCell'
 import PaymentMethodCell from 'src/components/PaymentMethodCell'
+import SEPAMethodCell from 'src/components/SEPAMethodCell'
+
 import PaymentCell from 'src/components/PaymentCell'
 import SMSCell from 'src/components/SMSCell'
+import {useStripe, useElements, IbanElement} from '@stripe/react-stripe-js';
 
 
 const LocationPage = () => {
@@ -51,6 +54,18 @@ const LocationPage = () => {
     setSMS(data.sms)
   }
 
+  const elements = useElements();
+
+  const IBAN_ELEMENT_OPTIONS = {
+    supportedCountries: ['SEPA'],
+    placeholderCountry: 'FR',
+  };
+
+  const [sepaMethod, setSEPAMethod] = useState()
+  const formSEPA = (data) => {
+    setSEPAMethod(data)
+  }
+
   return (
     <div className="md:container mx-auto p-4 space-y-8">
       <div>
@@ -68,7 +83,7 @@ const LocationPage = () => {
         </div>
         <div className="md:px-4">
           <Form onSubmit={formLocation}>
-            <label htmlfor="location" className="text-md font-medium">Votre adresse :</label><br/>
+            <label htmlFor="location" className="text-md font-medium">Votre adresse :</label><br/>
             <TextField name="location" placeholder="Adresse" className="text-sm autofill:bg-yellow-200 rounded-md border border-sky-500 p-2"/>
             <Submit className="text-sm ml-2 border-2 p-2 rounded-md bg-orange-500 text-white">Calculer</Submit>      
           </Form>
@@ -86,7 +101,7 @@ const LocationPage = () => {
         </div>
         <div className="md:px-4">
           <Form onSubmit={formPrice}>
-            <label htmlfor="meals" className="text-md font-medium">Nombre de couverts servis par semaine :</label><br/>
+            <label htmlFor="meals" className="text-md font-medium">Nombre de couverts servis par semaine :</label><br/>
             <NumberField name="meals" placeholder="Repas par semaine" className="text-sm autofill:bg-yellow-200 rounded-md border border-sky-500 p-2"/>
             <Submit className="text-sm ml-2 border-2 p-2 rounded-md bg-orange-500 text-white">Estimer</Submit>
           </Form>
@@ -262,7 +277,7 @@ const LocationPage = () => {
         </div>
         <div className="md:px-4">
           <Form onSubmit={formCustomer}>
-            <label htmlfor="customer" className="text-md font-medium">Votre nom :</label><br/>
+            <label htmlFor="customer" className="text-md font-medium">Votre nom :</label><br/>
             <TextField name="customer" placeholder="description" className="text-sm autofill:bg-yellow-200 rounded-md border border-sky-500 p-2"/>
           <Submit className="text-sm ml-2 border-2 p-2 rounded-md bg-orange-500 text-white">Ajouter</Submit>
           </Form>
@@ -271,18 +286,61 @@ const LocationPage = () => {
       </div>
       <div className="md:flex md:flex-row pt-4">
         <div className="md:col-span-1 md:basis-1/3">
-          <h3 className="text-lg font-medium leading-6 text-gray-900">5. Méthode de paiement</h3>
+          <h3 className="text-lg font-medium leading-6 text-gray-900">5a. Carte bancaire</h3>
           <p className="mt-1 text-sm text-gray-600">
-            Ajout d'une méthode de paiement
+            Ajout d'une carte bancaire
           </p>
         </div>
         <div className="md:px-4">
           <Form onSubmit={formPaymentMethod}>
-            <label htmlfor="paymentMethod" className="text-md font-medium">Numéro de carte :</label><br/>
-            <TextField name="paymentMethod" placeholder="Numéro de carte" className="text-sm autofill:bg-yellow-200 rounded-md border border-sky-500 p-2"/>
+            <label htmlFor="paymentMethod" className="text-md font-medium">Numéro de carte :</label><br/>
+            <TextField name="paymentMethod" placeholder="Numéro de carte" className="text-sm rounded-md border border-sky-500 p-2"/>
             <Submit className="text-sm ml-2 border-2 p-2 rounded-md bg-orange-500 text-white">Ajouter</Submit>
           </Form>
-          <ul><li>Méthode de paiement : {paymentMethod && <PaymentMethodCell query={paymentMethod} />}</li></ul>
+          <ul><li>Carte bancaire : {paymentMethod && <PaymentMethodCell query={paymentMethod} />}</li></ul>
+        </div>
+      </div>
+      <div className="md:flex md:flex-row pt-4">
+        <div className="md:col-span-1 md:basis-1/3">
+          <h3 className="text-lg font-medium leading-6 text-gray-900">5b. SEPA</h3>
+          <p className="mt-1 text-sm text-gray-600">
+            Ajout d'un compte bancaire
+          </p>
+        </div>
+        <div className="md:px-4">
+          <Form onSubmit={formSEPA}>
+            <label className="text-md font-medium">Nom :</label><br/>
+            <TextField
+              name="name"
+              placeholder="Do Huynh"
+              required
+              className="text-sm rounded-md border border-sky-500 p-2"
+            /><br/>
+            <label className="text-md font-medium">Mél :</label><br/>
+            <TextField
+              name="email"
+              type="email"
+              placeholder="do.huynh@les-detritivores.co"
+              required
+              className="text-sm rounded-md border border-sky-500 p-2"
+            /><br/>
+            <label>IBAN : FR1420041010050500013M02606</label><br/>
+            <TextField
+              name="iban"
+              placeholder="FR1420041010050500013M02606"
+              required
+              className="text-sm rounded-md border border-sky-500 p-2"
+            /><br/>
+            <IbanElement options={IBAN_ELEMENT_OPTIONS} />
+            <Submit className="text-sm ml-2 border-2 p-2 rounded-md bg-orange-500 text-white">
+              Ajouter
+            </Submit><br/>
+            {/* Display mandate acceptance text. */}
+            <p className="text-sm hidden">
+              En fournissant vos informations de paiement et en confirmant ce paiement, vous autorisez (A) LES DETRITIVORES et Stripe, notre prestataire de services de paiement et/ou PPRO, son prestataire de services local, à envoyer des instructions à votre banque pour débiter votre compte et (B) votre banque à débiter votre compte conformément à ces instructions. Vous avez, entre autres, le droit de vous faire rembourser par votre banque selon les modalités et conditions du contrat conclu avec votre banque. La demande de remboursement doit être soumise dans un délai de 8 semaines à compter de la date à laquelle votre compte a été débité. Vos droits sont expliqués dans une déclaration disponible auprès de votre banque. Vous acceptez de recevoir des notifications des débits à venir dans les 2 jours précédant leur réalisation.
+            </p>
+          </Form>
+          <ul><li>Compte bancaire : {sepaMethod && <SEPAMethodCell name={sepaMethod.name} email={sepaMethod.email} iban={sepaMethod.iban}/>}</li></ul>
         </div>
       </div>
       <div className="md:flex md:flex-row pt-4">
@@ -294,7 +352,7 @@ const LocationPage = () => {
         </div>
         <div className="md:px-4">
           <Form onSubmit={formPayment}>
-            <label htmlfor="payment" className="text-md font-medium">Paiement :</label><br/>
+            <label htmlFor="payment" className="text-md font-medium">Paiement :</label><br/>
             <NumberField name="payment" placeholder="Tarif" className="text-sm autofill:bg-yellow-200 rounded-md border border-sky-500 p-2"/>
             <Submit className="text-sm ml-2 border-2 p-2 rounded-md bg-orange-500 text-white">Payer</Submit>
           </Form>
@@ -310,7 +368,7 @@ const LocationPage = () => {
         </div>
         <div className="md:px-4">
           <Form onSubmit={formSMS}>
-            <label htmlfor="SMS" className="text-md font-medium">Message à envoyer :</label><br/>
+            <label htmlFor="SMS" className="text-md font-medium">Message à envoyer :</label><br/>
             <TextField name="sms" placeholder="Message" className="text-sm autofill:bg-yellow-200 rounded-md border border-sky-500 p-2"/>
             <Submit className="text-sm ml-2 border-2 p-2 rounded-md bg-orange-500 text-white">Envoyer</Submit>
           </Form>
