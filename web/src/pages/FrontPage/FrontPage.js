@@ -6,11 +6,10 @@ import GeocoderCell from 'src/components/GeocoderCell'
 import CustomerCell from 'src/components/CustomerCell'
 import PaymentMethodCell from 'src/components/PaymentMethodCell'
 import SEPAMethodCell from 'src/components/SEPAMethodCell'
-
+import ClientSecretCell from 'src/components/ClientSecretCell'
 import PaymentCell from 'src/components/PaymentCell'
 import SMSCell from 'src/components/SMSCell'
-import {useStripe, useElements, IbanElement} from '@stripe/react-stripe-js';
-
+import {useStripe, useElements, IbanElement, PaymentElement} from '@stripe/react-stripe-js';
 
 const LocationPage = () => {
   const PRICE_BY_LITER = 0.15
@@ -54,15 +53,48 @@ const LocationPage = () => {
     setSMS(data.sms)
   }
 
+  const stripe = useStripe();
   const elements = useElements();
+
+  const IBAN_STYLE = {
+    base: {
+      color: '#32325d',
+      fontSize: '16px',
+      '::placeholder': {
+        color: '#aab7c4'
+      },
+      ':-webkit-autofill': {
+        color: '#32325d',
+      },
+    },
+    invalid: {
+      color: '#fa755a',
+      iconColor: '#fa755a',
+      ':-webkit-autofill': {
+        color: '#fa755a',
+      },
+    }
+  };
 
   const IBAN_ELEMENT_OPTIONS = {
     supportedCountries: ['SEPA'],
     placeholderCountry: 'FR',
+    style: IBAN_STYLE
   };
 
   const [sepaMethod, setSEPAMethod] = useState()
-  const formSEPA = (data) => {
+  const formSEPA = async (data) => {
+    const iban = elements.getElement(IbanElement);
+    const clientSecret = 'seti_1KtHqpDczmPm9BYQD1tEXTkB_secret_LaSmLAS2HnaVTOXA8g2GW1ThehVksGA'
+    const result = await stripe.confirmSepaDebitSetup(clientSecret, {
+      payment_method: {
+        sepa_debit: iban,
+        billing_details: {
+          name: data.name,
+          email: data.email,
+        },
+      }
+    });
     setSEPAMethod(data)
   }
 
@@ -331,6 +363,7 @@ const LocationPage = () => {
               required
               className="text-sm rounded-md border border-sky-500 p-2"
             /><br/>
+            <label>IBAN ELEMENT : FR1420041010050500013M02606</label><br/>
             <IbanElement options={IBAN_ELEMENT_OPTIONS} />
             <Submit className="text-sm ml-2 border-2 p-2 rounded-md bg-orange-500 text-white">
               Ajouter

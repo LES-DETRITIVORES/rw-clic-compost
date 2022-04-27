@@ -21,10 +21,15 @@ export const schema = gql`
     id: String!
   }
 
+  type ClientSecret {
+    secret: String!
+  }
+
   type Query {
     addCustomer(query: String!): Customer! @skipAuth
     addPaymentMethod(query: String!): PaymentMethod! @skipAuth
     addSEPAMethod(name: String!, email: String!, iban: String!): SEPAMethod! @skipAuth
     addPayment(query: Int!): Payment! @skipAuth
+    getClientSecret(query: String!): ClientSecret! @skipAuth
   }
 `
