@@ -14,7 +14,9 @@ const App = () => (
     <RedwoodProvider titleTemplate="%PageTitle | %AppTitle">
       <RedwoodApolloProvider>
         <Elements stripe={stripePromise}>
-          <Routes />
+          <div className="p-4">
+            <Routes />
+          </div>
         </Elements>
       </RedwoodApolloProvider>
     </RedwoodProvider>
