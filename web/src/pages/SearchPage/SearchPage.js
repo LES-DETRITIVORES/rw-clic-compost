@@ -7,18 +7,18 @@ const SearchPage = () => {
   <>
     <MetaTags title="Recherche" description="Trouver la meilleure solution pour vos déchets organiques" />
     <div>  
-      <div className="font-medium text-center text-3xl mt-16">
+      <div className="font-medium text-center sm:text-2xl md:text-3xl mt-16">
         Trouver la meilleure solution pour vos déchets organiques
       </div>
       <div className="container mx-auto max-w-xl font-sans">
         <div className="bg-white rounded-t-lg shadow-lg p-8 mt-8">
-          <div className="font-light">
+          <div className="font-medium">
             Adresse à collecter
           </div>
           <div>
             <LocationSearch/>
           </div>
-          <div className="font-light mt-6">
+          <div className="font-medium mt-6">
             Repas par semaine
           </div>
           <div>
@@ -26,7 +26,7 @@ const SearchPage = () => {
           </div>
         </div>
         <div>
-            <button className="uppercase font-bold bg-green-800 rounded-b-md p-4 text-white w-full shadow-lg">Rechercher une solution</button>
+            <button className="sm:text-sm md:text-lg uppercase font-bold bg-green-800 rounded-b-md p-4 text-white w-full shadow-lg">Rechercher une solution</button>
         </div>
       </div>
     </div>

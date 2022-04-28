@@ -18,5 +18,5 @@ export const Failure = ({ error }) => (
 )
 
 export const Success = ({ locations }) => {
-  return <Locations locations={locations} />
+  return <Locations locations={locations}/>
 }
