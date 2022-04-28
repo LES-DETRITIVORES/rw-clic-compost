@@ -1,14 +1,14 @@
 import { render } from '@redwoodjs/testing/web'
 
-import Location from './LocationSearch'
+import Locations from './Locations'
 
 //   Improve this test with help from the Redwood Testing Doc:
 //    https://redwoodjs.com/docs/testing#testing-components
 
-describe('Location', () => {
+describe('Locations', () => {
   it('renders successfully', () => {
     expect(() => {
-      render(<Location />)
+      render(<Locations />)
     }).not.toThrow()
   })
 })

@@ -2,7 +2,7 @@ import * as turf from '@turf/turf'
 
 export const QUERY = gql`
   query GetGeocoderQuery($query: String!) {
-    geocoder: getLocation(query: $query) {
+    geocoder: location(query: $query) {
       query,
       address,
       longitude,
