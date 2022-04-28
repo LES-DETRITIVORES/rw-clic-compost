@@ -4,7 +4,9 @@ import { MetaTags } from '@redwoodjs/web'
 import { Form, TextField, NumberField, Submit } from '@redwoodjs/forms'
 import { Combobox, Transition } from '@headlessui/react'
 import LocationsCell from 'src/components/LocationsCell'
-import LocationSearch from 'src/components/LocationSearch/LocationSearch'
+import GeocoderCell from 'src/components/GeocoderCell'
+import Estimate from 'src/components/Estimate'
+import Offers from 'src/components/Offers'
 
 const SearchPage = () => {
   const [selected, setSelected] = useState('')
@@ -62,7 +64,12 @@ const SearchPage = () => {
             <Submit className="sm:text-sm md:text-lg uppercase font-bold bg-green-800 rounded-b-md p-4 text-white w-full shadow-lg">Chercher une solution locale</Submit>
         </div>
       </Form>
-      {location} - {meals}
+      <br/>
+      {location && <GeocoderCell query={location} />}
+      <br/>
+      {meals && <Estimate meals={meals} />}
+      <br/>
+      {meals && <Offers meals={meals} />}
     </div>
     </>
   )
