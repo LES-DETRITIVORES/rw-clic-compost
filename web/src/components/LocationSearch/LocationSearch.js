@@ -3,8 +3,8 @@ import { Combobox, Transition } from '@headlessui/react'
 import LocationsCell from 'src/components/LocationsCell'
 
 const LocationSearch = () => {
-  const [selected, setSelected] = useState()
-  const [query, setQuery] = useState('')
+const [selected, setSelected] = useState()
+const [query, setQuery] = useState('')
 
   return (
     <div className="w-full">
@@ -12,7 +12,7 @@ const LocationSearch = () => {
         <div className="relative mt-1">
           <div>
             <Combobox.Input
-              className="w-full rounded-md bg-gray-200 py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
+              className="w-full rounded-md bg-gray-200 py-2 pl-3 pr-10 text-sm outline-green-800 leading-5 text-gray-900 focus:ring-0"
               displayValue={(location) => location}
               onChange={(event) => setQuery(event.target.value)}
               autocomplete="off"
