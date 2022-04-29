@@ -9,6 +9,7 @@ import Offers from 'src/components/Offers'
 const SearchPage = () => {
   const [location, setLocation] = useState()
   const [meals, setMeals] = useState()
+  const [offer, setOffer] = useState()
 
   const logger = (log) => {
     console.log(log)
@@ -18,6 +19,15 @@ const SearchPage = () => {
     console.log(JSON.stringify(data))
     // setLocation(selected)
     // setMeals(data.meals)
+  }
+
+  const commandSubmit = () => {
+    var command = {
+      location : location,
+      meals : meals,
+      offer : offer,
+    }
+    console.log(JSON.stringify(command))
   }
 
   return (
@@ -57,8 +67,11 @@ const SearchPage = () => {
       }
       {meals &&
         <div className="mt-8 mt-8 text-lg">
-          <Offers meals={meals} />
+          <Offers meals={meals} onChange={setOffer}/>
         </div>
+      }
+      {location && meals && offer &&
+        <Submit onClick={commandSubmit} className="mt-16 sm:text-sm md:text-lg uppercase font-bold bg-orange-600 rounded-md p-4 text-white w-full shadow-lg">Adhérer</Submit>
       }
     </div>
   </>

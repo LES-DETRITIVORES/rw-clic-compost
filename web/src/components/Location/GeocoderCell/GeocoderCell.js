@@ -36,7 +36,7 @@ export const Success = ({ geocoder }) => {
   */
   <>
     {distance < MAX_DISTANCE
-      ? <p className="text-green-600">Bravo, vous pouvez composter localement vos biodéchets :)</p>
+      ? <p className="text-green-600">Bravo, vos biodéchets sont compostables localement :)</p>
       : <p className="text-red-600">Désolé, nous n'avons pas encore de solution locale :(</p>
     }
   </>

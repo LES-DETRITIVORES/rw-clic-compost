@@ -6,11 +6,11 @@ const Estimate = ({meals}) => {
   const LITER_BY_MEAL = WEIGHT_BY_MEAL/WEIGHT_BY_LITER+0.08 // 0.42 + 0.08 = 0.5
 
   return (
-    <ul>
+    <ul className="space-y-1 pt-2">
       {/* <li>{(meals*WEEKS_BY_MONTH).toFixed(0)} repas par mois</li> */}
-      <li>{(meals*WEIGHT_BY_MEAL*WEEKS_BY_MONTH).toFixed(0)} kg par mois</li>
-      <li>{(meals*LITER_BY_MEAL*WEEKS_BY_MONTH).toFixed(0)} L par mois</li>
-      <li>{(meals*LITER_BY_MEAL*PRICE_BY_LITER*WEEKS_BY_MONTH).toFixed(2)} € HT par mois</li>
+      <li>{(meals*WEIGHT_BY_MEAL*WEEKS_BY_MONTH*12).toFixed(0)} kg par an</li>
+      <li>{(meals*LITER_BY_MEAL*WEEKS_BY_MONTH*12).toFixed(0)} L par an</li>
+      <li>{(meals*LITER_BY_MEAL*PRICE_BY_LITER*WEEKS_BY_MONTH*12).toFixed(2)} € HT par an</li>
       <li>{(LITER_BY_MEAL*PRICE_BY_LITER).toFixed(3)} € HT par repas</li>
     </ul>
   )
