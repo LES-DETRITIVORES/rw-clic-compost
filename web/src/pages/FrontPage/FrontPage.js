@@ -2,7 +2,7 @@ import { Form, TextField, NumberField, Submit } from '@redwoodjs/forms'
 import { useState } from 'react'
 import { RadioGroup } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/solid'
-import GeocoderCell from 'src/components/GeocoderCell'
+import GeocoderCell from 'src/components/Location/GeocoderCell'
 import CustomerCell from 'src/components/CustomerCell'
 import PaymentMethodCell from 'src/components/PaymentMethodCell'
 import SEPAMethodCell from 'src/components/SEPAMethodCell'
@@ -17,7 +17,7 @@ const LocationPage = () => {
   const WEIGHT_BY_MEAL = 0.14
   const WEIGHT_BY_LITER = 1/3
   const LITER_BY_MEAL = WEIGHT_BY_MEAL/WEIGHT_BY_LITER+0.08 // 0.42 + 0.08 = 0.5
-  
+
   const [location, setLocation] = useState()
   const formLocation = (data) => {
     setLocation(data.location)
@@ -117,7 +117,7 @@ const LocationPage = () => {
           <Form onSubmit={formLocation}>
             <label htmlFor="location" className="text-md font-medium">Votre adresse :</label><br/>
             <TextField name="location" placeholder="Adresse" className="text-sm autofill:bg-yellow-200 rounded-md border border-sky-500 p-2"/>
-            <Submit className="text-sm ml-2 border-2 p-2 rounded-md bg-orange-500 text-white">Calculer</Submit>      
+            <Submit className="text-sm ml-2 border-2 p-2 rounded-md bg-orange-500 text-white">Calculer</Submit>
           </Form>
           {location && <GeocoderCell query={location} />}
         </div>

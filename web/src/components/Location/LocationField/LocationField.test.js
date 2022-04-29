@@ -1,6 +1,6 @@
 import { render } from '@redwoodjs/testing/web'
 
-import Location from './LocationSearch'
+import Location from './LocationField'
 
 //   Improve this test with help from the Redwood Testing Doc:
 //    https://redwoodjs.com/docs/testing#testing-components

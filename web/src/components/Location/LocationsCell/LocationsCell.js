@@ -1,4 +1,4 @@
-import Locations from 'src/components/Locations'
+import Locations from 'src/components/Location/Locations'
 
 export const QUERY = gql`
   query FindLocations($query: String!) {

@@ -1,5 +1,5 @@
 import { render } from '@redwoodjs/testing/web'
-import { Loading, Empty, Failure, Success } from './GeocoderCell'
+import { Loading, Empty, Failure, Success } from './LocationCell'
 import { standard } from './GeocoderCell.mock'
 
 // Generated boilerplate tests do not account for all circumstances

@@ -1,4 +1,4 @@
-import { Loading, Empty, Failure, Success } from './GeocoderCell'
+import { Loading, Empty, Failure, Success } from './LocationCell'
 import { standard } from './GeocoderCell.mock'
 
 export const loading = () => {

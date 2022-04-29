@@ -1,4 +1,4 @@
-import Location from './LocationSearch'
+import Location from './LocationField'
 
 export const generated = () => {
   return <Location />
