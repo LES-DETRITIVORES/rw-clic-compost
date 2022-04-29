@@ -23,7 +23,7 @@ const LocationField = ({onChange, className}) => {
           leaveTo="opacity-0"
           afterLeave={() => setQuery('')}
         >
-          <LocationsCell query={query}/>
+          <LocationsCell query={query} />
         </Transition>
       </div>
     </Combobox>

@@ -11,9 +11,9 @@ export const QUERY = gql`
   }
 `
 
-export const Loading = () => <div>Loading...</div>
+export const Loading = () => <p className="text-gray-400">Recherche de la meilleure solution...</p>
 
-export const Empty = () => <div>Empty</div>
+export const Empty = () => <div>Aucune réponse</div>
 
 export const Failure = ({ error }) => (
   <div style={{ color: 'red' }}>Error: {error.message}</div>
@@ -24,12 +24,21 @@ export const Success = ({ geocoder }) => {
   var to = turf.point([geocoder.longitude, geocoder.latitude]);
   var options = {units: 'kilometers'};
   var distance = turf.distance(from, to, options);
+  const MAX_DISTANCE = 110
 
   return (
+  /*
   <ul className="list-disc">
     <li>Adresse : {geocoder.address}</li>
     <li>Coordonnées : [{geocoder.longitude}, {geocoder.latitude}]</li>
     <li>Distance : {Math.round(distance)} km from HQ (65 quai de Brazza 33100 Bordeaux)</li>
   </ul>
+  */
+  <>
+    {distance < MAX_DISTANCE
+      ? <p className="text-green-600">Bravo, vous pouvez composter localement vos biodéchets :)</p>
+      : <p className="text-red-600">Désolé, nous n'avons pas encore de solution locale :(</p>
+    }
+  </>
   )
 }
