@@ -1,32 +1,34 @@
-import { back, Redirect, Link, routes } from '@redwoodjs/router'
+import { navigate, Link, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 import { useState } from 'react'
-import { Form, Label, TextField, NumberField, EmailField, TelField, DateField, Submit } from '@redwoodjs/forms'
+import { Form, Label, TextField, EmailField, TelField, Submit } from '@redwoodjs/forms'
 import GeocoderCell from 'src/components/Location/GeocoderCell'
 import Offers from 'src/components/Offers'
 
 
-const OfferPage = ({l, m}) => {
+const OfferPage = ({l, m, s}) => {
   const [location, setLocation] = useState(l)
   const [meals, setMeals] = useState(m)
-  const [service, setService] = useState()
-  const [subscription, setSubscription] = useState()
-  
-  const subscriptionSubmit = (data) => {
-    var sub = {
-      user : data,
-      offer : {
-        location : location,
-        meals : meals,
-        service : service,
-      }
+  const [service, setService] = useState(s)
+
+  const offerSubmit = (data) => {
+    const sub = {
+      f : data.firstname,
+      n : data.lastname,
+      c : data.company,
+      e : data.email,
+      p : data.phone,
+      l : location,
+      m : meals,
+      s : service,
     }
     console.log(JSON.stringify(sub))
-    setSubscription(sub)
+    navigate(routes.subscribe(sub))
   }
   
   return (
     <>
+      <MetaTags title="Offer" description="Offer page" />
       <div>
         <div>
           <Link to={routes.search({l:location, m:meals})}>&lt; Modifier votre recherche</Link>
@@ -46,11 +48,11 @@ const OfferPage = ({l, m}) => {
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2"> 
             <div>
               <div className="mt-8 text-lg">
-                <Offers meals={meals} onChange={setService}/>
+                <Offers meals={meals} onChange={setService} value={service}/>
               </div>
             </div>
             <div>
-              <Form onSubmit={subscriptionSubmit} className="container mx-auto font-sans">
+              <Form onSubmit={offerSubmit} className="container mx-auto font-sans">
                 <div className="bg-white rounded-t-lg shadow-lg p-8 mt-8">
                   <Label className="font-medium block">
                     Prénom
@@ -76,7 +78,7 @@ const OfferPage = ({l, m}) => {
                 <div>
                     <Submit
                       className="sm:text-sm md:text-lg uppercase font-bold bg-orange-600 rounded-b-md p-4 text-white w-full shadow-lg">
-                        Essayer gratuitement
+                        S'inscrire gratuitement
                     </Submit>
                 </div>
               </Form>
