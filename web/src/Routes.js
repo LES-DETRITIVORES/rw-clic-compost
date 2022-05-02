@@ -13,6 +13,8 @@ import UsersLayout from 'src/layouts/UsersLayout'
 const Routes = () => {
   return (
     <Router>
+      <Route path="/subscribe" page={SubscribePage} name="subscribe" />
+      <Route path="/offer" page={OfferPage} name="offer" />
       <Set wrap={UsersLayout}>
         <Route path="/users/new" page={UserNewUserPage} name="newUser" />
         <Route path="/users/{id:Int}/edit" page={UserEditUserPage} name="editUser" />

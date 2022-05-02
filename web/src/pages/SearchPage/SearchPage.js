@@ -1,4 +1,4 @@
-import { Link, routes } from '@redwoodjs/router'
+import { navigate, routes } from '@redwoodjs/router'
 import { useState } from 'react'
 import { MetaTags } from '@redwoodjs/web'
 import { Form, Label, TextField, NumberField, EmailField, TelField, DateField, Submit } from '@redwoodjs/forms'
@@ -6,9 +6,9 @@ import LocationField from 'src/components/Location/LocationField'
 import GeocoderCell from 'src/components/Location/GeocoderCell'
 import Offers from 'src/components/Offers'
 
-const SearchPage = () => {
-  const [location, setLocation] = useState()
-  const [meals, setMeals] = useState()
+const SearchPage = ({l, m}) => {
+  const [location, setLocation] = useState(l)
+  const [meals, setMeals] = useState(m)
   const [service, setService] = useState()
 
   const logger = (log) => {
@@ -19,6 +19,7 @@ const SearchPage = () => {
     console.log(JSON.stringify(data))
     // setLocation(selected)
     // setMeals(data.meals)
+    navigate(routes.offer({l:location, m:meals}))
   }
 
   const [subscription, setSubscription] = useState()
@@ -48,11 +49,11 @@ const SearchPage = () => {
             <Label className="font-medium block">
               Adresse à collecter
             </Label>
-            <LocationField onChange={setLocation} className="block text-center w-full rounded-md bg-gray-200 py-2 pl-3 pr-10 text-sm outline-green-800 leading-5 text-gray-900 focus:ring-0"/>
+            <LocationField value={location} onChange={setLocation} className="block text-center w-full rounded-md bg-gray-200 py-2 pl-3 pr-10 text-sm outline-green-800 leading-5 text-gray-900 focus:ring-0"/>
             <Label className="font-medium mt-6 block">
               Repas par semaine
             </Label>
-            <NumberField onChange={(e) => setMeals(e.target.value)} name="meals" className="block w-full text-center bg-gray-200 rounded-md p-2 text-sm outline-green-800" />
+            <NumberField onChange={(e) => setMeals(e.target.value)} value={meals} name="meals" className="block w-full text-center bg-gray-200 rounded-md p-2 text-sm outline-green-800" />
           </div>
           <div>
               <Submit
@@ -60,59 +61,8 @@ const SearchPage = () => {
                 className="sm:text-sm md:text-lg uppercase font-bold bg-green-800 rounded-b-md p-4 text-white w-full shadow-lg">Chercher une solution locale</Submit>
           </div>
         </Form>
-        {location &&
-          <div className="text-center bg-white rounded-lg shadow-lg p-4 mt-8 text-lg">
-            <GeocoderCell query={location}/>
-          </div>
-        }
       </div>
     </div>
-    { location && meals &&
-      <div>
-        <div className="font-medium text-center text-2xl md:text-3xl mt-16">
-          Choisissez la solution de tri qui vous ressemble
-        </div>
-        <div className="container mx-auto max-w-3xl font-sans">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            <div>
-              <div className="mt-8 text-lg">
-                <Offers meals={meals} onChange={setService}/>
-              </div>
-            </div>
-            <div>
-              <Form onSubmit={subscriptionSubmit} className="container mx-auto font-sans">
-                <div className="bg-white rounded-t-lg shadow-lg p-8 mt-8">
-                  <Label className="font-medium block">
-                    Prénom
-                  </Label>
-                  <TextField name="firstname" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
-                  <Label className="font-medium block">
-                    Nom
-                  </Label>
-                  <TextField name="lastname" className="uppercase block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
-                  <Label className="font-medium block">
-                    Société
-                  </Label>
-                  <TextField name="company" className="block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
-                  <Label className="font-medium block">
-                    Mél
-                  </Label>
-                  <EmailField name="email" className="block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
-                  <Label className="font-medium block">
-                    Téléphone
-                  </Label>
-                  <TelField name="phone" className="block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
-                </div>
-                <div>
-                    <Submit
-                      className="sm:text-sm md:text-lg uppercase font-bold bg-orange-600 rounded-b-md p-4 text-white w-full shadow-lg">Essayer gratuitement</Submit>
-                </div>
-              </Form>
-            </div>
-          </div>
-        </div>
-      </div>
-    }
     { subscription &&
       <div>
         <div className="font-medium text-center text-2xl md:text-3xl mt-16">
