@@ -41,8 +41,8 @@ const SearchPage = ({l, m}) => {
           </div>
           <div>
               <Submit
-                disabled={location == null || meals == null}
-                className="sm:text-sm md:text-lg uppercase font-bold bg-green-800 rounded-b-md p-4 text-white w-full shadow-lg">Chercher une solution locale</Submit>
+                disabled={!location || !meals}
+                className={`sm:text-sm md:text-lg uppercase font-bold ${(location && meals) ? 'bg-green-800' : 'bg-gray-600'} rounded-b-md p-4 text-white w-full shadow-lg`}>Chercher une solution locale</Submit>
           </div>
         </Form>
       </div>

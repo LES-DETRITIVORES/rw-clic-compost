@@ -6,7 +6,7 @@ import GeocoderCell from 'src/components/Location/GeocoderCell'
 import Offers from 'src/components/Offers'
 
 
-const OfferPage = ({l, m, s}) => {
+const OfferPage = ({l, m, s, f, n, c, e, p}) => {
   const [location, setLocation] = useState(l)
   const [meals, setMeals] = useState(m)
   const [service, setService] = useState(s)
@@ -48,36 +48,37 @@ const OfferPage = ({l, m, s}) => {
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2"> 
             <div>
               <div className="mt-8 text-lg">
-                <Offers meals={meals} onChange={setService} value={service}/>
+                <Offers meals={meals} onChange={setService} defaultValue={service}/>
               </div>
             </div>
             <div>
               <Form onSubmit={offerSubmit} className="container mx-auto font-sans">
                 <div className="bg-white rounded-t-lg shadow-lg p-8 mt-8">
                   <Label className="font-medium block">
+                    Société
+                  </Label>
+                  <TextField name="company" defaultValue={c} className="block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                  <Label className="font-medium block">
                     Prénom
                   </Label>
-                  <TextField name="firstname" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                  <TextField name="firstname" defaultValue={f} className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                   <Label className="font-medium block">
                     Nom
                   </Label>
-                  <TextField name="lastname" className="uppercase block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
-                  <Label className="font-medium block">
-                    Société
-                  </Label>
-                  <TextField name="company" className="block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                  <TextField name="lastname" defaultValue={n} className="uppercase block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                   <Label className="font-medium block">
                     Mél
                   </Label>
-                  <EmailField name="email" className="block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                  <EmailField name="email" defaultValue={e} className="block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                   <Label className="font-medium block">
                     Téléphone
                   </Label>
-                  <TelField name="phone" className="block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                  <TelField name="phone" defaultValue={p} className="block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                 </div>
                 <div>
                     <Submit
-                      className="sm:text-sm md:text-lg uppercase font-bold bg-orange-600 rounded-b-md p-4 text-white w-full shadow-lg">
+                      className={`sm:text-sm md:text-lg uppercase font-bold ${service ? 'bg-orange-600' : 'bg-gray-600'}  rounded-b-md p-4 text-white w-full shadow-lg`}
+                      disabled={!service}>
                         S'inscrire gratuitement
                     </Submit>
                 </div>

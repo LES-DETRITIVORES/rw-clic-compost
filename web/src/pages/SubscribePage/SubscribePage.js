@@ -25,6 +25,9 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
       <MetaTags title="Subscribe" description="Subscribe page" />
       { subscription &&
       <div>
+        <div>
+          <Link to={routes.offer({l:l, m:m, f:f, n:n, c:c, e:e, p:p, s:s})}>&lt; Changer d'offre</Link>
+        </div>
         <div className="font-medium text-center text-2xl md:text-3xl mt-16">
           Validez votre contrat de collecte
         </div>
