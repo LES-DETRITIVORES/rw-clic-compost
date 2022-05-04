@@ -92,8 +92,8 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
 
     /* Save subscription */
     var sub = subscription
-    sub.customer = customer.data.customer.id
     sub.startedAt = data.startedAt
+    sub.customer = customer.data.customer.id
     sub.card = card.data.card.id
     sub.iban = data.iban
     // console.log(JSON.stringify(sub))
