@@ -1,7 +1,8 @@
 import { Link, routes } from '@redwoodjs/router'
 import { MetaTags, useMutation } from '@redwoodjs/web'
+import { toast, Toaster } from '@redwoodjs/web/toast'
 import { useState } from 'react'
-import { Form, Label, TextField, DateField, Submit } from '@redwoodjs/forms'
+import { Form, Label, TextField, FormError, DateField, Submit } from '@redwoodjs/forms'
 
 const CREATE_SUBSCRIPTION = gql`
   mutation CreateSubscriptionMutation($input: CreateSubscriptionInput!) {
@@ -12,7 +13,11 @@ const CREATE_SUBSCRIPTION = gql`
 `
 
 const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
-  const [create] = useMutation(CREATE_SUBSCRIPTION)
+  const [create, {loading, error}] = useMutation(CREATE_SUBSCRIPTION, {
+    onCompleted: () => {
+      toast.success('Merci pour votre abonnement !')
+    },
+  })
 
   const [subscription, setSubscription] = useState({
     firstname : f,
@@ -64,7 +69,9 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
               </div>
             </div>
             <div>
-              <Form onSubmit={subscriptionSubmit} className="container mx-auto font-sans">
+              <Toaster />
+              <Form onSubmit={subscriptionSubmit} config={{ mode: 'onBlur' }} error={error} className="container mx-auto font-sans">
+                <FormError error={error} wrapperClassName="form-error" />
                 <div className="bg-white rounded-t-lg shadow-lg p-8 mt-8">
                   <Label className="font-medium block">
                     Date de démarrage
@@ -81,6 +88,7 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
                 </div>
                 <div>
                     <Submit
+                      disabled={loading}
                       className="sm:text-sm md:text-lg uppercase font-bold bg-blue-600 rounded-b-md p-4 text-white w-full shadow-lg">S'abonner</Submit>
                 </div>
               </Form>
