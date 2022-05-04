@@ -6,16 +6,47 @@ import { Form, Label, TextField, FormError, DateField, Submit } from '@redwoodjs
 
 const CREATE_SUBSCRIPTION = gql`
   mutation CreateSubscriptionMutation($input: CreateSubscriptionInput!) {
-    createSubscription(input: $input) {
+    subscription: createSubscription(input: $input) {
+      id
+    }
+  }
+`
+
+const CREATE_CUSTOMER = gql`
+  mutation CreateCustomerMutation($input: CreateCustomerInput!) {
+    customer: createCustomer(input: $input) {
+      id
+    }
+  }
+`
+
+const CREATE_CARD = gql`
+  mutation CreateCardMutation($input: CreateCardInput!) {
+    card: createCard(input: $input) {
       id
     }
   }
 `
 
 const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
-  const [create, {loading, error}] = useMutation(CREATE_SUBSCRIPTION, {
-    onCompleted: () => {
+  const [createSubscription, {loading, error}] = useMutation(CREATE_SUBSCRIPTION, {
+    onCompleted: (result) => {
+      //console.log(JSON.stringify(result.subscription))
       toast.success('Merci pour votre abonnement !')
+    },
+  })
+
+  const [createCustomer] = useMutation(CREATE_CUSTOMER, {
+    onCompleted: (result) => {
+      //console.log(JSON.stringify(result.customer))
+      toast.success('Nouvel usager ajouté !')
+    },
+  })
+
+  const [createCard] = useMutation(CREATE_CARD, {
+    onCompleted: (result) => {
+      //console.log(JSON.stringify(result.card))
+      toast.success('Nouvelle carte de paiement ajoutée !')
     },
   })
 
@@ -33,13 +64,40 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
     iban: ''
   })
 
-  const subscriptionSubmit = (data) => {
+  const subscriptionSubmit = async (data) => {
+   
+    /* Save customer */    
+    const customer = await createCustomer({ variables: { 
+      input: {
+        description: subscription.firstname + ' ' + subscription.lastname.toUpperCase(), 
+        email: subscription.email}
+      }
+    })
+    console.log(JSON.stringify(customer))
+
+    /* Add card to customer */
+    const card = await createCard({ variables: { 
+      input: {
+        customer: customer.data.customer.id,
+        number: data.card,
+        exp_month: 4,
+        exp_year: 2023,
+        cvc: '314'}
+      }
+    })
+    console.log(JSON.stringify(card))
+
+    /* Add IBAN * /
+    // TODO...
+
+    /* Save subscription */
     var sub = subscription
+    sub.customer = customer.data.customer.id
     sub.startedAt = data.startedAt
-    sub.card = data.card
+    sub.card = card.data.card.id
     sub.iban = data.iban
-    console.log(JSON.stringify(sub))
-    create({ variables: { input: sub } })
+    // console.log(JSON.stringify(sub))
+    createSubscription({ variables: { input: sub } })
   }
   
   return (
@@ -80,7 +138,7 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
                   <Label className="font-medium block">
                     Numéro carte bleu
                   </Label>
-                  <TextField name="card" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                  <TextField name="card" placeholder="4242424242424242" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                   <Label className="font-medium block">
                     IBAN
                   </Label>

@@ -1,11 +1,9 @@
 export const schema = gql`
   type Customer {
-    query: String!
     id: String!
   }
 
-  type PaymentMethod {
-    query: String!
+  type Card {
     id: String!
   }
 
@@ -25,11 +23,27 @@ export const schema = gql`
     secret: String!
   }
 
+  input CreateCustomerInput {
+    description: String
+    email: String!
+  }
+
+  input CreateCardInput {
+    customer: String!
+    number: String!
+    exp_month: Int!
+    exp_year: Int!
+    cvc: String!
+  }
+
   type Query {
-    addCustomer(query: String!): Customer! @skipAuth
-    addPaymentMethod(query: String!): PaymentMethod! @skipAuth
     addSEPAMethod(name: String!, email: String!, iban: String!): SEPAMethod! @skipAuth
     addPayment(query: Int!): Payment! @skipAuth
     getClientSecret(query: String!): ClientSecret! @skipAuth
+  }
+
+  type Mutation {
+    createCustomer(input: CreateCustomerInput!): Customer! @skipAuth
+    createCard(input: CreateCardInput!): Card! @skipAuth
   }
 `

@@ -11,6 +11,7 @@ export const schema = gql`
     meals: Int
     service: String
     startedAt: DateTime!
+    customer: String
     card: String
     iban: String
   }
@@ -30,6 +31,7 @@ export const schema = gql`
     meals: Int
     service: String
     startedAt: DateTime!
+    customer: String
     card: String
     iban: String
   }
@@ -44,6 +46,7 @@ export const schema = gql`
     meals: Int
     service: String
     startedAt: DateTime
+    customer: String
     card: String
     iban: String
   }

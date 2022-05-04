@@ -1,5 +1,4 @@
 import { db } from 'src/lib/db'
-import { validate } from '@redwoodjs/api'
 
 export const subscriptions = () => {
   return db.subscription.findMany()
@@ -12,7 +11,6 @@ export const subscription = ({ id }) => {
 }
 
 export const createSubscription = ({ input }) => {
-  validate(input.email, 'email', { email: true })
   return db.subscription.create({
     data: input,
   })

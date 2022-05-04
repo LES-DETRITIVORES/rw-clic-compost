@@ -1,38 +1,31 @@
 const SK_TEST_TOKEN = 'sk_test_51IvKaADczmPm9BYQwm3wIcB02BUdMsACq8jxlo8UaDL5EE8hbcu2TDdP7qVdSAY6juszXMIopGlpmA3wiALaG3cn00ZOj5L93b'
 const stripe = require('stripe')(SK_TEST_TOKEN);
-import {loadStripe} from '@stripe/stripe-js';
 
-export const addCustomer = async ({ query }) => {
-  const customer = await stripe.customers.create({
-    description: query,
-    email: 'admin@les-detritivores.co'
-  });
+export const createCustomer = async ({ input }) => {
+  const customer = await stripe.customers.create(input);
   return {
-    query,
     id : customer.id
   }
 }
 
-export const addPaymentMethod = async ({ query }) => {
-
-  const paymentMethod = await stripe.paymentMethods.create({
+export const createCard = async ({ input }) => {
+  const card = await stripe.paymentMethods.create({
     type: 'card',
     card: {
-      number: '4242424242424242',
-      exp_month: 4,
-      exp_year: 2023,
-      cvc: '314',
+      number: input.number,
+      exp_month: input.exp_month,
+      exp_year: input.exp_year,
+      cvc: input.cvc
     },
   });
 
   const paymentAttach = await stripe.paymentMethods.attach(
-    paymentMethod.id,
-    {customer: 'cus_LY4LysEO2dG6NP'}
+    card.id,
+    {customer: input.customer}
   );
 
   return {
-    query,
-    id : paymentMethod.id
+    id : card.id
   }
 }
 
