@@ -1,9 +1,19 @@
 import { Link, routes } from '@redwoodjs/router'
-import { MetaTags } from '@redwoodjs/web'
+import { MetaTags, useMutation } from '@redwoodjs/web'
 import { useState } from 'react'
 import { Form, Label, TextField, DateField, Submit } from '@redwoodjs/forms'
 
+const CREATE_SUBSCRIPTION = gql`
+  mutation CreateSubscriptionMutation($input: CreateSubscriptionInput!) {
+    createSubscription(input: $input) {
+      id
+    }
+  }
+`
+
 const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
+  const [create] = useMutation(CREATE_SUBSCRIPTION)
+
   const [subscription, setSubscription] = useState({
     firstname : f,
     lastname : n,
@@ -11,13 +21,20 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
     email: e,
     phone : p,
     location : l,
-    meals : m,
-    service : s
+    meals : parseInt(m),
+    service : s,
+    startedAt : '',
+    card: '',
+    iban: ''
   })
 
   const subscriptionSubmit = (data) => {
-    console.log(JSON.stringify(data))
-    // navigate(routes.payment(data))
+    var sub = subscription
+    sub.startedAt = data.startedAt
+    sub.card = data.card
+    sub.iban = data.iban
+    console.log(JSON.stringify(sub))
+    create({ variables: { input: sub } })
   }
   
   return (
@@ -52,11 +69,11 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
                   <Label className="font-medium block">
                     Date de démarrage
                   </Label>
-                  <DateField name="startdate" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                  <DateField name="startedAt" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                   <Label className="font-medium block">
                     Numéro carte bleu
                   </Label>
-                  <TextField name="card_number" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                  <TextField name="card" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                   <Label className="font-medium block">
                     IBAN
                   </Label>

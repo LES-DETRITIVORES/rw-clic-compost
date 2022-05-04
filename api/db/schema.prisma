@@ -29,6 +29,8 @@ model Subscription {
   meals     Int?
   service   String?
   startedAt DateTime
+  card      String?
+  iban      String?
 }
 
 
