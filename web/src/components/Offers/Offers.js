@@ -4,7 +4,7 @@ import { CheckIcon } from '@heroicons/react/solid'
 import Estimate from 'src/components/Estimate'
 
 
-const Offers = ({meals, onChange}) => {
+const Offers = ({meals, onChange, defaultValue}) => {
   const PRICE_BY_LITER = 0.15
   const WEEKS_BY_MONTH = 52/12
   const WEIGHT_BY_MEAL = 0.14
@@ -29,7 +29,7 @@ const Offers = ({meals, onChange}) => {
     },
   ]
 
-  const [service, setService] = useState()
+  const [service, setService] = useState(defaultValue)
   const formService = (data) => {
     setService(data.service)
   }

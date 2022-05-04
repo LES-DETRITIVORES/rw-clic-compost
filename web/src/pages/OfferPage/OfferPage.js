@@ -48,7 +48,7 @@ const OfferPage = ({l, m, s, f, n, c, e, p}) => {
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2"> 
             <div>
               <div className="mt-8 text-lg">
-                <Offers meals={meals} onChange={setService} defaultValue={service}/>
+                <Offers meals={meals} onChange={setService} defaultValue={s}/>
               </div>
             </div>
             <div>
