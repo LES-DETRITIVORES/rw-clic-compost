@@ -11,6 +11,8 @@ export const schema = gql`
     meals: Int
     service: String
     startedAt: DateTime!
+    card: String
+    iban: String
   }
 
   type Query {
@@ -28,6 +30,8 @@ export const schema = gql`
     meals: Int
     service: String
     startedAt: DateTime!
+    card: String
+    iban: String
   }
 
   input UpdateSubscriptionInput {
@@ -40,6 +44,8 @@ export const schema = gql`
     meals: Int
     service: String
     startedAt: DateTime
+    card: String
+    iban: String
   }
 
   type Mutation {
