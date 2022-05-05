@@ -56,7 +56,7 @@ export const addSEPAMethod = async ({ name, email, iban }) => {
 export const getClientSecret = async ({ query }) => {
   const setupIntent = await stripe.setupIntents.create({
     payment_method_types: ['sepa_debit'],
-    customer: 'cus_LY4LysEO2dG6NP',
+    customer: query,
   });
 
   return {
