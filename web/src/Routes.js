@@ -9,19 +9,22 @@
 
 import { Set, Router, Route } from '@redwoodjs/router'
 import UsersLayout from 'src/layouts/UsersLayout'
+import SearchLayout from 'src/layouts/SearchLayout'
 
 const Routes = () => {
   return (
     <Router>
-      <Route path="/subscribe" page={SubscribePage} name="subscribe" />
+      <Set wrap={SearchLayout}>
+        <Route path="/" page={SearchPage} name="search" />
+      </Set>
       <Route path="/offer" page={OfferPage} name="offer" />
+      <Route path="/subscribe" page={SubscribePage} name="subscribe" />
       <Set wrap={UsersLayout}>
         <Route path="/users/new" page={UserNewUserPage} name="newUser" />
         <Route path="/users/{id:Int}/edit" page={UserEditUserPage} name="editUser" />
         <Route path="/users/{id:Int}" page={UserUserPage} name="user" />
         <Route path="/users" page={UserUsersPage} name="users" />
       </Set>
-      <Route path="/" page={SearchPage} name="search" />
       <Route path="/front" page={FrontPage} name="front" />
       <Route path="/connect" page={ConnectPage} name="connect" />
       <Route path="/schedule" page={SchedulePage} name="schedule" />
