@@ -173,10 +173,11 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
       { subscription &&
       <div>
         <div>
-          <Link to={routes.offer({l:l, m:m, f:f, n:n, c:c, e:e, p:p, s:s})}>&lt; Changer d'offre</Link>
+          <Link className="text-white" to={routes.offer({l:l, m:m, f:f, n:n, c:c, e:e, p:p, s:s})}>&lt; Changer d'offre</Link>
         </div>
-        <div className="font-medium text-center text-2xl md:text-3xl mt-16">
-          Validez votre contrat de collecte
+        <div className="font-bold text-center text-3xl md:text-5xl mt-16 text-black w-min mx-auto -rotate-2">
+          <span className="bg-yellow-400 p-1 block w-min">Commandez&nbsp;aujourd'hui,</span> 
+          <span className="bg-yellow-400 p-1 block w-min mt-1">Payez&nbsp;plus&nbsp;tard&nbsp;!</span>
         </div>
         <div className="container mx-auto max-w-6xl font-sans">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -191,10 +192,11 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
                   <li><span className="font-bold">Adresse de collecte : </span><span className="">{subscription.location}</span></li>
                   <li><span className="font-bold">Prestation : </span><span className="lowercase">Collecte et compostage de {subscription.service}</span></li>
                 </ul>
-              </div>
-              {/* Display mandate acceptance text. */}
-              <div className="text-xs block mt-6 text-justify">
+                {/* Display mandate acceptance text. */}
+                <hr className="mt-2"/>
+              <div className="text-xs block mt-2 text-justify">
                 En fournissant vos informations de paiement et en confirmant ce paiement, vous autorisez (A) LES DETRITIVORES et Stripe, notre prestataire de services de paiement et/ou PPRO, son prestataire de services local, à envoyer des instructions à votre banque pour débiter votre compte et (B) votre banque à débiter votre compte conformément à ces instructions. Vous avez, entre autres, le droit de vous faire rembourser par votre banque selon les modalités et conditions du contrat conclu avec votre banque. La demande de remboursement doit être soumise dans un délai de 8 semaines à compter de la date à laquelle votre compte a été débité. Vos droits sont expliqués dans une déclaration disponible auprès de votre banque. Vous acceptez de recevoir des notifications des débits à venir dans les 2 jours précédant leur réalisation.
+              </div>
               </div>
             </div>
             <div>
@@ -218,7 +220,7 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
                 <div>
                   <Submit
                     disabled={loading}
-                    className="sm:text-sm md:text-lg uppercase font-bold bg-blue-600 rounded-b-md p-4 text-white w-full shadow-lg">S'abonner</Submit>
+                    className="sm:text-sm md:text-lg uppercase font-bold bg-yellow-400 rounded-b-md p-4 text-black w-full shadow-lg">S'abonner</Submit>
                 </div>
               </Form>
             </div>

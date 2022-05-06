@@ -10,6 +10,8 @@
 import { Set, Router, Route } from '@redwoodjs/router'
 import UsersLayout from 'src/layouts/UsersLayout'
 import SearchLayout from 'src/layouts/SearchLayout'
+import OfferLayout from 'src/layouts/OfferLayout'
+import SubscribeLayout from 'src/layouts/SubscribeLayout'
 
 const Routes = () => {
   return (
@@ -17,8 +19,12 @@ const Routes = () => {
       <Set wrap={SearchLayout}>
         <Route path="/" page={SearchPage} name="search" />
       </Set>
-      <Route path="/offer" page={OfferPage} name="offer" />
-      <Route path="/subscribe" page={SubscribePage} name="subscribe" />
+      <Set wrap={OfferLayout}>
+        <Route path="/offer" page={OfferPage} name="offer" />
+      </Set>
+      <Set wrap={SubscribeLayout}>
+        <Route path="/subscribe" page={SubscribePage} name="subscribe" />
+      </Set>
       <Set wrap={UsersLayout}>
         <Route path="/users/new" page={UserNewUserPage} name="newUser" />
         <Route path="/users/{id:Int}/edit" page={UserEditUserPage} name="editUser" />

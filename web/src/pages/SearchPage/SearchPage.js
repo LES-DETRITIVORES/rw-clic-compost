@@ -26,7 +26,7 @@ const SearchPage = ({l, m}) => {
     <div className="flex flex-row">
       <div className="basis-auto md:basis-1/2"></div>
       <div className="basis-full md:basis-2/2">
-        <div className="font-bold text-center text-3xl md:text-5xl mt-16 text-white  w-min mx-auto -rotate-2">
+        <div className="font-bold text-center text-3xl md:text-5xl mt-16 text-white w-min mx-auto -rotate-2">
           <span className="bg-green-900 p-1 block w-min">Restaurateurs, </span> 
           <span className="bg-green-900 p-1 block w-min mt-1">Prêts&nbsp;à&nbsp;trier&nbsp;vos&nbsp;biodéchets&nbsp;?</span>
         </div>

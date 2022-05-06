@@ -31,20 +31,19 @@ const OfferPage = ({l, m, s, f, n, c, e, p}) => {
       <MetaTags title="Offer" description="Offer page" />
       <div>
         <div>
-          <Link to={routes.search({l:location, m:meals})}>&lt; Modifier votre recherche</Link>
+          <Link className="text-white" to={routes.search({l:location, m:meals})}>&lt; {location} - {meals} repas par semaine</Link>
         </div>
-        <div className="font-medium text-center text-2xl md:text-3xl mt-16">
-          Choisissez la solution de tri qui vous ressemble
-        </div>
-        <div className="text-center">
-          {location} - {meals} repas par semaine
+        <div className="font-bold text-center text-3xl md:text-5xl mt-16 text-white w-min mx-auto -rotate-2">
+          <span className="bg-orange-600 p-1 block w-min">Choisissez,</span> 
+          <span className="bg-orange-600 p-1 block w-min mt-1">On&nbsp;s'occupe&nbsp;de&nbsp;vous&nbsp;!</span>
         </div>
         <div className="container mx-auto max-w-3xl font-sans">
-          {location &&
+          {/*
+          location &&
             <div className="text-center bg-white rounded-lg shadow-lg p-4 mt-8 text-lg">
               <GeocoderCell query={location}/>
             </div>
-          }
+          */}
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2"> 
             <div>
               <div className="mt-8 text-lg">
