@@ -15,17 +15,20 @@ const Offers = ({meals, onChange, defaultValue}) => {
     {
       name : 'Bioseau',
       liter : 22,
-      qty : Math.round(meals*LITER_BY_MEAL/22)
+      qty : Math.round(meals*LITER_BY_MEAL/22),
+      dimensions : "29 x 42 x 28 cm (l x L x h)",
     },
     {
       name : 'Bac roulant',
       liter : 120,
-      qty : Math.round(meals*LITER_BY_MEAL/120)
+      qty : Math.round(meals*LITER_BY_MEAL/120),
+      dimensions : "50,5 x p 55,5 x h 100,5 cm (l x L x h)",
     },
     {
       name : 'Caisse-palette',
       liter : 500,
-      qty :  Math.round(meals*LITER_BY_MEAL/500)
+      qty :  Math.round(meals*LITER_BY_MEAL/500),
+      dimensions : "79,5 x 119,5 x 79 cm (l x L x h)",
     },
   ]
 
@@ -71,7 +74,8 @@ const Offers = ({meals, onChange, defaultValue}) => {
                             checked ? 'text-green-100' : 'text-gray-500'
                           }`}
                         >
-                        <span>{(offer.qty*offer.liter*PRICE_BY_LITER).toFixed(2)}€ par semaine</span>
+                        <span className="block">{offer.dimensions}</span>
+                        <span className="block font-bold">{(offer.qty*offer.liter*PRICE_BY_LITER).toFixed(2)}€ par semaine</span>
                         </RadioGroup.Description>
                       </div>
                     </div>
