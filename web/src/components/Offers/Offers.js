@@ -31,8 +31,8 @@ const Offers = ({meals, onChange, defaultValue}) => {
       dimensions : "79,5 x 119,5 x 79 cm (l x L x h)",
     },
   ]
-
-  const [service, setService] = useState(defaultValue)
+  
+  const [service, setService] = defaultValue ? useState(defaultValue) : useState(offers[0].qty + 'x ' + offers[0].name + ' ' + offers[0].liter +'L - ' + (offers[0].qty*offers[0].liter*PRICE_BY_LITER).toFixed(2) + '€ par semaine')
   const formService = (data) => {
     setService(data.service)
   }
