@@ -14,6 +14,14 @@ const CREATE_SUBSCRIPTION = gql`
   }
 `
 
+const EMAIL_SUBSCRIPTION = gql`
+  mutation EmailSubscriptionMutation($id: Int!) {
+    emailSubscription(id: $id) {
+      id
+    }
+  }
+`
+
 const CREATE_CUSTOMER = gql`
   mutation CreateCustomerMutation($input: CreateCustomerInput!) {
     customer: createCustomer(input: $input) {
@@ -43,6 +51,15 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
     onCompleted: (result) => {
       //console.log(JSON.stringify(result.subscription))
       toast.success('Merci pour votre abonnement !')
+    },
+  })
+
+  const [emailSubscription] = useMutation(EMAIL_SUBSCRIPTION, {
+    onCompleted: () => {
+      toast.success('Mél de confirmation envoyé.')
+    },
+    onError: (error) => {
+      toast.error(error.message)
     },
   })
 
@@ -163,8 +180,11 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
     sub.card = card.data.card.id
     sub.iban = sepa.setupIntent.payment_method
     setSubscription(sub)
-    console.log(JSON.stringify(subscription))
-    createSubscription({ variables: { input: subscription } })
+    sub = await createSubscription({ variables: { input: subscription } })
+    console.log(JSON.stringify(sub))
+
+    /* Send email subscription */
+    emailSubscription({ variables: { id: sub.data.subscription.id } })
   }
   
   return (

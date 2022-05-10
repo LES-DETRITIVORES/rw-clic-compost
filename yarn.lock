@@ -8220,6 +8220,7 @@ __metadata:
     "@turf/turf": ^6.5.0
     cross-undici-fetch: ^0.1.28
     imagekit: ^3.2.5
+    nodemailer: ^6.7.5
     stripe: ^8.219.0
     twilio: ^3.76.1
   languageName: unknown
@@ -18884,6 +18885,13 @@ __metadata:
   version: 2.0.2
   resolution: "node-releases@npm:2.0.2"
   checksum: d4f0f090670c02c3537b38c43ff39216be0addd75908cd7027bfff30a3ce8ac9b1db0c802c60756d1e79c33b8154dd0c9f2e5bbfb0deaaf39563299d52458ae9
+  languageName: node
+  linkType: hard
+
+"nodemailer@npm:^6.7.5":
+  version: 6.7.5
+  resolution: "nodemailer@npm:6.7.5"
+  checksum: 3aa0cdc42e041cc4109f96529ddaf9d0d4831589fd9ea0d9c8b521656288a3bc37657c727e19f24bb811f0bcc60dee985a75ad34acc1b216eba72c515e4ed1c1
   languageName: node
   linkType: hard
 

@@ -8,6 +8,7 @@
     "@turf/turf": "^6.5.0",
     "cross-undici-fetch": "^0.1.28",
     "imagekit": "^3.2.5",
+    "nodemailer": "^6.7.5",
     "stripe": "^8.219.0",
     "twilio": "^3.76.1"
   }
