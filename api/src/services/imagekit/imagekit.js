@@ -3,9 +3,9 @@
 var ImageKit = require("imagekit");
 
 var imagekit = new ImageKit({
-    publicKey : "public_RujORre5FFpe1N220PBprbYjPjg=",
-    privateKey : "private_NSEPIdI5LCdgItHNuGZwTXLYzRc=",
-    urlEndpoint : "https://ik.imagekit.io/dttv"
+    publicKey : process.env.IMAGEKIT_PK,
+    privateKey : process.env.IMAGEKIT_SK,
+    urlEndpoint : process.env.IMAGEKIT_URL
 });
 
 export const image = async ({ query }) => {

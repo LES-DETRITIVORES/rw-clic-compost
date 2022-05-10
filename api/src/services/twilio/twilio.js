@@ -1,6 +1,5 @@
-const TW_TEST_ACCOUNT = 'AC724edcdd87a985d60b049f9027063ff7'; 
-const TW_TEST_TOKEN = '6953660954e3232066fe260151cdd0bd'; 
-const twilio = require('twilio')(TW_TEST_ACCOUNT, TW_TEST_TOKEN); 
+
+const twilio = require('twilio')(process.env.TWILIO_TEST_ACCOUNT, process.env.TWILIO_TEST_TOKEN); 
 
 export const sendSMS = async ({ query }) => {
  

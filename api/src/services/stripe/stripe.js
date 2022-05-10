@@ -1,5 +1,4 @@
-const SK_TEST_TOKEN = 'sk_test_51IvKaADczmPm9BYQwm3wIcB02BUdMsACq8jxlo8UaDL5EE8hbcu2TDdP7qVdSAY6juszXMIopGlpmA3wiALaG3cn00ZOj5L93b'
-const stripe = require('stripe')(SK_TEST_TOKEN);
+const stripe = require('stripe')(process.env.STRIPE_TEST_TOKEN);
 
 export const createCustomer = async ({ input }) => {
   const customer = await stripe.customers.create(input);
