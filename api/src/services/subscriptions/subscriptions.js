@@ -42,6 +42,5 @@ export const emailSubscription = async ({ id }) => {
     'Merci, votre abonnement est confirmé.<br><br>' +
     'A bientôt !'
   const email = await sendEmail({ to: subscription.email, subject, text, html })
-  // return email.messageId
-  return "ok"
+  return email.messageId
 }

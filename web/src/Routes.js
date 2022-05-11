@@ -12,10 +12,15 @@ import UsersLayout from 'src/layouts/UsersLayout'
 import SearchLayout from 'src/layouts/SearchLayout'
 import OfferLayout from 'src/layouts/OfferLayout'
 import SubscribeLayout from 'src/layouts/SubscribeLayout'
+import ConfirmLayout from 'src/layouts/ConfirmLayout'
+
 
 const Routes = () => {
   return (
     <Router>
+      <Set wrap={ConfirmLayout}>
+        <Route path="/confirm" page={ConfirmPage} name="confirm" />
+      </Set>
       <Set wrap={SearchLayout}>
         <Route path="/" page={SearchPage} name="search" />
       </Set>

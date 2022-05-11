@@ -1,4 +1,4 @@
-import { Link, routes } from '@redwoodjs/router'
+import { navigate, Link, routes } from '@redwoodjs/router'
 import { MetaTags, useMutation } from '@redwoodjs/web'
 import { useLazyQuery } from '@apollo/client'
 import { toast, Toaster } from '@redwoodjs/web/toast'
@@ -16,7 +16,13 @@ const CREATE_SUBSCRIPTION = gql`
 
 const EMAIL_SUBSCRIPTION = gql`
   mutation EmailSubscriptionMutation($id: Int!) {
-    emailSubscription(id: $id) {
+    emailSubscription(id: $id)
+  }
+`
+
+const SMS_SUBSCRIPTION = gql`
+  mutation SMSSubscriptionMutation($input: sendSMSInput!) {
+    sendSMS(input: $input) {
       id
     }
   }
@@ -50,7 +56,7 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
   const [createSubscription, {loading, error}] = useMutation(CREATE_SUBSCRIPTION, {
     onCompleted: (result) => {
       //console.log(JSON.stringify(result.subscription))
-      toast.success('Merci pour votre abonnement !')
+      toast.success('Abonnement ajouté.')
     },
   })
 
@@ -63,24 +69,33 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
     },
   })
 
+  const [SMSSubscription] = useMutation(SMS_SUBSCRIPTION, {
+    onCompleted: () => {
+      toast.success('SMS de confirmation envoyé.')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+  })
+
   const [createCustomer] = useMutation(CREATE_CUSTOMER, {
     onCompleted: (result) => {
       //console.log(JSON.stringify(result.customer))
-      toast.success('Nouvel usager ajouté.')
+      toast.success('Usager ajouté.')
     },
   })
 
   const [createCard] = useMutation(CREATE_CARD, {
     onCompleted: (result) => {
       //console.log(JSON.stringify(result.card))
-      toast.success('Nouvelle carte bancaire ajoutée.')
+      toast.success('Carte bancaire ajoutée.')
     },
   })
 
   const [getClientSecret] = useLazyQuery(GET_CLIENT_SECRET, {
     onCompleted: (result) => {
       //console.log(JSON.stringify(result))
-      toast.success('Nouveau compte bancaire ajouté.')
+      toast.success('Compte bancaire ajouté.')
     },
   })
 
@@ -185,6 +200,12 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
 
     /* Send email subscription */
     emailSubscription({ variables: { id: sub.data.subscription.id } })
+
+    /* Send SMS subscription */
+    console.log(JSON.stringify(subscription))
+    SMSSubscription({ variables: { input: {text: "Abonnement prêt", from:'+1 207 705 5921', 'to': subscription.phone }} })
+
+    navigate(routes.confirm())
   }
   
   return (

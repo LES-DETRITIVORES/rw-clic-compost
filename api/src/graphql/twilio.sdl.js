@@ -1,10 +1,15 @@
 export const schema = gql`
   type SMS {
-    query: String!
     id: String!
   }
 
-  type Query {
-    sendSMS(query: String!): SMS! @skipAuth
+  input sendSMSInput {
+    text: String!
+    from: String!
+    to: String!
+  }
+
+  type Mutation {
+    sendSMS(input: sendSMSInput!): SMS! @requireAuth
   }
 `

@@ -1,6 +1,6 @@
 import { render } from '@redwoodjs/testing'
 
-import AppLayout from './AppLayout'
+import AppLayout from './ConfirmLayout'
 
 describe('AppLayout', () => {
   it('renders successfully', () => {
