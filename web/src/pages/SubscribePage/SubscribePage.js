@@ -62,7 +62,7 @@ function deliverDate(date, delay) {
   var nextDate = new Date(date);
   nextDate.setDate(nextDate.getDate() + delay);
   // return next day if date on weekend
-  if (nextDate.getDay() == 6 || nextDate.getDay() == 0) { return getDeliverDate(nextDate, 1) }
+  if (nextDate.getDay() == 6 || nextDate.getDay() == 0) { return deliverDate(nextDate, 1) }
   return nextDate;
 }
 
