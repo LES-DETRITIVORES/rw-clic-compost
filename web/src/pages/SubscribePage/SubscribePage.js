@@ -4,7 +4,7 @@ import { useLazyQuery } from '@apollo/client'
 import { toast, Toaster } from '@redwoodjs/web/toast'
 import { useState } from 'react'
 import { Form, Label, TextField, FormError, DateField, Submit } from '@redwoodjs/forms'
-import { useStripe, useElements, IbanElement } from '@stripe/react-stripe-js';
+import { useStripe, useElements, IbanElement, CardElement, PaymentElement } from '@stripe/react-stripe-js';
 
 const CREATE_SUBSCRIPTION = gql`
   mutation CreateSubscriptionMutation($input: CreateSubscriptionInput!) {
@@ -143,17 +143,17 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
   })
 
   const subscriptionSubmit = async (data) => {
-    /* Save customer */    
-    const customer = await createCustomer({ variables: { 
+    /* Save customer */
+    const customer = await createCustomer({ variables: {
       input: {
-        description: subscription.firstname + ' ' + subscription.lastname.toUpperCase(), 
+        description: subscription.firstname + ' ' + subscription.lastname.toUpperCase(),
         email: subscription.email
       }
     }})
     console.log(JSON.stringify(customer))
-    
+
     /* Add card to customer */
-    const card = await createCard({ variables: { 
+    const card = await createCard({ variables: {
       input: {
         customer: customer.data.customer.id,
         number: data.card,
@@ -165,7 +165,7 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
     console.log(JSON.stringify(card))
 
     /* Add IBAN to customer */
-    const client_secret = await getClientSecret({ variables: { 
+    const client_secret = await getClientSecret({ variables: {
       query: customer.data.customer.id
       }
     })
@@ -207,7 +207,7 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
 
     navigate(routes.confirm())
   }
-  
+
   return (
     <>
       <MetaTags title="Subscribe" description="Subscribe page" />
@@ -217,7 +217,7 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
           <Link className="text-white" to={routes.offer({l:l, m:m, f:f, n:n, c:c, e:e, p:p, s:s})}>&lt; Changer d'offre</Link>
         </div>
         <div className="font-bold text-center text-3xl md:text-5xl mt-16 text-black w-min mx-auto -rotate-2">
-          <span className="bg-yellow-400 p-1 block w-min">Commandez&nbsp;aujourd'hui,</span> 
+          <span className="bg-yellow-400 p-1 block w-min">Commandez&nbsp;aujourd'hui,</span>
           <span className="bg-yellow-400 p-1 block w-min mt-1">Payez&nbsp;plus&nbsp;tard&nbsp;!</span>
         </div>
         <div className="container mx-auto max-w-6xl font-sans">
@@ -254,9 +254,8 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
                     Carte bancaire
                   </Label>
                   <TextField name="card" placeholder="4242424242424242" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
-
                   <Label className="font-medium block mt-6">IBAN</Label>
-                  <IbanElement placeholder="FR1420041010050500013M02606" options={IBAN_ELEMENT_OPTIONS} className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>        
+                  <IbanElement placeholder="FR1420041010050500013M02606" options={IBAN_ELEMENT_OPTIONS} className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                 </div>
                 <div>
                   <Submit

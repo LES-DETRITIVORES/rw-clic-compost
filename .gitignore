@@ -20,3 +20,4 @@ api/types/graphql.d.ts
 !.yarn/versions
 package-lock.json
 yarn.lock
+.vscode/*
