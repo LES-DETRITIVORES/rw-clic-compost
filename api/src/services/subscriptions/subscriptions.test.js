@@ -27,20 +27,20 @@ describe('subscriptions', () => {
 
   scenario('creates a subscription', async () => {
     const result = await createSubscription({
-      input: { startedAt: '2022-05-04T21:22:53Z' },
+      input: { startedAt: '2022-05-12T12:02:47Z' },
     })
 
-    expect(result.startedAt).toEqual('2022-05-04T21:22:53Z')
+    expect(result.startedAt).toEqual('2022-05-12T12:02:47Z')
   })
 
   scenario('updates a subscription', async (scenario) => {
     const original = await subscription({ id: scenario.subscription.one.id })
     const result = await updateSubscription({
       id: original.id,
-      input: { startedAt: '2022-05-05T21:22:53Z' },
+      input: { startedAt: '2022-05-13T12:02:47Z' },
     })
 
-    expect(result.startedAt).toEqual('2022-05-05T21:22:53Z')
+    expect(result.startedAt).toEqual('2022-05-13T12:02:47Z')
   })
 
   scenario('deletes a subscription', async (scenario) => {

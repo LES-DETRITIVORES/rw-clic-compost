@@ -8,6 +8,7 @@
 // 'src/pages/Admin/BooksPage/BooksPage.js' -> AdminBooksPage
 
 import { Set, Router, Route } from '@redwoodjs/router'
+import SubscriptionsLayout from 'src/layouts/SubscriptionsLayout'
 import UsersLayout from 'src/layouts/UsersLayout'
 import SearchLayout from 'src/layouts/SearchLayout'
 import OfferLayout from 'src/layouts/OfferLayout'
@@ -18,6 +19,12 @@ import ConfirmLayout from 'src/layouts/ConfirmLayout'
 const Routes = () => {
   return (
     <Router>
+      <Set wrap={SubscriptionsLayout}>
+        <Route path="/subscriptions/new" page={SubscriptionNewSubscriptionPage} name="newSubscription" />
+        <Route path="/subscriptions/{id:Int}/edit" page={SubscriptionEditSubscriptionPage} name="editSubscription" />
+        <Route path="/subscriptions/{id:Int}" page={SubscriptionSubscriptionPage} name="subscription" />
+        <Route path="/subscriptions" page={SubscriptionSubscriptionsPage} name="subscriptions" />
+      </Set>
       <Set wrap={ConfirmLayout}>
         <Route path="/confirm" page={ConfirmPage} name="confirm" />
       </Set>

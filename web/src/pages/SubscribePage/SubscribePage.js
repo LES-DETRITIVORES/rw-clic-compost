@@ -2,7 +2,7 @@ import { navigate, Link, routes } from '@redwoodjs/router'
 import { MetaTags, useMutation } from '@redwoodjs/web'
 import { useLazyQuery } from '@apollo/client'
 import { toast, Toaster } from '@redwoodjs/web/toast'
-import { useState } from 'react'
+import { Component, useState } from 'react'
 import { Form, Label, TextField, FormError, DateField, Submit } from '@redwoodjs/forms'
 import { useStripe, useElements, IbanElement, CardElement, PaymentElement } from '@stripe/react-stripe-js';
 
@@ -51,6 +51,12 @@ const GET_CLIENT_SECRET = gql`
     }
   }
 `
+
+const formatDate = (value) => {
+  if (value) {
+    return new Date(value).toISOString().substring(0,10)
+  }
+}
 
 const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
   const [createSubscription, {loading, error}] = useMutation(CREATE_SUBSCRIPTION, {
@@ -137,7 +143,7 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
     location : l,
     meals : parseInt(m),
     service : s,
-    startedAt : '',
+    startedAt : Date(Date.now()),
     card: '',
     iban: ''
   })
@@ -281,7 +287,7 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
                   <Label className="font-medium block">
                     Date de démarrage
                   </Label>
-                  <DateField name="startedAt" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                  <DateField name="startedAt" defaultValue={formatDate(subscription?.startedAt)} className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
 
                   <Label className="font-medium block mt-6">Carte bancaire</Label>
                   <CardElement placeholder="4242424242424242" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>

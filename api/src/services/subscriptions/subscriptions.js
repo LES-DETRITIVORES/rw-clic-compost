@@ -1,5 +1,4 @@
 import { db } from 'src/lib/db'
-import { sendEmail } from 'src/lib/email'
 
 export const subscriptions = () => {
   return db.subscription.findMany()

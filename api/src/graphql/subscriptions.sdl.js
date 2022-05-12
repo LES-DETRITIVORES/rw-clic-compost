@@ -61,7 +61,4 @@ export const schema = gql`
     deleteSubscription(id: Int!): Subscription! @requireAuth
     emailSubscription(id: Int!): String! @requireAuth
   }
-
-  
-
 `
