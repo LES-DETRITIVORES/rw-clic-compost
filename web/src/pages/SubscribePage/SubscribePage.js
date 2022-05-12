@@ -152,7 +152,15 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
     }})
     console.log(JSON.stringify(customer))
 
+    /* Get customer secret */
+    var client_secret = await getClientSecret({ variables: {
+      query: customer.data.customer.id
+      }
+    })
+    console.log(JSON.stringify(client_secret.data.customer.secret))
+
     /* Add card to customer */
+    /*
     const card = await createCard({ variables: {
       input: {
         customer: customer.data.customer.id,
@@ -163,13 +171,38 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
       }
     }})
     console.log(JSON.stringify(card))
+    */
 
-    /* Add IBAN to customer */
-    const client_secret = await getClientSecret({ variables: {
+    const card = await stripe.confirmCardSetup(client_secret.data.customer.secret, {
+      payment_method: {
+        card: elements.getElement(CardElement),
+        billing_details: {
+          name: subscription.firstname + ' ' + subscription.lastname.toUpperCase(),
+          email: subscription.email,
+        },
+      }
+    });
+
+    if (card.error) {
+      // setError(`Payment failed ${payload.error.message}`);
+      // setProcessing(false);
+      // Show error to your customer.
+      console.log("Error card:", card.error.message);
+    } else {
+      // setError(null);
+      // setProcessing(false);
+      // setSucceeded(true);
+      console.log("Succeed card:", card.setupIntent.payment_method)
+    }
+
+    /* Get customer secret */
+    client_secret = await getClientSecret({ variables: {
       query: customer.data.customer.id
       }
     })
     console.log(JSON.stringify(client_secret.data.customer.secret))
+
+    /* Add IBAN to customer */
     const sepa = await stripe.confirmSepaDebitSetup(client_secret.data.customer.secret, {
       payment_method: {
         sepa_debit: elements.getElement(IbanElement),
@@ -192,7 +225,7 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
     var sub = subscription
     sub.startedAt = data.startedAt
     sub.customer = customer.data.customer.id
-    sub.card = card.data.card.id
+    sub.card = card.setupIntent.payment_method
     sub.iban = sepa.setupIntent.payment_method
     setSubscription(sub)
     sub = await createSubscription({ variables: { input: subscription } })
@@ -250,10 +283,9 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
                   </Label>
                   <DateField name="startedAt" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
 
-                  <Label className="font-medium block mt-6">
-                    Carte bancaire
-                  </Label>
-                  <TextField name="card" placeholder="4242424242424242" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                  <Label className="font-medium block mt-6">Carte bancaire</Label>
+                  <CardElement placeholder="4242424242424242" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+
                   <Label className="font-medium block mt-6">IBAN</Label>
                   <IbanElement placeholder="FR1420041010050500013M02606" options={IBAN_ELEMENT_OPTIONS} className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                 </div>

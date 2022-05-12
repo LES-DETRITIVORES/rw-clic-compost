@@ -38,12 +38,12 @@ export const addSEPAMethod = async ({ name, email, iban }) => {
       email: email
     }
   });
-  
+
   const paymentAttach = await stripe.paymentMethods.attach(
     paymentMethod.id,
     {customer: 'cus_LY4LysEO2dG6NP'}
   );
-  
+
   return {
     name: name,
     email: email,
@@ -54,7 +54,7 @@ export const addSEPAMethod = async ({ name, email, iban }) => {
 
 export const getClientSecret = async ({ query }) => {
   const setupIntent = await stripe.setupIntents.create({
-    payment_method_types: ['sepa_debit'],
+    payment_method_types: ['card', 'sepa_debit'],
     customer: query,
   });
 
@@ -75,7 +75,7 @@ export const addPayment = async ({ query }) => {
     payment_method: 'pm_1KtHvzDczmPm9BYQ4FcSDx6Y', // SEPA
     receipt_email: 'admin@les-detritivores.co'
   })
-  
+
   return {
     query,
     id: paymentIntent.id,
