@@ -52,20 +52,6 @@ const GET_CLIENT_SECRET = gql`
   }
 `
 
-const formatDate = (value) => {
-  if (value) {
-    return new Date(value).toISOString().substring(0,10)
-  }
-}
-
-function deliverDate(date, delay) {
-  var nextDate = new Date(date);
-  nextDate.setDate(nextDate.getDate() + delay);
-  // return next day if date on weekend
-  if (nextDate.getDay() == 6 || nextDate.getDay() == 0) { return deliverDate(nextDate, 1) }
-  return nextDate;
-}
-
 const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
   const [createSubscription, {loading, error}] = useMutation(CREATE_SUBSCRIPTION, {
     onCompleted: (result) => {
@@ -142,6 +128,22 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
     style: IBAN_STYLE
   };
 
+  const [deliverDate, setDeliverDate] = useState(delayDate(Date(Date.now()), 6))
+
+  const formatDate = (value) => {
+    if (value) {
+      return new Date(value).toISOString().substring(0,10)
+    }
+  }
+
+  function delayDate(date, delay) {
+    var nextDate = new Date(date);
+    nextDate.setDate(nextDate.getDate() + delay);
+    // return next day if date on weekend
+    if (nextDate.getDay() == 6 || nextDate.getDay() == 0) { return delayDate(nextDate, 1) }
+    return nextDate;
+  }
+
   const [subscription, setSubscription] = useState({
     firstname : f,
     lastname : n,
@@ -151,7 +153,7 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
     location : l,
     meals : parseInt(m),
     service : s,
-    startedAt : deliverDate(Date(Date.now()), 6),
+    startedAt : '',
     card: '',
     iban: ''
   })
@@ -264,7 +266,7 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
           <Link className="text-white" to={routes.offer({l:l, m:m, f:f, n:n, c:c, e:e, p:p, s:s})}>&lt; Changer d'offre</Link>
         </div>
         <div className="font-bold text-center text-3xl md:text-5xl mt-16 text-black w-min mx-auto -rotate-2">
-          <span className="bg-yellow-400 p-1 block w-min">Commandez&nbsp;aujourd'hui,</span>
+          <span className="bg-yellow-400 p-1 block w-min">Commencez&nbsp;aujourd'hui,</span>
           <span className="bg-yellow-400 p-1 block w-min mt-1">Payez&nbsp;plus&nbsp;tard&nbsp;!</span>
         </div>
         <div className="container mx-auto max-w-6xl font-sans">
@@ -295,7 +297,7 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
                   <Label className="font-medium block">
                     Date de démarrage
                   </Label>
-                  <DateField name="startedAt" defaultValue={formatDate(subscription?.startedAt)} className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                  <DateField name="startedAt" onChange={(date) => setDeliverDate(delayDate(new Date(date.target.value),0))} min={formatDate(delayDate(new Date(Date.now()),6))} value={formatDate(deliverDate)} className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
 
                   <Label className="font-medium block mt-6">Carte bancaire</Label>
                   <CardElement placeholder="4242424242424242" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
