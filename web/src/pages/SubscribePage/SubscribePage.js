@@ -58,6 +58,14 @@ const formatDate = (value) => {
   }
 }
 
+function deliverDate(date, delay) {
+  var nextDate = new Date(date);
+  nextDate.setDate(nextDate.getDate() + delay);
+  // return next day if date on weekend
+  if (nextDate.getDay() == 6 || nextDate.getDay() == 0) { return getDeliverDate(nextDate, 1) }
+  return nextDate;
+}
+
 const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
   const [createSubscription, {loading, error}] = useMutation(CREATE_SUBSCRIPTION, {
     onCompleted: (result) => {
@@ -143,7 +151,7 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
     location : l,
     meals : parseInt(m),
     service : s,
-    startedAt : Date(Date.now()),
+    startedAt : deliverDate(Date(Date.now()), 6),
     card: '',
     iban: ''
   })
