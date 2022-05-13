@@ -11,28 +11,45 @@ const Offers = ({meals, onChange, defaultValue}) => {
   const WEIGHT_BY_LITER = 1/3
   const LITER_BY_MEAL = WEIGHT_BY_MEAL/WEIGHT_BY_LITER+0.08 // 0.42 + 0.08 = 0.5
 
+  function bestOffer(items) {
+    // filter offers with qty
+    // sort offers by price
+    // return best offer
+    return items.filter(item => item.qty > 0).sort(
+      function (a, b) {
+        return a.price - b.price;  
+      }
+    )[0].service;
+  }
+
   const offers = [
     {
-      name : 'Bioseau',
-      liter : 22,
-      qty : Math.round(meals*LITER_BY_MEAL/22),
-      dimensions : "29 x 42 x 28 cm (l x L x h)",
+      name: 'Bioseau',
+      liter: 22,
+      dimensions: "29 x 42 x 28 cm (l x L x h)",
+      get qty() {return Math.round(meals*LITER_BY_MEAL/this.liter)},
+      get price() {return  parseFloat((this.qty*this.liter*PRICE_BY_LITER).toFixed(2))},
+      get service() {return this.qty + 'x ' + this.name + ' ' + this.liter +'L - ' + this.price + '€ par semaine'}
     },
     {
       name : 'Bac roulant',
       liter : 120,
-      qty : Math.round(meals*LITER_BY_MEAL/120),
       dimensions : "50,5 x p 55,5 x h 100,5 cm (l x L x h)",
+      get qty() {return Math.round(meals*LITER_BY_MEAL/this.liter)},
+      get price() {return  parseFloat((this.qty*this.liter*PRICE_BY_LITER).toFixed(2))},
+      get service() {return this.qty + 'x ' + this.name + ' ' + this.liter +'L - ' + this.price + '€ par semaine'}
     },
     {
       name : 'Caisse-palette',
       liter : 500,
-      qty :  Math.round(meals*LITER_BY_MEAL/500),
       dimensions : "79,5 x 119,5 x 79 cm (l x L x h)",
+      get qty() {return Math.round(meals*LITER_BY_MEAL/this.liter)},
+      get price() {return  parseFloat((this.qty*this.liter*PRICE_BY_LITER).toFixed(2))},
+      get service() {return this.qty + 'x ' + this.name + ' ' + this.liter +'L - ' + this.price + '€ par semaine'}
     },
   ]
   
-  const [service, setService] = defaultValue ? useState(defaultValue) : useState(offers[0].qty + 'x ' + offers[0].name + ' ' + offers[0].liter +'L - ' + (offers[0].qty*offers[0].liter*PRICE_BY_LITER).toFixed(2) + '€ par semaine')
+  const [service, setService] = defaultValue ? useState(defaultValue) : useState(bestOffer(offers))
   const formService = (data) => {
     setService(data.service)
   }
@@ -44,7 +61,7 @@ const Offers = ({meals, onChange, defaultValue}) => {
           offers.map((offer) => (
             <>
             {offer.qty > 0 ?
-              <RadioGroup.Option value={offer.qty + 'x ' + offer.name + ' ' + offer.liter +'L - ' + (offer.qty*offer.liter*PRICE_BY_LITER).toFixed(2) + '€ par semaine'} className={({ active, checked }) =>
+              <RadioGroup.Option value={offer.service} className={({ active, checked }) =>
                 `${
                   active
                     ? 'ring-2 ring-offset-2 ring-offset-orange-300 ring-white ring-opacity-60'
@@ -75,7 +92,7 @@ const Offers = ({meals, onChange, defaultValue}) => {
                           }`}
                         >
                         <span className="block">{offer.dimensions}</span>
-                        <span className="block font-bold">{(offer.qty*offer.liter*PRICE_BY_LITER).toFixed(2)}€ par semaine</span>
+                        <span className="block font-bold">{offer.price.toFixed(2)}€ HT / semaine ({(offer.price/meals).toFixed(2)} € HT / couvert)</span>
                         </RadioGroup.Description>
                       </div>
                     </div>

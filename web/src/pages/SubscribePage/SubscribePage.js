@@ -5,6 +5,7 @@ import { toast, Toaster } from '@redwoodjs/web/toast'
 import { Component, useState } from 'react'
 import { Form, Label, TextField, FormError, DateField, Submit } from '@redwoodjs/forms'
 import { useStripe, useElements, IbanElement, CardElement, PaymentElement } from '@stripe/react-stripe-js';
+import { Tab } from '@headlessui/react'
 
 const CREATE_SUBSCRIPTION = gql`
   mutation CreateSubscriptionMutation($input: CreateSubscriptionInput!) {
@@ -280,7 +281,8 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
                   <li><span className="font-bold">Tél : </span><span className="">{subscription.phone}</span></li>
                   <li><span className="font-bold">Mél : </span><span className="">{subscription.email}</span></li>
                   <li><span className="font-bold">Adresse de collecte : </span><span className="">{subscription.location}</span></li>
-                  <li><span className="font-bold">Prestation : </span><span className="lowercase">Collecte et compostage de {subscription.service}</span></li>
+                  <li><span className="font-bold">Prestation : </span><span className="">Collecte et compostage des biodéchets alimentaires</span></li>
+                  <li><span className="font-bold">Offre : </span><span className="">{subscription.service}</span></li>
                 </ul>
                 {/* Display mandate acceptance text. */}
                 <hr className="mt-2"/>
@@ -299,11 +301,26 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
                   </Label>
                   <DateField name="startedAt" onChange={(date) => setDeliverDate(delayDate(new Date(date.target.value),0))} min={formatDate(delayDate(new Date(Date.now()),6))} value={formatDate(deliverDate)} className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
 
-                  <Label className="font-medium block mt-6">Carte bancaire</Label>
-                  <CardElement placeholder="4242424242424242" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                  <Label className="font-medium block mt-6">
+                    Mode de réglement
+                  </Label>
 
-                  <Label className="font-medium block mt-6">IBAN</Label>
-                  <IbanElement placeholder="FR1420041010050500013M02606" options={IBAN_ELEMENT_OPTIONS} className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                  <Tab.Group defaultIndex={1}>
+                    <Tab.List>
+                      <Tab className={`p-6 w-1/2 border-2 border-gray-500 rounded-md hover:border-yellow-500 ${({ selected }) => 
+                        selected ? 'bg-yellow-400 font-bold' : 'bg-none'}`}>Carte bancaire</Tab>
+                      <Tab className={`p-6 w-1/2 border-2 border-gray-500 rounded-md hover:border-yellow-500 ${({ selected }) =>
+                        selected ? 'bg-yellow-400 font-bold' : 'bg-none'}`}>IBAN</Tab>
+                    </Tab.List>
+                    <Tab.Panels className="mt-3">
+                      <Tab.Panel>
+                        <CardElement placeholder="4242424242424242" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                      </Tab.Panel>
+                      <Tab.Panel>
+                        <IbanElement placeholder="FR1420041010050500013M02606" options={IBAN_ELEMENT_OPTIONS} className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>  
+                      </Tab.Panel>
+                    </Tab.Panels>
+                  </Tab.Group>
                 </div>
                 <div>
                   <Submit

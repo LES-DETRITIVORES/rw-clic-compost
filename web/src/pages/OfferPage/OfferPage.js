@@ -12,18 +12,19 @@ const OfferPage = ({l, m, s, f, n, c, e, p}) => {
   const [service, setService] = useState(s)
 
   const offerSubmit = (data) => {
-    const sub = {
-      f : data.firstname,
-      n : data.lastname,
-      c : data.company,
-      e : data.email,
-      p : data.phone,
-      l : location,
-      m : meals,
-      s : service,
-    }
-    console.log(JSON.stringify(sub))
-    navigate(routes.subscribe(sub))
+    var subscription =
+      {
+        f : data.firstname,
+        n : data.lastname,
+        c : data.company,
+        e : data.email,
+        p : data.phone,
+        l : location,
+        m : meals,
+        s : service,
+      }
+    console.log(JSON.stringify(subscription))
+    navigate(routes.subscribe(subscription))
   }
   
   return (
@@ -76,8 +77,8 @@ const OfferPage = ({l, m, s, f, n, c, e, p}) => {
                 </div>
                 <div>
                     <Submit
-                      className={`sm:text-sm md:text-lg uppercase font-bold ${service ? 'bg-orange-600' : 'bg-gray-600'}  rounded-b-md p-4 text-white w-full shadow-lg`}
-                      disabled={!service}>
+                      className={`sm:text-sm md:text-lg uppercase font-bold ${service && location && meals ? 'bg-orange-600' : 'bg-gray-600'}  rounded-b-md p-4 text-white w-full shadow-lg`}
+                      disabled={!service || !location || !meals}>
                         S'inscrire gratuitement
                     </Submit>
                 </div>
