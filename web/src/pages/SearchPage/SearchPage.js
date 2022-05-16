@@ -34,18 +34,30 @@ const SearchPage = ({l, m}) => {
           <div></div>
           <Form onSubmit={searchSubmit}>
             <div className="bg-white rounded-t-lg shadow-lg p-8 mt-8 text-center">
-              <Label className="font-medium block">
+              <Label 
+                name="location"
+                className="font-medium block">
                 Adresse à trier
               </Label>
-              <LocationField value={location} onChange={setLocation} className="block text-center w-full rounded-md bg-gray-200 py-2 pl-3 pr-10 text-sm outline-green-800 leading-5 text-gray-900 focus:ring-0"/>
+              <LocationField 
+                name="location"
+                value={location} 
+                onChange={setLocation} 
+                className="block text-center w-full rounded-md bg-gray-200 py-2 pl-3 pr-10 text-sm outline-green-800 leading-5 text-gray-900 focus:ring-0"/>
               {
               location &&
                   <GeocoderCell query={location} />
               }
-              <Label className="font-medium mt-6 block">
+              <Label 
+                name="meals"
+                className="font-medium mt-6 block">
                 Couverts servis par semaine
               </Label>
-              <NumberField onChange={(e) => setMeals(e.target.value)} value={meals} name="meals" className="block w-full text-center bg-gray-200 rounded-md p-2 text-sm outline-green-800" />
+              <NumberField 
+                name="meals" 
+                onChange={(e) => setMeals(e.target.value)} 
+                value={meals} 
+                className="block w-full text-center bg-gray-200 rounded-md p-2 text-sm outline-green-800" />
             </div>
             <div>
                 <Submit

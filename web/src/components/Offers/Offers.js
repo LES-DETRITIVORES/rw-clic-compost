@@ -81,7 +81,7 @@ const Offers = ({meals, onChange, defaultValue}) => {
                             checked ? 'text-white' : 'text-gray-900'
                           }`}
                         >
-                        {offer.qty}x {offer.name} {offer.liter}L
+                          {offer.qty}x {offer.name} {offer.liter}L
                         </RadioGroup.Label>
                         <RadioGroup.Description
                           as="span"
@@ -89,8 +89,8 @@ const Offers = ({meals, onChange, defaultValue}) => {
                             checked ? 'text-green-100' : 'text-gray-500'
                           }`}
                         >
-                        <span className="block">{offer.dimensions}</span>
-                        <span className="block font-bold">{offer.price.toFixed(2)}€ HT / semaine ({(offer.price/meals).toFixed(2)} € HT / couvert)</span>
+                          <span className="block">{offer.dimensions}</span>
+                          <span className="block font-bold">{offer.price.toFixed(2)}€ HT / semaine ({(offer.price/meals).toFixed(2)} € HT / couvert)</span>
                         </RadioGroup.Description>
                       </div>
                     </div>
