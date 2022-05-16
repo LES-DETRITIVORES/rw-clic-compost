@@ -2,9 +2,9 @@ import { navigate, Link, routes } from '@redwoodjs/router'
 import { MetaTags, useMutation } from '@redwoodjs/web'
 import { useLazyQuery } from '@apollo/client'
 import { toast, Toaster } from '@redwoodjs/web/toast'
-import { Component, useState } from 'react'
+import { useState } from 'react'
 import { Form, Label, TextField, FormError, DateField, Submit } from '@redwoodjs/forms'
-import { useStripe, useElements, IbanElement, CardElement, PaymentElement } from '@stripe/react-stripe-js';
+import { useStripe, useElements, IbanElement, CardElement } from '@stripe/react-stripe-js';
 import { Tab } from '@headlessui/react'
 
 function classNames(...classes) {
@@ -36,14 +36,6 @@ const SMS_SUBSCRIPTION = gql`
 const CREATE_CUSTOMER = gql`
   mutation CreateCustomerMutation($input: CreateCustomerInput!) {
     customer: createCustomer(input: $input) {
-      id
-    }
-  }
-`
-
-const CREATE_CARD = gql`
-  mutation CreateCardMutation($input: CreateCardInput!) {
-    card: createCard(input: $input) {
       id
     }
   }
@@ -90,17 +82,9 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
     },
   })
 
-  const [createCard] = useMutation(CREATE_CARD, {
-    onCompleted: (result) => {
-      //console.log(JSON.stringify(result.card))
-      toast.success('Carte bancaire ajoutée.')
-    },
-  })
-
   const [getClientSecret] = useLazyQuery(GET_CLIENT_SECRET, {
     onCompleted: (result) => {
-      //console.log(JSON.stringify(result))
-      toast.success('Compte bancaire ajouté.')
+      console.log(JSON.stringify(result))
     },
   })
 
@@ -164,6 +148,9 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
   })
 
   const subscriptionSubmit = async (data) => {
+    let sub = subscription
+    sub.startedAt = data.startedAt
+    
     /* Save customer */
     const customer = await createCustomer({ variables: {
       input: {
@@ -172,82 +159,77 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
       }
     }})
     console.log(JSON.stringify(customer))
+    sub.customer = customer.data.customer.id
 
-    /* Get customer secret */
-    var client_secret = await getClientSecret({ variables: {
-      query: customer.data.customer.id
+
+    /* Add CARD payment */
+    if (elements.getElement(CardElement)) {
+      /* Get customer secret */
+      var client_secret = await getClientSecret({ variables: {
+        query: customer.data.customer.id
+        }
+      })
+      console.log(JSON.stringify(client_secret.data.customer.secret))
+
+      /* Add card to customer */
+      const card = await stripe.confirmCardSetup(client_secret.data.customer.secret, {
+        payment_method: {
+          card: elements.getElement(CardElement),
+          billing_details: {
+            name: subscription.firstname + ' ' + subscription.lastname.toUpperCase(),
+            email: subscription.email,
+          },
+        }
+      });
+
+      if (card.error) {
+        // setError(`Payment failed ${payload.error.message}`);
+        // setProcessing(false);
+        // Show error to your customer.
+        console.log("Error card:", card.error.message);
+      } else {
+        // setError(null);
+        // setProcessing(false);
+        // setSucceeded(true);
+        console.log("Succeed card:", card.setupIntent.payment_method)
+        toast.success('Carte bancaire ajoutée.')
+        sub.card = card.setupIntent.payment_method
       }
-    })
-    console.log(JSON.stringify(client_secret.data.customer.secret))
-
-    /* Add card to customer */
-    /*
-    const card = await createCard({ variables: {
-      input: {
-        customer: customer.data.customer.id,
-        number: data.card,
-        exp_month: 4,
-        exp_year: 2023,
-        cvc: '314'
-      }
-    }})
-    console.log(JSON.stringify(card))
-    */
-
-    const card = await stripe.confirmCardSetup(client_secret.data.customer.secret, {
-      payment_method: {
-        card: elements.getElement(CardElement),
-        billing_details: {
-          name: subscription.firstname + ' ' + subscription.lastname.toUpperCase(),
-          email: subscription.email,
-        },
-      }
-    });
-
-    if (card.error) {
-      // setError(`Payment failed ${payload.error.message}`);
-      // setProcessing(false);
-      // Show error to your customer.
-      console.log("Error card:", card.error.message);
-    } else {
-      // setError(null);
-      // setProcessing(false);
-      // setSucceeded(true);
-      console.log("Succeed card:", card.setupIntent.payment_method)
     }
 
-    /* Get customer secret */
-    client_secret = await getClientSecret({ variables: {
-      query: customer.data.customer.id
-      }
-    })
-    console.log(JSON.stringify(client_secret.data.customer.secret))
 
-    /* Add IBAN to customer */
-    const sepa = await stripe.confirmSepaDebitSetup(client_secret.data.customer.secret, {
-      payment_method: {
-        sepa_debit: elements.getElement(IbanElement),
-        billing_details: {
-          name: subscription.firstname + ' ' + subscription.lastname.toUpperCase(),
-          email: subscription.email,
-        },
+    /* Add IBAN payment */
+    if (elements.getElement(IbanElement)) {
+      /* Get customer secret */
+      client_secret = await getClientSecret({ variables: {
+        query: customer.data.customer.id
+        }
+      })
+      console.log(JSON.stringify(client_secret.data.customer.secret))
+
+      /* Add IBAN to customer */
+      const sepa = await stripe.confirmSepaDebitSetup(client_secret.data.customer.secret, {
+        payment_method: {
+          sepa_debit: elements.getElement(IbanElement),
+          billing_details: {
+            name: subscription.firstname + ' ' + subscription.lastname.toUpperCase(),
+            email: subscription.email,
+          },
+        }
+      });
+      if (sepa.error) {
+        // Show error to your customer.
+        console.log("Error SEPA:", sepa.error.message);
+      } else {
+        console.log("Succeed SEPA:", sepa.setupIntent.payment_method)
+        sub.iban = sepa.setupIntent.payment_method
+        toast.success('Compte bancaire ajouté.')
+        // Show a confirmation message to your customer.
+        // The SetupIntent is in the 'succeeded' state.
       }
-    });
-    if (sepa.error) {
-      // Show error to your customer.
-      console.log("Error SEPA:", sepa.error.message);
-    } else {
-      console.log("Succeed SEPA:", sepa.setupIntent.payment_method)
-      // Show a confirmation message to your customer.
-      // The SetupIntent is in the 'succeeded' state.
     }
 
     /* Save subscription */
-    var sub = subscription
-    sub.startedAt = data.startedAt
-    sub.customer = customer.data.customer.id
-    sub.card = card.setupIntent.payment_method
-    sub.iban = sepa.setupIntent.payment_method
     setSubscription(sub)
     sub = await createSubscription({ variables: { input: subscription } })
     console.log(JSON.stringify(sub))
@@ -256,8 +238,8 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
     emailSubscription({ variables: { id: sub.data.subscription.id } })
 
     /* Send SMS subscription */
-    console.log(JSON.stringify(subscription))
-    SMSSubscription({ variables: { input: {text: "Abonnement prêt", from:'+1 207 705 5921', 'to': subscription.phone }} })
+    // console.log(JSON.stringify(subscription))
+    //SMSSubscription({ variables: { input: {text: "Abonnement prêt", from:'+1 207 705 5921', 'to': subscription.phone }} })
 
     navigate(routes.confirm())
   }
@@ -268,7 +250,7 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
       { subscription &&
       <div>
         <div>
-          <Link className="text-white" to={routes.offer({l:l, m:m, f:f, n:n, c:c, e:e, p:p, s:s})}>&lt; Changer d'offre</Link>
+          <Link className="text-white" to={routes.offer({l:l, m:m, f:f, n:n, c:c, e:e, p:p, s:s})}>&lt; Changer d'Offre</Link>
         </div>
         <div className="font-bold text-center text-3xl md:text-5xl mt-16 text-black w-min mx-auto -rotate-2">
           <span className="bg-yellow-400 p-1 block w-min">Commencez&nbsp;aujourd'hui,</span>
@@ -331,7 +313,7 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
                     </Tab.List>
                     <Tab.Panels className="mt-3">
                       <Tab.Panel>
-                        <CardElement placeholder="4242424242424242" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                        <CardElement options={{hidePostalCode:true}} placeholder="4242424242424242" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                       </Tab.Panel>
                       <Tab.Panel>
                         <IbanElement placeholder="FR1420041010050500013M02606" options={IBAN_ELEMENT_OPTIONS} className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>  

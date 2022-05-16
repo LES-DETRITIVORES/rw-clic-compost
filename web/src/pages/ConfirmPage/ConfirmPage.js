@@ -1,8 +1,4 @@
-import { navigate, routes } from '@redwoodjs/router'
-import { useState } from 'react'
 import { MetaTags } from '@redwoodjs/web'
-import { Form, Label, NumberField, Submit } from '@redwoodjs/forms'
-import LocationField from 'src/components/Location/LocationField'
 
 const ConfirmPage = () => {
   const logoUrl = "https://ik.imagekit.io/dttv/logo_k7opAuX3K.png?ik-sdk-version=javascript-1.4.3&updatedAt=1652281391081"
@@ -20,8 +16,13 @@ const ConfirmPage = () => {
           <span className="bg-green-900 p-1 block w-min">Vous&nbsp;êtes&nbsp;formidable&nbsp;!</span>
         </div>
         <div className="container mx-auto max-w-xl font-sans bg-white rounded-lg shadow-lg p-8 mt-8 text-center">  
-          <p className="mt-6">Votre abonnement est prêt, nous vous livrerons bientôt vos bacs pour débuter le tri. N'hésitez pas à nous contacter pour toutes questions.</p>
-          <p className='text-center mt-3'>L'équipe LES DETRITIVORES - bonjour@les-detritivores.co</p>
+          <p className="mt-6 font-bold text-lg">Votre contrat est prêt :)</p> 
+          <p className="mt-6 text-left">1) Un mél récapitulatif vient de vous être envoyé.</p>
+          <p className="text-left">2) Vos contenants biodéchets seront bientôt livrés pour débuter le tri.</p>
+          <p className="text-left">3) Nous sommes présents pour répondre à toutes vos questions.</p>
+          <p className='text-center mt-6 font-bold'>L'équipe LES DETRITIVORES</p>
+          <p className='text-center mt-6'>65 quai de Brazza 33100 Bordeaux</p>
+          <p><a className="underline" href="mailto:bonjour@les-detritivores.co">bonjour@les-detritivores.co</a> | 05 56 67 14 47</p>
           <img className="w-72 p-6 mx-auto" src={logoUrl} />
         </div>
       </div>

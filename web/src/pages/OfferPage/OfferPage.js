@@ -31,7 +31,7 @@ const OfferPage = ({l, m, s, f, n, c, e, p}) => {
       <MetaTags title="Offer" description="Offer page" />
       <div>
         <div>
-          <Link className="text-white" to={routes.search({l:location, m:meals})}>&lt; {location} - {meals} repas par semaine</Link>
+          <Link className="text-white" to={routes.search({l:location, m:meals})}>&lt; Changer d'adresse</Link>
         </div>
         <div className="font-bold text-center text-3xl md:text-5xl mt-16 text-white w-min mx-auto -rotate-2">
           <span className="bg-orange-600 p-1 block w-min">Choisissez,</span> 
