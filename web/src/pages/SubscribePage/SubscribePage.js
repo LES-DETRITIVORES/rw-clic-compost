@@ -307,10 +307,10 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
 
                   <Tab.Group defaultIndex={1}>
                     <Tab.List className="flex space-x-3">
-                      <Tab className={`p-3 w-1/2 border-2 border-gray-500 rounded-md hover:border-yellow-500 outline-none ${({ selected }) => 
-                        selected ? 'bg-yellow-400 font-bold' : 'bg-none'}`}>Carte bancaire</Tab>
-                      <Tab className={`p-3 w-1/2 border-2 border-gray-500 rounded-md hover:border-yellow-500 outline-none ${({ selected }) =>
-                        selected ? 'bg-yellow-400 font-bold' : 'bg-none'}`}>IBAN</Tab>
+                      <Tab className={`p-3 w-1/2 border-2 border-gray-500 rounded-md hover:border-yellow-500 outline-none 
+                      ${({ selected }) => selected ? 'bg-yellow-400 font-bold' : 'bg-none'}`}>Carte bancaire</Tab>
+                      <Tab className={`p-3 w-1/2 border-2 border-gray-500 rounded-md hover:border-yellow-500 outline-none 
+                      ${({ selected }) => selected ? 'bg-yellow-400 font-bold' : 'bg-none'}`}>IBAN</Tab>
                     </Tab.List>
                     <Tab.Panels className="mt-3">
                       <Tab.Panel>

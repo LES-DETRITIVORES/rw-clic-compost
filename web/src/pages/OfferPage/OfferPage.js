@@ -2,7 +2,6 @@ import { navigate, Link, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 import { useState } from 'react'
 import { Form, Label, TextField, EmailField, TelField, Submit } from '@redwoodjs/forms'
-import GeocoderCell from 'src/components/Location/GeocoderCell'
 import Offers from 'src/components/Offers'
 
 
@@ -39,12 +38,6 @@ const OfferPage = ({l, m, s, f, n, c, e, p}) => {
           <span className="bg-orange-600 p-1 block w-min mt-1">On&nbsp;s'occupe&nbsp;de&nbsp;vous&nbsp;!</span>
         </div>
         <div className="container mx-auto max-w-3xl font-sans">
-          {/*
-          location &&
-            <div className="text-center bg-white rounded-lg shadow-lg p-4 mt-8 text-lg">
-              <GeocoderCell query={location}/>
-            </div>
-          */}
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2"> 
             <div>
               <div className="mt-8 text-lg">

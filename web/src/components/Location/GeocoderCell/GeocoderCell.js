@@ -34,11 +34,10 @@ export const Success = ({ geocoder }) => {
     <li>Distance : {Math.round(distance)} km from HQ (65 quai de Brazza 33100 Bordeaux)</li>
   </ul>
   */
-  <>
-    {distance < MAX_DISTANCE
-      ? <p className="text-green-600">Bravo, vos biodéchets sont compostables localement :)</p>
-      : <p className="text-red-600">Désolé, nous n'avons pas encore de solution locale :(</p>
-    }
-  </>
+    <>
+      {(distance > MAX_DISTANCE) &&
+        <div className="text-center mt-3 text-sm text-red-600">Désolé, nous n'avons pas encore de solution hors Gironde :(</div>  
+      }
+    </>
   )
 }

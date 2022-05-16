@@ -3,11 +3,11 @@ import { useState } from 'react'
 import { MetaTags } from '@redwoodjs/web'
 import { Form, Label, NumberField, Submit } from '@redwoodjs/forms'
 import LocationField from 'src/components/Location/LocationField'
+import GeocoderCell from 'src/components/Location/GeocoderCell'
 
 const SearchPage = ({l, m}) => {
   const [location, setLocation] = useState(l)
   const [meals, setMeals] = useState(m)
-  const [service, setService] = useState()
 
   const logger = (log) => {
     console.log(log)
@@ -15,7 +15,7 @@ const SearchPage = ({l, m}) => {
 
   const searchSubmit = (data) => {
     console.log(JSON.stringify(data))
-    // setLocation(selected)
+    // setLocation(data.location)
     // setMeals(data.meals)
     navigate(routes.offer({l:location, m:meals}))
   }
@@ -27,7 +27,7 @@ const SearchPage = ({l, m}) => {
       <div className="basis-auto md:basis-1/2"></div>
       <div className="basis-full md:basis-2/2">
         <div className="font-bold text-center text-3xl md:text-5xl mt-16 text-white w-min mx-auto -rotate-2">
-          <span className="bg-green-900 p-1 block w-min">Restaurateurs, </span> 
+          <span className="bg-green-900 p-1 block w-min">Restaurateurs&nbsp;, </span> 
           <span className="bg-green-900 p-1 block w-min mt-1">Prêts&nbsp;à&nbsp;trier&nbsp;vos&nbsp;biodéchets&nbsp;?</span>
         </div>
         <div className="container mx-auto max-w-xl font-sans">
@@ -38,6 +38,10 @@ const SearchPage = ({l, m}) => {
                 Adresse à trier
               </Label>
               <LocationField value={location} onChange={setLocation} className="block text-center w-full rounded-md bg-gray-200 py-2 pl-3 pr-10 text-sm outline-green-800 leading-5 text-gray-900 focus:ring-0"/>
+              {
+              location &&
+                  <GeocoderCell query={location} />
+              }
               <Label className="font-medium mt-6 block">
                 Couverts servis par semaine
               </Label>
