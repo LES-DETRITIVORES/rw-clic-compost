@@ -15,8 +15,6 @@ const SearchPage = ({l, m}) => {
 
   const searchSubmit = (data) => {
     console.log(JSON.stringify(data))
-    // setLocation(data.location)
-    // setMeals(data.meals)
     navigate(routes.offer({l:location, m:meals}))
   }
 
@@ -32,41 +30,41 @@ const SearchPage = ({l, m}) => {
         </div>
         <div className="container mx-auto max-w-xl font-sans">
           <div></div>
-          <Form onSubmit={searchSubmit}>
-            <div className="bg-white rounded-t-lg shadow-lg p-8 mt-8 text-center">
-              <Label 
-                name="location"
-                className="font-medium block">
-                Adresse à trier
-              </Label>
-              <LocationField 
-                name="location"
-                value={location} 
-                onChange={setLocation} 
-                className="block text-center w-full rounded-md bg-gray-200 py-2 pl-3 pr-10 text-sm outline-green-800 leading-5 text-gray-900 focus:ring-0"
-              />
-              {
-              location &&
-                  <GeocoderCell query={location} />
-              }
-              <Label 
-                name="meals"
-                className="font-medium mt-6 block">
-                Couverts servis par semaine
-              </Label>
-              <NumberField 
-                name="meals" 
-                onChange={(e) => setMeals(e.target.value)} 
-                value={meals} 
-                className="block w-full text-center bg-gray-200 rounded-md p-2 text-sm outline-green-800" 
-              />
-            </div>
-            <div>
-                <Submit
-                  disabled={!location || !meals}
-                  className={`sm:text-sm md:text-lg uppercase font-bold ${(location && meals) ? 'bg-green-800' : 'bg-gray-600'} rounded-b-md p-4 text-white w-full shadow-lg`}>Chercher une solution locale</Submit>
-            </div>
-          </Form>
+            <Form onSubmit={searchSubmit}>
+              <div className="bg-white rounded-t-lg shadow-lg p-8 mt-8 text-center">
+                <Label 
+                  name="location"
+                  className="font-medium block">
+                  Adresse à trier
+                </Label>
+                <LocationField 
+                  name="location"
+                  value={location} 
+                  onChange={setLocation} 
+                  className="block text-center w-full rounded-md bg-gray-200 py-2 pl-3 pr-10 text-sm outline-green-800 leading-5 text-gray-900 focus:ring-0"
+                />
+                {
+                location &&
+                    <GeocoderCell query={location} />
+                }
+                <Label 
+                  name="meals"
+                  className="font-medium mt-6 block">
+                  Couverts servis par semaine
+                </Label>
+                <NumberField 
+                  name="meals" 
+                  onChange={(e) => setMeals(e.target.value)} 
+                  value={meals} 
+                  className="block w-full text-center bg-gray-200 rounded-md p-2 text-sm outline-green-800" 
+                />
+              </div>
+              <div>
+                  <Submit
+                    disabled={!location || !meals}
+                    className={`sm:text-sm md:text-lg uppercase font-bold ${(location && meals) ? 'bg-green-800' : 'bg-gray-600'} rounded-b-md p-4 text-white w-full shadow-lg`}>Chercher une solution locale</Submit>
+              </div>
+            </Form>
         </div>
       </div>
     </div>
