@@ -5,7 +5,7 @@ import Estimate from 'src/components/Estimate'
 
 
 const Offers = ({meals, onChange, defaultValue}) => {
-  const PRICE_BY_LITER = 0.15
+  const PRICE_BY_LITER = 0.2
   const WEEKS_BY_MONTH = 52/12
   const WEIGHT_BY_MEAL = 0.14
   const WEIGHT_BY_LITER = 1/3
@@ -27,7 +27,7 @@ const Offers = ({meals, onChange, defaultValue}) => {
       name: 'Bioseau',
       liter: 22,
       dimensions: "29 x 42 x 28 cm (l x L x h)",
-      get qty() {return Math.round(meals*LITER_BY_MEAL/this.liter)},
+      get qty() {return Math.max(Math.round(meals*LITER_BY_MEAL/this.liter), 1)},
       get price() {return  parseFloat((this.qty*this.liter*PRICE_BY_LITER).toFixed(2))},
       get service() {return this.qty + 'x ' + this.name + ' ' + this.liter +'L - ' + this.price + '€ par semaine'}
     },
