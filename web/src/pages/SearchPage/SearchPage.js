@@ -43,7 +43,8 @@ const SearchPage = ({l, m}) => {
                 name="location"
                 value={location} 
                 onChange={setLocation} 
-                className="block text-center w-full rounded-md bg-gray-200 py-2 pl-3 pr-10 text-sm outline-green-800 leading-5 text-gray-900 focus:ring-0"/>
+                className="block text-center w-full rounded-md bg-gray-200 py-2 pl-3 pr-10 text-sm outline-green-800 leading-5 text-gray-900 focus:ring-0"
+              />
               {
               location &&
                   <GeocoderCell query={location} />
@@ -57,7 +58,8 @@ const SearchPage = ({l, m}) => {
                 name="meals" 
                 onChange={(e) => setMeals(e.target.value)} 
                 value={meals} 
-                className="block w-full text-center bg-gray-200 rounded-md p-2 text-sm outline-green-800" />
+                className="block w-full text-center bg-gray-200 rounded-md p-2 text-sm outline-green-800" 
+              />
             </div>
             <div>
                 <Submit
