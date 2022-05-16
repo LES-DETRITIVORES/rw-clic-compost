@@ -49,14 +49,12 @@ const Offers = ({meals, onChange, defaultValue}) => {
     },
   ]
   
+  // Initialize best offer
   const [service, setService] = defaultValue ? useState(defaultValue) : useState(bestOffer(offers))
-  const formService = (data) => {
-    setService(data.service)
-  }
 
   return (
     <>
-      <RadioGroup value={service} onChange={(e) => {onChange(e); setService(e)}} className="space-y-2">
+      <RadioGroup value={service} onLoad={onChange(service)} onChange={(e) => {onChange(e); setService(e)}} className="space-y-2">
         {
           offers.map((offer) => (
             <>
