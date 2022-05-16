@@ -7,6 +7,10 @@ import { Form, Label, TextField, FormError, DateField, Submit } from '@redwoodjs
 import { useStripe, useElements, IbanElement, CardElement, PaymentElement } from '@stripe/react-stripe-js';
 import { Tab } from '@headlessui/react'
 
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ')
+}
+
 const CREATE_SUBSCRIPTION = gql`
   mutation CreateSubscriptionMutation($input: CreateSubscriptionInput!) {
     subscription: createSubscription(input: $input) {
@@ -305,12 +309,25 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
                     Mode de réglement
                   </Label>
 
-                  <Tab.Group defaultIndex={1}>
+                  <Tab.Group defaultIndex={0}>
                     <Tab.List className="flex space-x-3">
-                      <Tab className={`p-3 w-1/2 border-2 border-gray-500 rounded-md hover:border-yellow-500 outline-none 
-                      ${({ selected }) => selected ? 'bg-yellow-400 font-bold' : 'bg-none'}`}>Carte bancaire</Tab>
-                      <Tab className={`p-3 w-1/2 border-2 border-gray-500 rounded-md hover:border-yellow-500 outline-none 
-                      ${({ selected }) => selected ? 'bg-yellow-400 font-bold' : 'bg-none'}`}>IBAN</Tab>
+                      <Tab
+                        className={({ selected }) =>
+                          classNames(
+                            'p-3 w-1/2 border-2 border-gray-500 text-gray-500 rounded-md hover:border-yellow-500 outline-none',
+                            selected
+                              ? 'bg-yellow-400 text-black font-bold border-none'
+                              : 'bg-none'
+                          )}>Carte bancaire</Tab>
+                      <div className="p-1 my-auto">ou</div>
+                      <Tab
+                        className={({ selected }) =>
+                          classNames(
+                            'p-3 w-1/2 border-2 border-gray-500 text-gray-500 rounded-md hover:border-yellow-500 outline-none',
+                            selected
+                              ? 'bg-yellow-400 text-black font-bold border-none'
+                              : 'bg-none'
+                          )}>IBAN</Tab>
                     </Tab.List>
                     <Tab.Panels className="mt-3">
                       <Tab.Panel>
