@@ -49,7 +49,18 @@ const GET_CLIENT_SECRET = gql`
   }
 `
 
+const CREATE_DEAL = gql`
+  mutation CreateDealMutation($input: CreateDealInput!) {
+    deal: createDeal(input: $input) {
+      id
+    }
+  }
+`
+
 const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
+  const [card, setCard] = useState(false)
+  const [iban, setIban] = useState(false)
+
   const [createSubscription, {loading, error}] = useMutation(CREATE_SUBSCRIPTION, {
     onCompleted: (result) => {
       //console.log(JSON.stringify(result.subscription))
@@ -85,6 +96,13 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
   const [getClientSecret] = useLazyQuery(GET_CLIENT_SECRET, {
     onCompleted: (result) => {
       console.log(JSON.stringify(result))
+    },
+  })
+
+  const [createDeal] = useMutation(CREATE_DEAL, {
+    onCompleted: (result) => {
+      //console.log(JSON.stringify(result.customer))
+      toast.success('Affaire ajoutée.')
     },
   })
 
@@ -241,6 +259,9 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
     // console.log(JSON.stringify(subscription))
     //SMSSubscription({ variables: { input: {text: "Abonnement prêt", from:'+1 207 705 5921', 'to': subscription.phone }} })
 
+    /* Add new deal to pipedrive (CRM) */
+    createDeal({ variables: { input: { title:"Clic & Compost" } } })  
+
     navigate(routes.confirm())
   }
 
@@ -313,18 +334,18 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
                     </Tab.List>
                     <Tab.Panels className="mt-3">
                       <Tab.Panel>
-                        <CardElement options={{hidePostalCode:true}} placeholder="4242424242424242" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                        <CardElement onChange={(e) => {setCard(e.complete)}} options={{hidePostalCode:true}} placeholder="4242424242424242" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                       </Tab.Panel>
                       <Tab.Panel>
-                        <IbanElement placeholder="FR1420041010050500013M02606" options={IBAN_ELEMENT_OPTIONS} className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>  
+                        <IbanElement onChange={(e) => {setIban(e.complete)}} options={IBAN_ELEMENT_OPTIONS} placeholder="FR1420041010050500013M02606" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>  
                       </Tab.Panel>
                     </Tab.Panels>
                   </Tab.Group>
                 </div>
                 <div>
                   <Submit
-                    disabled={loading}
-                    className="sm:text-sm md:text-lg uppercase font-bold bg-yellow-400 rounded-b-md p-4 text-black w-full shadow-lg">S'abonner</Submit>
+                    disabled={loading || !(card || iban)}
+                    className={`sm:text-sm md:text-lg uppercase font-bold ${(card || iban) ? 'bg-yellow-400 text-black' : 'bg-gray-600 text-white'} rounded-b-md p-4 w-full shadow-lg`}>S'abonner</Submit>
                 </div>
               </Form>
             </div>
