@@ -1,4 +1,5 @@
 import { db } from 'src/lib/db'
+import { sendEmail } from 'src/lib/email'
 
 export const subscriptions = () => {
   return db.subscription.findMany()
@@ -33,13 +34,48 @@ export const emailSubscription = async ({ id }) => {
   const subscription = await db.subscription.findUnique({
     where: { id },
   })
-  const subject = 'Abonnement confirmé'
+  let paymentMethod = subscription.card ? 'Carte bancaire' : 'Prélèvement SEPA'
+  let startedAt = new Date(subscription.startedAt).toLocaleDateString("fr")
+  const subject = 'CLIC & COMPOST - Vous êtes prêts à trier vos biodéchets !'
   const text =
-    'Merci, votre abonnement est confirmé.\n\n' +
-    'A bientôt !'
+    'Bienvenu ' + subscription.firstname + ' !\n\n' +
+    'La coopérative inclusive LES DETRITIVORES est heureuse de vous compter parmi les pionniers du tri des biodéchets :)\n\n' +
+    'Voici un récapitulatif de votre inscription :\n' +
+    '------------------------------------------------------\n' +
+    'Société : ' + subscription.company + '\n' +
+    'Contact : ' + subscription.firstname + ' ' + subscription.lastname + '\n' +
+    'Tél : ' + subscription.phone + '\n' +
+    'Mél : ' + subscription.email + '\n' +
+    'Adresse de collecte : ' + subscription.location + '\n' +
+    'Offre : ' + subscription.service + '\n' +
+    'Mode de réglement : ' + paymentMethod + '\n' +
+    'Date de démarrage : ' + startedAt + '\n' +
+    '-------------------------------------------------------\n\n' +
+    'N\'hésitez pas à nous contacter pour toutes questions :\n' +
+    'LES DETRITIVORES\n' +
+    '65 quai de Brazza 33100 Bordeaux\n' +
+    'bonjour@les-detritivores.co | 05 56 67 14 47' 
+
   const html =
-    'Merci, votre abonnement est confirmé.<br><br>' +
-    'A bientôt !'
+    'Bienvenu ' + subscription.firstname + ' !<br/><br/>' +
+    'La coopérative inclusive LES DETRITIVORES est heureuse de vous compter parmi les pionniers du tri des biodéchets :)<br/><br/>' +
+    'Voici un récapitulatif de votre inscription :<br/>' +
+    '<hr/>' +
+    'Société : ' + subscription.company + '<br/>' +
+    'Contact : ' + subscription.firstname + ' ' + subscription.lastname + '<br/>' +
+    'Tél : ' + subscription.phone + '<br/>' +
+    'Mél : ' + subscription.email + '<br/>' +
+    'Adresse de collecte : ' + subscription.location + '<br/>' +
+    'Offre : ' + subscription.service + '<br/>' +
+    'Mode de réglement : ' + paymentMethod + '<br/>' +
+    'Date de démarrage : ' + startedAt + '<br/>' +
+    '<hr/><br/>' +
+    'N\'hésitez pas à nous contacter pour toutes questions :<br/>' +
+    'LES DETRITIVORES<br/>' +
+    '65 quai de Brazza 33100 Bordeaux<br/>' +
+    'bonjour@les-detritivores.co | 05 56 67 14 47' 
+
+  console.log(text, html)
   const email = await sendEmail({ to: subscription.email, subject, text, html })
   return email.messageId
 }

@@ -16,7 +16,7 @@ export async function sendEmail({ to, subject, text, html }: Options) {
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-      user: 'admin@les-detritivores.co',
+      user: process.env.SENDINBLUE_USER,
       pass: process.env.SENDINBLUE_SMTP,
     },
   })
