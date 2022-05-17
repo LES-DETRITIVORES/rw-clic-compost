@@ -36,12 +36,13 @@ export const emailSubscription = async ({ id }) => {
   })
   let paymentMethod = subscription.card ? 'Carte bancaire' : 'Prélèvement SEPA'
   let startedAt = new Date(subscription.startedAt).toLocaleDateString("fr")
-  const subject = 'CLIC & COMPOST - Vous êtes prêts à trier vos biodéchets !'
+  const subject = 'CLIC & COMPOST #' + subscription.id + ' - Vous êtes prêts à trier vos biodéchets !'
   const text =
     'Bienvenu ' + subscription.firstname + ' !\n\n' +
     'La coopérative inclusive LES DETRITIVORES est heureuse de vous compter parmi les pionniers du tri des biodéchets :)\n\n' +
     'Voici un récapitulatif de votre inscription :\n' +
     '------------------------------------------------------\n' +
+    'Numéro d\'adhésion : ' + subscription.id + '\n' +
     'Société : ' + subscription.company + '\n' +
     'Contact : ' + subscription.firstname + ' ' + subscription.lastname + '\n' +
     'Tél : ' + subscription.phone + '\n' +
@@ -61,6 +62,7 @@ export const emailSubscription = async ({ id }) => {
     'La coopérative inclusive LES DETRITIVORES est heureuse de vous compter parmi les pionniers du tri des biodéchets :)<br/><br/>' +
     'Voici un récapitulatif de votre inscription :<br/>' +
     '<hr/>' +
+    'Numéro d\'adhésion : ' + subscription.id + '<br/>' +
     'Société : ' + subscription.company + '<br/>' +
     'Contact : ' + subscription.firstname + ' ' + subscription.lastname + '<br/>' +
     'Tél : ' + subscription.phone + '<br/>' +
@@ -76,6 +78,6 @@ export const emailSubscription = async ({ id }) => {
     'bonjour@les-detritivores.co | 05 56 67 14 47' 
 
   console.log(text, html)
-  const email = await sendEmail({ to: subscription.email, subject, text, html })
+  const email = await sendEmail({ to: [subscription.email, 'bonjour@les-detritivores.co'], subject, text, html })
   return email.messageId
 }
