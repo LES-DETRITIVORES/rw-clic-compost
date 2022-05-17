@@ -10,20 +10,21 @@ interface Options {
 export async function sendEmail({ to, subject, text, html }: Options) {
   console.log('Sending email to:', to)
 
-  // create reusable transporter object using SendInBlue for SMTP
-  const transporter = nodemailer.createTransport({
-    host: 'smtp-relay.sendinblue.com',
+  // create reusable transporter object using office365 for SMTP
+  const office365 = nodemailer.createTransport({
+    host: 'smtp.office365.com',
     port: 587,
-    secure: false, // true for 465, false for other ports
     auth: {
-      user: process.env.SENDINBLUE_USER,
-      pass: process.env.SENDINBLUE_SMTP,
+      user: process.env.OFFICE365_USER,
+      pass: process.env.OFFICE365_PWD,
     },
+    secureConnection: false,
+    tls: { ciphers: 'SSLv3' }
   })
 
   // send mail with defined transport object
-  const email = await transporter.sendMail({
-    from: '"LES DETRITIVORES" <bonjour@les-detritivores.co>',
+  const email = await office365.sendMail({
+    from: 'LES DETRITIVORES <bonjour@les-detritivores.co>',
     to: Array.isArray(to) ? to : [to], // list of receivers
     subject, // Subject line
     text, // plain text body
