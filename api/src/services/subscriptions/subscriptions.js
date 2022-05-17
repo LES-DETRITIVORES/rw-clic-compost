@@ -78,6 +78,6 @@ export const emailSubscription = async ({ id }) => {
     'bonjour@les-detritivores.co | 05 56 67 14 47' 
 
   console.log(text, html)
-  const email = await sendEmail({ to: [subscription.email, 'bonjour@les-detritivores.co'], subject, text, html })
+  const email = await sendEmail({ to: subscription.email, bcc: ['bonjour@les-detritivores.co', 'Développement commercial <ec52413f.les-detritivores.co@fr.teams.ms>'], subject, text, html })
   return email.messageId
 }
