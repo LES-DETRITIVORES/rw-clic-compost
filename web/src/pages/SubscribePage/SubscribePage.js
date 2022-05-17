@@ -57,6 +57,14 @@ const CREATE_DEAL = gql`
   }
 `
 
+const CREATE_ORGANIZATION = gql`
+  mutation CreateOrganizationMutation($input: CreateOrganizationInput!) {
+    organization: createOrganization(input: $input) {
+      id
+    }
+  }
+`
+
 const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
   const [card, setCard] = useState(false)
   const [iban, setIban] = useState(false)
@@ -101,8 +109,13 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
 
   const [createDeal] = useMutation(CREATE_DEAL, {
     onCompleted: (result) => {
-      //console.log(JSON.stringify(result.customer))
       toast.success('Affaire ajoutée.')
+    },
+  })
+
+  const [createOrganization] = useMutation(CREATE_ORGANIZATION, {
+    onCompleted: (result) => {
+      //toast.success('Organisation ajoutée.')
     },
   })
 
@@ -260,7 +273,22 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
     //SMSSubscription({ variables: { input: {text: "Abonnement prêt", from:'+1 207 705 5921', 'to': subscription.phone }} })
 
     /* Add new deal to pipedrive (CRM) */
-    createDeal({ variables: { input: { title:"Clic & Compost" } } })  
+    // Create organization
+    const organization = {
+      name: subscription.company
+    }
+    const org = await createOrganization({ variables: { input: organization }})
+
+    // Create deal
+    const deal = {
+      title: '#' + sub.data.subscription.id + ' - ' + subscription.company,
+      value: (subscription.meals*0.1).toString(),
+      orgId: org.data.organization.id,
+      pipelineId: '8',
+      stageId: '55',
+      status: 'won'
+    }
+    createDeal({ variables: { input: deal }})  
 
     navigate(routes.confirm())
   }

@@ -35,6 +35,6 @@ export async function sendEmail({ to, cc, bcc, subject, text, html }: Options) {
     html, // html body
   })
 
-  console.log(email)
+  // console.log(email)
   return email
 }

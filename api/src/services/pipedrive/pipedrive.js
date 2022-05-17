@@ -7,16 +7,20 @@ apiToken.apiKey = process.env.PIPEDRIVE_TOKEN;
 
 export const createDeal = async ({ input }) => {
   const apiInstance = new pipedrive.DealsApi();
-  let opts = pipedrive.NewDeal.constructFromObject({
-    title: input.title,
-    value: "10",
-    orgId: "5734",
-    pipelineId : "8",
-    stageId : "2"
-  });
+  let opts = pipedrive.NewDeal.constructFromObject(input);
   const deal = await apiInstance.addDeal(opts);
 
   return {
     id : deal.data.id
+  }
+}
+
+export const createOrganization = async ({ input }) => {
+  const apiInstance = new pipedrive.OrganizationsApi();
+  let opts = pipedrive.NewOrganization.constructFromObject(input);
+  const organization = await apiInstance.addOrganization(opts);
+
+  return {
+    id : organization.data.id
   }
 }
