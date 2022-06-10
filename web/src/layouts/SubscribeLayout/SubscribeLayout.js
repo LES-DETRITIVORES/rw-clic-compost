@@ -5,6 +5,7 @@ const stripePromise = loadStripe(process.env.STRIPE_PUBLIC_TOKEN);
 import { Transition } from '@headlessui/react'
 import { useState, useEffect } from 'react'
 
+console.log(process.env.STRIPE_PUBLIC_TOKEN)
 const SubscribeLayout = (props) => {
     const imageUrl = "https://ik.imagekit.io/dttv/SHOOTING/DETRI_211202_599__s4xTKpKa.jpg?ik-sdk-version=javascript-1.4.3&updatedAt=1651844829335"
     
