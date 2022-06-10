@@ -1,6 +1,6 @@
 import {Elements} from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
-const stripePromise = loadStripe(process.env.STRIPE_PUBLIC_TOKEN);
+const stripePromise = loadStripe(process.env.REDWOOD_ENV_STRIPE_PUBLIC_TOKEN);
 
 import { Transition } from '@headlessui/react'
 import { useState, useEffect } from 'react'
