@@ -1,4 +1,4 @@
-const stripe = require('stripe')(process.env.STRIPE_TEST_TOKEN);
+const stripe = require('stripe')(process.env.STRIPE_SECRET_TOKEN);
 
 export const createCustomer = async ({ input }) => {
   const customer = await stripe.customers.create(input);
