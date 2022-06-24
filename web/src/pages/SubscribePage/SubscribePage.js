@@ -301,7 +301,7 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
         <div>
           <Link className="text-white" to={routes.offer({l:l, m:m, f:f, n:n, c:c, e:e, p:p, s:s})}>&lt; Changer d'Offre</Link>
         </div>
-        <div className="font-bold text-center text-3xl md:text-5xl mt-16 text-black w-min mx-auto -rotate-2">
+        <div className="font-bold text-center text-xl sm:text-3xl md:text-5xl mt-16 text-black w-min mx-auto -rotate-2">
           <span className="bg-yellow-400 p-1 block w-min">Commencez&nbsp;aujourd'hui,</span>
           <span className="bg-yellow-400 p-1 block w-min mt-1">Payez&nbsp;plus&nbsp;tard&nbsp;!</span>
         </div>

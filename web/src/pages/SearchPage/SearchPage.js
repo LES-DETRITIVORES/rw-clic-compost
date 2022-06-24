@@ -24,8 +24,8 @@ const SearchPage = ({l, m}) => {
     <div className="flex flex-row">
       <div className="basis-auto md:basis-1/2"></div>
       <div className="basis-full md:basis-2/2">
-        <div className="font-bold text-center text-3xl md:text-5xl mt-16 text-white w-min mx-auto -rotate-2">
-          <span className="bg-green-900 p-1 block w-min">Restaurateurs&nbsp;, </span> 
+        <div className="font-bold text-center text-xl sm:text-3xl md:text-5xl mt-16 text-white w-min mx-auto -rotate-2">
+          <span className="bg-green-900 p-1 block w-min">Restaurateurs, </span> 
           <span className="bg-green-900 p-1 block w-min mt-1">Prêts&nbsp;à&nbsp;trier&nbsp;vos&nbsp;biodéchets&nbsp;?</span>
         </div>
         <div className="container mx-auto max-w-xl font-sans">
@@ -62,7 +62,9 @@ const SearchPage = ({l, m}) => {
               <div>
                   <Submit
                     disabled={!location || !meals}
-                    className={`sm:text-sm md:text-lg uppercase font-bold ${(location && meals) ? 'bg-green-800' : 'bg-gray-600'} rounded-b-md p-4 text-white w-full shadow-lg`}>Chercher une solution locale</Submit>
+                    className={`text-xs sm:text-sm md:text-lg uppercase font-bold ${(location && meals) ? 'bg-green-800' : 'bg-gray-600'} rounded-b-md p-4 text-white w-full shadow-lg`}>
+                      Chercher une solution locale
+                  </Submit>
               </div>
             </Form>
         </div>

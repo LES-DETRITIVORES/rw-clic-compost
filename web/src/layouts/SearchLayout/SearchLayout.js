@@ -12,7 +12,7 @@ const SearchLayout = (props) => {
     });
 
     return (
-        <div className="p-6 min-h-screen bg-gray-300 bg-cover bg-no-repeat bg-center" style={{ backgroundImage: `url(${imageUrl})` }}>
+        <div className="p-6 min-h-screen min-w-screen bg-gray-300 bg-cover bg-no-repeat bg-center" style={{ backgroundImage: `url(${imageUrl})` }}>
             <Transition
                 appear={true}
                 show={isShowing}
