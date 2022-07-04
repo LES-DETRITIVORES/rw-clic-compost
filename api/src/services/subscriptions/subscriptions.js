@@ -43,12 +43,13 @@ export const emailSubscription = async ({ id }) => {
     'Voici un récapitulatif de votre inscription :\n' +
     '------------------------------------------------------\n' +
     'Numéro d\'adhésion : ' + subscription.id + '\n' +
-    'Société : ' + subscription.company + '\n' +
+    (subscription.profile == 'professionnel' ? 'Société : ' + subscription.company + '\n' : '') +
     'Contact : ' + subscription.firstname + ' ' + subscription.lastname + '\n' +
     'Tél : ' + subscription.phone + '\n' +
     'Mél : ' + subscription.email + '\n' +
     'Adresse de collecte : ' + subscription.location + '\n' +
     'Offre : ' + subscription.service + '\n' +
+    'Tarif : ' + subscription.rate + ' € ' + (subscription.profile == 'particulier' ? 'TTC' : 'HT') + ' par collecte' + '\n' +
     'Mode de réglement : ' + paymentMethod + '\n' +
     'Date de démarrage : ' + startedAt + '\n' +
     '-------------------------------------------------------\n\n' +
@@ -63,12 +64,13 @@ export const emailSubscription = async ({ id }) => {
     'Voici un récapitulatif de votre inscription :<br/>' +
     '<hr/>' +
     'Numéro d\'adhésion : ' + subscription.id + '<br/>' +
-    'Société : ' + subscription.company + '<br/>' +
+    (subscription.profile == 'professionnel' ? 'Société : ' + subscription.company + '<br/>' : '') +
     'Contact : ' + subscription.firstname + ' ' + subscription.lastname + '<br/>' +
     'Tél : ' + subscription.phone + '<br/>' +
     'Mél : ' + subscription.email + '<br/>' +
     'Adresse de collecte : ' + subscription.location + '<br/>' +
     'Offre : ' + subscription.service + '<br/>' +
+    'Tarif : ' + subscription.rate + ' € ' + (subscription.profile == 'particulier' ? 'TTC' : 'HT') + ' par collecte' + '<br/>' +
     'Mode de réglement : ' + paymentMethod + '<br/>' +
     'Date de démarrage : ' + startedAt + '<br/>' +
     '<hr/><br/>' +
