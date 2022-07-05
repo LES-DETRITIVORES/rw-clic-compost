@@ -18,7 +18,7 @@ const LoginPage = ({redirectTo}) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate(redirectTo !== '' ? redirectTo : routes.book())
+      navigate(redirectTo ? redirectTo : routes.book())
     }
   }, [isAuthenticated])
 

@@ -81,7 +81,6 @@ const UsersList = ({ users }) => {
           <tr>
             <th>Id</th>
             <th>Email</th>
-            <th>Name</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -90,7 +89,6 @@ const UsersList = ({ users }) => {
             <tr key={user.id}>
               <td>{truncate(user.id)}</td>
               <td>{truncate(user.email)}</td>
-              <td>{truncate(user.name)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link

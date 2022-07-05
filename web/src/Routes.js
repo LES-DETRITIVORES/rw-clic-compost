@@ -14,6 +14,7 @@ import SearchLayout from 'src/layouts/SearchLayout'
 import OfferLayout from 'src/layouts/OfferLayout'
 import SubscribeLayout from 'src/layouts/SubscribeLayout'
 import ConfirmLayout from 'src/layouts/ConfirmLayout'
+import AuthLayout from 'src/layouts/AuthLayout'
 
 
 const Routes = () => {
@@ -34,10 +35,12 @@ const Routes = () => {
           <Route path="/users" page={UserUsersPage} name="users" />
         </Set>
       </Private>
-      <Route path="/login" page={LoginPage} name="login" />
-      <Route path="/signup" page={SignupPage} name="signup" />
-      <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
-      <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
+      <Set wrap={AuthLayout}>
+        <Route path="/login" page={LoginPage} name="login" />
+        <Route path="/signup" page={SignupPage} name="signup" />
+        <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
+        <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
+      </Set>
       <Set wrap={SearchLayout}>
         <Route path="/" page={SearchPage} name="search" />
       </Set>
