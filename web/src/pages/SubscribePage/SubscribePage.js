@@ -68,6 +68,7 @@ const CREATE_ORGANIZATION = gql`
 const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
   const [card, setCard] = useState(false)
   const [iban, setIban] = useState(false)
+  const [coupon, setCoupon] = useState()
 
   const [createSubscription, {loading, error}] = useMutation(CREATE_SUBSCRIPTION, {
     onCompleted: (result) => {
@@ -263,6 +264,7 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
     }
 
     /* Save subscription */
+    sub.rate = (parseFloat(sub.rate)*(coupon == "RECUP40" ? 4/1.2/parseFloat(sub.rate) : 1)).toFixed(2) // apply coupon
     setSubscription(sub)
     sub = await createSubscription({ variables: { input: subscription } })
     console.log(JSON.stringify(sub))
@@ -324,7 +326,16 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
                   <li><span className="font-bold">Adresse de collecte : </span><span className="">{subscription.location}</span></li>
                   <li><span className="font-bold">Prestation : </span><span className="">Collecte et compostage des biodéchets alimentaires</span></li>
                   <li><span className="font-bold">Offre : </span><span className="">{subscription.service}</span></li>
-                  <li><span className="font-bold">Tarif : </span><span className="">{parseFloat(subscription.rate*(subscription.profile == "particulier" ? 1.2 : 1)).toFixed(2)} € {subscription.profile == "particulier" ? 'TTC' : 'HT'} par collecte</span></li>
+                  <li><span className="font-bold">Tarif : </span>
+                    {coupon == "RECUP40" &&
+                      <span className="line-through font-light text-sm mr-1">
+                        {parseFloat(subscription.rate*(subscription.profile == "particulier" ? 1.2 : 1)).toFixed(2)} €
+                      </span>
+                    }
+                    <span className={`${coupon == "RECUP40" ? 'text-orange-600 font-bold' : ''}`}>
+                      {parseFloat(subscription.rate*(coupon == "RECUP40" ? 4/1.2/subscription.rate : 1)*(subscription.profile == "particulier" ? 1.2 : 1)).toFixed(2)} € {subscription.profile == "particulier" ? 'TTC' : 'HT'} par collecte
+                    </span>
+                  </li>
                 </ul>
                 {/* Display mandate acceptance text. */}
                 <hr className="mt-2"/>
@@ -336,7 +347,7 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
             <div>
               <Toaster />
               <Form onSubmit={subscriptionSubmit} config={{ mode: 'onBlur' }} error={error} 
-                    className="container mx-auto font-sans">
+                    className="mx-auto font-sans">
                 <FormError error={error} wrapperClassName="form-error" />
                 <div className="bg-white rounded-t-lg shadow-lg p-8 mt-8">
                   <p className="font-bold text-md mb-6">
@@ -350,18 +361,33 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
                     subscription.profile == "particulier" && 
                     <DateField name="startedAt" 
                               onChange={(date) => setDeliverDate(delayDate(new Date(date.target.value),0))} min={formatDate(delayDate(new Date(Date.now()),1))} value={formatDate(deliverDate)} 
-                              className="capitalize block w-auto bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                              className="block text-center w-32 bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                   }
                   {
                     subscription.profile == "professionnel" && 
                     <DateField name="startedAt" 
                               onChange={(date) => setDeliverDate(delayDate(new Date(date.target.value),0))} min={formatDate(delayDate(new Date(Date.now()),6))} value={formatDate(deliverDate)} 
-                              className="capitalize block w-auto bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                              className="block text-center w-32 bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                   }
+                  { subscription.profile == "particulier" && 
+                  <>
+                    <Label className="font-medium block mt-6">
+                      Code de réduction
+                    </Label>
+                    <TextField 
+                      name="coupon" 
+                      value={coupon}
+                      onChange={(e) => setCoupon(e.target.value.toUpperCase())}
+                      className="uppercase text-center block w-32 bg-gray-200 rounded-md p-2 text-sm outline-orange-300"
+                    />
+                    {coupon == "RECUP40" && 
+                    <p className="font-medium text-orange-600">Réduction appliquée de -40% sur le tarif de collecte</p>}
+                  </>
+                  }
+                  
                   <Label className="font-medium block mt-6">
                     Mode de réglement
                   </Label>
-
                   <Tab.Group defaultIndex={0}>
                     <Tab.List className="flex space-x-3">
                       <Tab
@@ -384,12 +410,12 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
                     </Tab.List>
                     <Tab.Panels className="mt-3">
                       <Tab.Panel>
-                        Veuillez renseigner les informations de votre carte bancaire :
-                        <CardElement onChange={(e) => {setCard(e.complete)}} options={{hidePostalCode:true}} placeholder="4242424242424242" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                        Veuillez renseigner les informations de votre carte :
+                        <CardElement onChange={(e) => {setCard(e.complete)}} options={{hidePostalCode:true}} placeholder="4242424242424242" className="block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                       </Tab.Panel>
                       <Tab.Panel>
                         Veuillez renseigner votre IBAN :
-                        <IbanElement onChange={(e) => {setIban(e.complete)}} options={IBAN_ELEMENT_OPTIONS} placeholder="FR1420041010050500013M02606" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>  
+                        <IbanElement onChange={(e) => {setIban(e.complete)}} options={IBAN_ELEMENT_OPTIONS} placeholder="FR1420041010050500013M02606" className="block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>  
                       </Tab.Panel>
                     </Tab.Panels>
                   </Tab.Group>
