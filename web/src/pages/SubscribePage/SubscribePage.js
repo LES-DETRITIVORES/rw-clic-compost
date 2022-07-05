@@ -300,7 +300,7 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
 
   return (
     <>
-      <MetaTags title="Subscribe" description="Subscribe page" />
+      <MetaTags title="Abonnement" description="Page d'abonnement avec validation du contrat et enregistrement du mode de réglement" />
       { subscription &&
       <div>
         <div>

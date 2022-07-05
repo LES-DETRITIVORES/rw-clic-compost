@@ -5,7 +5,7 @@ const ConfirmPage = () => {
 
   return (
   <>
-    <MetaTags title="Confirmation" description="Confirmation" />
+    <MetaTags title="Confirmation" description="Page de confirmation de l'abonnement" />
     <div className="flex flex-row">
       <div className="basis-auto md:basis-1/2">
         <div>

@@ -38,7 +38,7 @@ const OfferPage = ({u, l, m, o, s, r, f, n, c, e, p}) => {
   
   return (
     <>
-      <MetaTags title="Offer" description="Offer page" />
+      <MetaTags title="Offres" description="Page de choix de l'offre et renseignement sur l'usager" />
       <div>
         <div>
           <Link className="text-white" to={routes.search({u:profile, l:location, m:meals})}>&lt; Modifier ma demande</Link>
