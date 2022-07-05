@@ -65,9 +65,10 @@ const CREATE_ORGANIZATION = gql`
   }
 `
 
-const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
+const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
   const [card, setCard] = useState(false)
   const [iban, setIban] = useState(false)
+  const [coupon, setCoupon] = useState()
 
   const [createSubscription, {loading, error}] = useMutation(CREATE_SUBSCRIPTION, {
     onCompleted: (result) => {
@@ -148,7 +149,7 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
     style: IBAN_STYLE
   };
 
-  const [deliverDate, setDeliverDate] = useState(delayDate(Date(Date.now()), 6))
+  const [deliverDate, setDeliverDate] = useState(delayDate(Date(Date.now()), u == "particulier" ? 1 : 6))
 
   const formatDate = (value) => {
     if (value) {
@@ -165,6 +166,7 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
   }
 
   const [subscription, setSubscription] = useState({
+    profile: u,
     firstname : f,
     lastname : n,
     company: c,
@@ -173,6 +175,7 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
     location : l,
     meals : parseInt(m),
     service : s,
+    rate : r,
     startedAt : '',
     card: '',
     iban: ''
@@ -261,6 +264,7 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
     }
 
     /* Save subscription */
+    sub.rate = (parseFloat(sub.rate)*(coupon == "RECUP40" ? 4/1.2/parseFloat(sub.rate) : 1)).toFixed(2) // apply coupon
     setSubscription(sub)
     sub = await createSubscription({ variables: { input: subscription } })
     console.log(JSON.stringify(sub))
@@ -275,19 +279,20 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
     /* Add new deal to pipedrive (CRM) */
     // Create organization
     const organization = {
-      name: subscription.company
+      name: subscription.profile == "particulier" ? subscription.firstname + ' ' + subscription.lastname.toUpperCase() + ' ' + '(Particulier)': subscription.company
     }
     const org = await createOrganization({ variables: { input: organization }})
 
     // Create deal
     const deal = {
-      title: '#' + sub.data.subscription.id + ' - ' + subscription.company,
-      value: (subscription.meals*0.1).toString(),
+      title: '#' + sub.data.subscription.id + ' - ' + organization.name,
+      value: (subscription.rate).toString(),
       orgId: org.data.organization.id,
       pipelineId: '8',
       stageId: '55',
       status: 'won'
     }
+    console.log(deal)
     createDeal({ variables: { input: deal }})  
 
     navigate(routes.confirm())
@@ -295,11 +300,11 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
 
   return (
     <>
-      <MetaTags title="Subscribe" description="Subscribe page" />
+      <MetaTags title="Abonnement" description="Page d'abonnement avec validation du contrat et enregistrement du mode de réglement" />
       { subscription &&
       <div>
         <div>
-          <Link className="text-white" to={routes.offer({l:l, m:m, f:f, n:n, c:c, e:e, p:p, s:s})}>&lt; Changer d'Offre</Link>
+          <Link className="text-white" to={routes.offer({u:u, l:l, m:m, f:f, n:n, c:c, e:e, p:p, o:o, s:s, r:r})}>&lt; Changer d'offre</Link>
         </div>
         <div className="font-bold text-center text-xl sm:text-3xl md:text-5xl mt-16 text-black w-min mx-auto -rotate-2">
           <span className="bg-yellow-400 p-1 block w-min">Commencez&nbsp;aujourd'hui,</span>
@@ -311,35 +316,78 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
               <div className="bg-white rounded-md shadow-lg p-8 mt-8">
                 <h1 className="uppercase font-bold text-lg text-center mb-6">Contrat de tri des biodéchets</h1>
                 <ul>
-                  <li><span className="font-bold">Société : </span><span className="uppercase">{subscription.company}</span></li>
+                  {
+                    subscription.profile == "professionnel" &&
+                    <li><span className="font-bold">Société : </span><span className="uppercase">{subscription.company}</span></li>
+                  }
                   <li><span className="font-bold">Contact : </span><span className="capitalize">{subscription.firstname}</span> <span className="uppercase">{subscription.lastname}</span></li>
                   <li><span className="font-bold">Tél : </span><span className="">{subscription.phone}</span></li>
                   <li><span className="font-bold">Mél : </span><span className="">{subscription.email}</span></li>
                   <li><span className="font-bold">Adresse de collecte : </span><span className="">{subscription.location}</span></li>
                   <li><span className="font-bold">Prestation : </span><span className="">Collecte et compostage des biodéchets alimentaires</span></li>
                   <li><span className="font-bold">Offre : </span><span className="">{subscription.service}</span></li>
+                  <li><span className="font-bold">Tarif : </span>
+                    {coupon == "RECUP40" &&
+                      <span className="line-through font-light text-sm mr-1">
+                        {parseFloat(subscription.rate*(subscription.profile == "particulier" ? 1.2 : 1)).toFixed(2)} €
+                      </span>
+                    }
+                    <span className={`${coupon == "RECUP40" ? 'text-orange-600 font-bold' : ''}`}>
+                      {parseFloat(subscription.rate*(coupon == "RECUP40" ? 4/1.2/subscription.rate : 1)*(subscription.profile == "particulier" ? 1.2 : 1)).toFixed(2)} € {subscription.profile == "particulier" ? 'TTC' : 'HT'} par collecte
+                    </span>
+                  </li>
                 </ul>
                 {/* Display mandate acceptance text. */}
                 <hr className="mt-2"/>
-              <div className="text-xs block mt-2 text-justify">
-                En fournissant vos informations de paiement et en confirmant ce paiement, vous autorisez (A) LES DETRITIVORES et Stripe, notre prestataire de services de paiement et/ou PPRO, son prestataire de services local, à envoyer des instructions à votre banque pour débiter votre compte et (B) votre banque à débiter votre compte conformément à ces instructions. Vous avez, entre autres, le droit de vous faire rembourser par votre banque selon les modalités et conditions du contrat conclu avec votre banque. La demande de remboursement doit être soumise dans un délai de 8 semaines à compter de la date à laquelle votre compte a été débité. Vos droits sont expliqués dans une déclaration disponible auprès de votre banque. Vous acceptez de recevoir des notifications des débits à venir dans les 2 jours précédant leur réalisation.
-              </div>
+                <div className="text-xs block mt-2 text-justify">
+                  En fournissant vos informations de paiement et en confirmant ce paiement, vous autorisez (A) LES DETRITIVORES et Stripe, notre prestataire de services de paiement et/ou PPRO, son prestataire de services local, à envoyer des instructions à votre banque pour débiter votre compte et (B) votre banque à débiter votre compte conformément à ces instructions. Vous avez, entre autres, le droit de vous faire rembourser par votre banque selon les modalités et conditions du contrat conclu avec votre banque. La demande de remboursement doit être soumise dans un délai de 8 semaines à compter de la date à laquelle votre compte a été débité. Vos droits sont expliqués dans une déclaration disponible auprès de votre banque. Vous acceptez de recevoir des notifications des débits à venir dans les 2 jours précédant leur réalisation.
+                </div>
               </div>
             </div>
             <div>
               <Toaster />
-              <Form onSubmit={subscriptionSubmit} config={{ mode: 'onBlur' }} error={error} className="container mx-auto font-sans">
+              <Form onSubmit={subscriptionSubmit} config={{ mode: 'onBlur' }} error={error} 
+                    className="mx-auto font-sans">
                 <FormError error={error} wrapperClassName="form-error" />
                 <div className="bg-white rounded-t-lg shadow-lg p-8 mt-8">
-                  <Label className="font-medium block">
-                    Date de démarrage
+                  <p className="font-bold text-md mb-6">
+                    Notre service est facturé chaque mois en fonction du nombre de collectes réalisées : vous payez uniquement à l'usage !
+                  </p>
+                  <hr/>
+                  <Label className="font-medium mt-6 block">
+                    Date de démarrage souhaitée
                   </Label>
-                  <DateField name="startedAt" onChange={(date) => setDeliverDate(delayDate(new Date(date.target.value),0))} min={formatDate(delayDate(new Date(Date.now()),6))} value={formatDate(deliverDate)} className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
-
+                  {
+                    subscription.profile == "particulier" && 
+                    <DateField name="startedAt" 
+                              onChange={(date) => setDeliverDate(delayDate(new Date(date.target.value),0))} min={formatDate(delayDate(new Date(Date.now()),1))} value={formatDate(deliverDate)} 
+                              className="block text-center w-32 bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                  }
+                  {
+                    subscription.profile == "professionnel" && 
+                    <DateField name="startedAt" 
+                              onChange={(date) => setDeliverDate(delayDate(new Date(date.target.value),0))} min={formatDate(delayDate(new Date(Date.now()),6))} value={formatDate(deliverDate)} 
+                              className="block text-center w-32 bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                  }
+                  { subscription.profile == "particulier" && 
+                  <>
+                    <Label className="font-medium block mt-6">
+                      Code de réduction
+                    </Label>
+                    <TextField 
+                      name="coupon" 
+                      value={coupon}
+                      onChange={(e) => setCoupon(e.target.value.toUpperCase())}
+                      className="uppercase text-center block w-32 bg-gray-200 rounded-md p-2 text-sm outline-orange-300"
+                    />
+                    {coupon == "RECUP40" && 
+                    <p className="font-medium text-orange-600">Réduction appliquée de -40% sur le tarif de collecte</p>}
+                  </>
+                  }
+                  
                   <Label className="font-medium block mt-6">
                     Mode de réglement
                   </Label>
-
                   <Tab.Group defaultIndex={0}>
                     <Tab.List className="flex space-x-3">
                       <Tab
@@ -358,14 +406,16 @@ const SubscribePage = ({f, n, c, e, p, l, m, s}) => {
                             selected
                               ? 'bg-yellow-400 text-black font-bold border-none'
                               : 'bg-none'
-                          )}>IBAN</Tab>
+                          )}>Prélèvement SEPA</Tab>
                     </Tab.List>
                     <Tab.Panels className="mt-3">
                       <Tab.Panel>
-                        <CardElement onChange={(e) => {setCard(e.complete)}} options={{hidePostalCode:true}} placeholder="4242424242424242" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                        Veuillez renseigner les informations de votre carte :
+                        <CardElement onChange={(e) => {setCard(e.complete)}} options={{hidePostalCode:true}} placeholder="4242424242424242" className="block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                       </Tab.Panel>
                       <Tab.Panel>
-                        <IbanElement onChange={(e) => {setIban(e.complete)}} options={IBAN_ELEMENT_OPTIONS} placeholder="FR1420041010050500013M02606" className="capitalize block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>  
+                        Veuillez renseigner votre IBAN :
+                        <IbanElement onChange={(e) => {setIban(e.complete)}} options={IBAN_ELEMENT_OPTIONS} placeholder="FR1420041010050500013M02606" className="block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>  
                       </Tab.Panel>
                     </Tab.Panels>
                   </Tab.Group>
