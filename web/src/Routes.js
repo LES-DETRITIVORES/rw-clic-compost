@@ -7,7 +7,7 @@
 // 'src/pages/HomePage/HomePage.js'         -> HomePage
 // 'src/pages/Admin/BooksPage/BooksPage.js' -> AdminBooksPage
 
-import { Set, Router, Route } from '@redwoodjs/router'
+import { Set, Private, Router, Route } from '@redwoodjs/router'
 import SubscriptionsLayout from 'src/layouts/SubscriptionsLayout'
 import UsersLayout from 'src/layouts/UsersLayout'
 import SearchLayout from 'src/layouts/SearchLayout'
@@ -19,6 +19,25 @@ import ConfirmLayout from 'src/layouts/ConfirmLayout'
 const Routes = () => {
   return (
     <Router>
+      <Private unauthenticated="login">
+        <Route path="/book" page={BookPage} name="book" />
+        <Set wrap={SubscriptionsLayout}>
+          <Route path="/subscriptions/new" page={SubscriptionNewSubscriptionPage} name="newSubscription" />
+          <Route path="/subscriptions/{id:Int}/edit" page={SubscriptionEditSubscriptionPage} name="editSubscription" />
+          <Route path="/subscriptions/{id:Int}" page={SubscriptionSubscriptionPage} name="subscription" />
+          <Route path="/subscriptions" page={SubscriptionSubscriptionsPage} name="subscriptions" />
+        </Set>
+        <Set wrap={UsersLayout}>
+          <Route path="/users/new" page={UserNewUserPage} name="newUser" />
+          <Route path="/users/{id:Int}/edit" page={UserEditUserPage} name="editUser" />
+          <Route path="/users/{id:Int}" page={UserUserPage} name="user" />
+          <Route path="/users" page={UserUsersPage} name="users" />
+        </Set>
+      </Private>
+      <Route path="/login" page={LoginPage} name="login" />
+      <Route path="/signup" page={SignupPage} name="signup" />
+      <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
+      <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
       <Set wrap={SearchLayout}>
         <Route path="/" page={SearchPage} name="search" />
       </Set>
@@ -31,18 +50,7 @@ const Routes = () => {
       <Set wrap={ConfirmLayout}>
         <Route path="/confirm" page={ConfirmPage} name="confirm" />
       </Set>
-      <Set wrap={SubscriptionsLayout}>
-        <Route path="/subscriptions/new" page={SubscriptionNewSubscriptionPage} name="newSubscription" />
-        <Route path="/subscriptions/{id:Int}/edit" page={SubscriptionEditSubscriptionPage} name="editSubscription" />
-        <Route path="/subscriptions/{id:Int}" page={SubscriptionSubscriptionPage} name="subscription" />
-        <Route path="/subscriptions" page={SubscriptionSubscriptionsPage} name="subscriptions" />
-      </Set>
-      <Set wrap={UsersLayout}>
-        <Route path="/users/new" page={UserNewUserPage} name="newUser" />
-        <Route path="/users/{id:Int}/edit" page={UserEditUserPage} name="editUser" />
-        <Route path="/users/{id:Int}" page={UserUserPage} name="user" />
-        <Route path="/users" page={UserUsersPage} name="users" />
-      </Set>
+      
       <Route path="/front" page={FrontPage} name="front" />
       <Route path="/connect" page={ConnectPage} name="connect" />
       <Route path="/schedule" page={SchedulePage} name="schedule" />

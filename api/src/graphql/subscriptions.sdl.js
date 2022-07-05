@@ -59,12 +59,12 @@ export const schema = gql`
 
   type Mutation {
     createSubscription(input: CreateSubscriptionInput!): Subscription!
-      @requireAuth
+      @skipAuth
     updateSubscription(
       id: Int!
       input: UpdateSubscriptionInput!
-    ): Subscription! @requireAuth
-    deleteSubscription(id: Int!): Subscription! @requireAuth
-    emailSubscription(id: Int!): String! @requireAuth
+    ): Subscription! @skipAuth
+    deleteSubscription(id: Int!): Subscription! @skipAuth
+    emailSubscription(id: Int!): String! @skipAuth
   }
 `

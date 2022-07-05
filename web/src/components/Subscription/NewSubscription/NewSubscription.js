@@ -3,6 +3,7 @@ import { toast } from '@redwoodjs/web/toast'
 import { navigate, routes } from '@redwoodjs/router'
 import SubscriptionForm from 'src/components/Subscription/SubscriptionForm'
 
+/*
 const CREATE_SUBSCRIPTION_MUTATION = gql`
   mutation CreateSubscriptionMutation($input: CreateSubscriptionInput!) {
     createSubscription(input: $input) {
@@ -10,6 +11,7 @@ const CREATE_SUBSCRIPTION_MUTATION = gql`
     }
   }
 `
+*/
 
 const NewSubscription = () => {
   const [createSubscription, { loading, error }] = useMutation(
