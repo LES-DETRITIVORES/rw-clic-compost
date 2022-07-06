@@ -220,7 +220,7 @@ const BookPage = () => {
               <div className="bg-white rounded-md shadow-lg p-8 mt-8">
                 <h1 className="uppercase font-bold text-lg text-center">Votre contrat de tri des biodéchets</h1>
                 <hr className="my-3 -mx-8"/>
-                <ContractCell email="huynhdoo@gmail.com"/>
+                <ContractCell user={currentUser.id}/>
                 <ul>
                   {
                     subscription.profile == "professionnel" &&

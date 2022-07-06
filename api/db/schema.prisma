@@ -37,6 +37,7 @@ model Subscription {
   customer  String?
   card      String?
   iban      String?
+  user      Int?
 }
 
 

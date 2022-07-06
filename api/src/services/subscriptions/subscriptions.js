@@ -1,5 +1,6 @@
 import { db } from 'src/lib/db'
 import { sendEmail } from 'src/lib/email'
+import { logger } from 'src/lib/logger'
 
 export const subscriptions = () => {
   return db.subscription.findMany()
@@ -11,9 +12,9 @@ export const subscription = ({ id }) => {
   })
 }
 
-export const contract = ({ email }) => {
+export const contract = ({ user }) => {
   return db.subscription.findMany({
-    where: { email },
+    where: { user : user },
   })
 }
 

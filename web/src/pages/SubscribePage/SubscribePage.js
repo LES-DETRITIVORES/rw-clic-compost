@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { Form, Label, TextField, FormError, DateField, Submit } from '@redwoodjs/forms'
 import { useStripe, useElements, IbanElement, CardElement } from '@stripe/react-stripe-js';
 import { Tab } from '@headlessui/react'
+import { useAuth } from '@redwoodjs/auth'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -69,6 +70,7 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
   const [card, setCard] = useState(false)
   const [iban, setIban] = useState(false)
   const [coupon, setCoupon] = useState()
+  const { currentUser, signUp } = useAuth()
 
   const [createSubscription, {loading, error}] = useMutation(CREATE_SUBSCRIPTION, {
     onCompleted: (result) => {
@@ -98,7 +100,7 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
   const [createCustomer] = useMutation(CREATE_CUSTOMER, {
     onCompleted: (result) => {
       //console.log(JSON.stringify(result.customer))
-      toast.success('Usager ajouté.')
+      //toast.success('Usager ajouté.')
     },
   })
 
@@ -178,14 +180,15 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
     rate : r,
     startedAt : '',
     card: '',
-    iban: ''
+    iban: '',
+    user: ''
   })
 
   const subscriptionSubmit = async (data) => {
     let sub = subscription
     sub.startedAt = data.startedAt
     
-    /* Save customer */
+    /* Save customer on Stripe */
     const customer = await createCustomer({ variables: {
       input: {
         description: subscription.firstname + ' ' + subscription.lastname.toUpperCase(),
@@ -195,6 +198,13 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
     console.log(JSON.stringify(customer))
     sub.customer = customer.data.customer.id
 
+    /* Save user for authentification */
+    const user = await signUp({username: subscription.email, password:"0000"  })
+    console.log(JSON.stringify(user))
+    if (user) {
+      toast.success('Utilisateur ajouté')
+      sub.user = user.id
+    }
 
     /* Add CARD payment */
     if (elements.getElement(CardElement)) {

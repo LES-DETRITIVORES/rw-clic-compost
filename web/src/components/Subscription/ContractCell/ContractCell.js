@@ -1,8 +1,8 @@
 import Subscription from 'src/components/Subscription/Subscription'
 
 export const QUERY = gql`
-  query FindSubscriptionByEmail($email: String!) {
-    subscription: contract(email: $email) {
+  query FindSubscriptionByUser($user: Int!) {
+    subscription: contract(user: $user) {
       id
       createdAt
       profile
@@ -18,6 +18,7 @@ export const QUERY = gql`
       customer
       card
       iban
+      user
     }
   }
 `
