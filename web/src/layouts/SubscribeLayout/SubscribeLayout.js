@@ -16,7 +16,7 @@ const SubscribeLayout = (props) => {
 
     return (
       <Elements stripe={stripePromise}>
-        <div className="p-6 bg-gray-300 bg-cover bg-no-repeat bg-center" style={{ backgroundImage: `url(${imageUrl})` }}>
+        <div className="p-6 bg-gray-300 bg-cover bg-no-repeat bg-center h-screen" style={{ backgroundImage: `url(${imageUrl})` }}>
           <Transition
             appear={true}
             show={isShowing}
