@@ -350,7 +350,7 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
                     className="mx-auto font-sans">
                 <FormError error={error} wrapperClassName="form-error" />
                 <div className="bg-white rounded-t-lg shadow-lg p-8 mt-8">
-                  <p className="font-bold text-md mb-6">
+                  <p className="font-bold text-md mb-6 text-center">
                     Notre service est facturé chaque mois en fonction du nombre de collectes réalisées : vous payez uniquement à l'usage !
                   </p>
                   <hr/>

@@ -15,13 +15,16 @@ import OfferLayout from 'src/layouts/OfferLayout'
 import SubscribeLayout from 'src/layouts/SubscribeLayout'
 import ConfirmLayout from 'src/layouts/ConfirmLayout'
 import AuthLayout from 'src/layouts/AuthLayout'
+import BookLayout from 'src/layouts/BookLayout'
 
 
 const Routes = () => {
   return (
     <Router>
       <Private unauthenticated="login">
-        <Route path="/book" page={BookPage} name="book" />
+        <Set wrap={BookLayout}>
+          <Route path="/book" page={BookPage} name="book" />
+        </Set>
         <Set wrap={SubscriptionsLayout}>
           <Route path="/subscriptions/new" page={SubscriptionNewSubscriptionPage} name="newSubscription" />
           <Route path="/subscriptions/{id:Int}/edit" page={SubscriptionEditSubscriptionPage} name="editSubscription" />
