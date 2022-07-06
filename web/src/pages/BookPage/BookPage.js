@@ -1,12 +1,12 @@
 import { navigate, Link, routes } from '@redwoodjs/router'
-import { MetaTags, useMutation } from '@redwoodjs/web'
+import { MetaTags, useMutation, useQuery } from '@redwoodjs/web'
 import { useLazyQuery } from '@apollo/client'
 import { toast, Toaster } from '@redwoodjs/web/toast'
 import { useState } from 'react'
 import { Form, Label, TextAreaField, FormError, DatetimeLocalField, Submit } from '@redwoodjs/forms'
-import { useStripe, useElements, IbanElement, CardElement } from '@stripe/react-stripe-js';
-import { Tab } from '@headlessui/react'
 import { useAuth } from '@redwoodjs/auth'
+import LoginCell from 'src/components/User/LoginCell'
+import ContractCell from 'src/components/Subscription/ContractCell'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -166,74 +166,6 @@ const BookPage = () => {
     console.log(JSON.stringify(customer))
     sub.customer = customer.data.customer.id
 
-
-    /* Add CARD payment */
-    if (elements.getElement(CardElement)) {
-      /* Get customer secret */
-      var client_secret = await getClientSecret({ variables: {
-        query: customer.data.customer.id
-        }
-      })
-      console.log(JSON.stringify(client_secret.data.customer.secret))
-
-      /* Add card to customer */
-      const card = await stripe.confirmCardSetup(client_secret.data.customer.secret, {
-        payment_method: {
-          card: elements.getElement(CardElement),
-          billing_details: {
-            name: subscription.firstname + ' ' + subscription.lastname.toUpperCase(),
-            email: subscription.email,
-          },
-        }
-      });
-
-      if (card.error) {
-        // setError(`Payment failed ${payload.error.message}`);
-        // setProcessing(false);
-        // Show error to your customer.
-        console.log("Error card:", card.error.message);
-      } else {
-        // setError(null);
-        // setProcessing(false);
-        // setSucceeded(true);
-        console.log("Succeed card:", card.setupIntent.payment_method)
-        toast.success('Carte bancaire ajoutée.')
-        sub.card = card.setupIntent.payment_method
-      }
-    }
-
-
-    /* Add IBAN payment */
-    if (elements.getElement(IbanElement)) {
-      /* Get customer secret */
-      client_secret = await getClientSecret({ variables: {
-        query: customer.data.customer.id
-        }
-      })
-      console.log(JSON.stringify(client_secret.data.customer.secret))
-
-      /* Add IBAN to customer */
-      const sepa = await stripe.confirmSepaDebitSetup(client_secret.data.customer.secret, {
-        payment_method: {
-          sepa_debit: elements.getElement(IbanElement),
-          billing_details: {
-            name: subscription.firstname + ' ' + subscription.lastname.toUpperCase(),
-            email: subscription.email,
-          },
-        }
-      });
-      if (sepa.error) {
-        // Show error to your customer.
-        console.log("Error SEPA:", sepa.error.message);
-      } else {
-        console.log("Succeed SEPA:", sepa.setupIntent.payment_method)
-        sub.iban = sepa.setupIntent.payment_method
-        toast.success('Compte bancaire ajouté.')
-        // Show a confirmation message to your customer.
-        // The SetupIntent is in the 'succeeded' state.
-      }
-    }
-
     /* Save subscription */
     sub.rate = (parseFloat(sub.rate)*(coupon == "RECUP40" ? 4/1.2/parseFloat(sub.rate) : 1)).toFixed(2) // apply coupon
     setSubscription(sub)
@@ -274,12 +206,13 @@ const BookPage = () => {
       <MetaTags title="Réservation" description="Page de réservation d'un créneau de collecte" />
       { subscription &&
       <div>
-        <div className="text-right">
-          <Link className="text-white hover:underline cursor-pointer" onClick={logOut}>Se déconnecter</Link>
+        <div className="text-white text-right">
+          <span className="text-sm font-light">[<LoginCell id={currentUser.id} />]</span>&nbsp;
+          <Link className="underline cursor-pointer font-bold text-md" onClick={logOut}>Se déconnecter</Link>
         </div>
         <div className="font-bold text-center text-xl sm:text-3xl md:text-5xl mt-16 text-black w-min mx-auto -rotate-2">
           <span className="bg-yellow-400 p-1 block w-min">Réservez&nbsp;votre&nbsp;créneau,</span>
-          <span className="bg-yellow-400 p-1 block w-min mt-1">On&nbsp;composte&nbsp;vos&nbsp;biodéchets!</span>
+          <span className="bg-yellow-400 p-1 block w-min mt-1">On&nbsp;composte&nbsp;vos&nbsp;biodéchets&nbsp;!</span>
         </div>
         <div className="container mx-auto max-w-6xl font-sans">
           <div className="flex flex-col-reverse gap-8 md:flex-row ">
@@ -287,6 +220,7 @@ const BookPage = () => {
               <div className="bg-white rounded-md shadow-lg p-8 mt-8">
                 <h1 className="uppercase font-bold text-lg text-center">Votre contrat de tri des biodéchets</h1>
                 <hr className="my-3 -mx-8"/>
+                <ContractCell email="huynhdoo@gmail.com"/>
                 <ul>
                   {
                     subscription.profile == "professionnel" &&

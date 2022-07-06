@@ -43,85 +43,77 @@ const LoginPage = ({redirectTo}) => {
     <>
       <MetaTags title="Connexion" description="Page de connexion à l'application" />
 
-      <main className="rw-main">
+      <div className="font-sans">
         <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />
-        <div className="rw-scaffold rw-login-container">
-          <div className="rw-segment">
-            <header className="rw-segment-header">
-              <h2 className="rw-heading rw-heading-secondary">Connexion</h2>
-            </header>
+        <div className="max-w-md mx-auto">
+          <div className="bg-white rounded-md shadow-lg p-8 mt-32">
+            <h1 className="uppercase font-bold text-lg text-center">Connexion</h1>
+            <hr className="my-3 -mx-8"/>
+            <Form onSubmit={onSubmit} className="mx-auto font-sans">
+              <Label
+                name="username"
+                className="rw-label"
+                errorClassName="rw-label rw-label-error"
+              >
+                Votre mél
+              </Label>
+              <TextField
+                name="username"
+                className="bg-gray-200 rounded-md p-2 text-sm outline-green-700 w-full"
+                errorClassName="rw-input rw-input-error"
+                ref={usernameRef}
+                validation={{
+                  required: {
+                    value: true,
+                    message: 'Veuillez saisir un mél',
+                  },
+                }}
+              />
 
-            <div className="rw-segment-main">
-              <div className="rw-form-wrapper">
-                <Form onSubmit={onSubmit} className="rw-form-wrapper">
-                  <Label
-                    name="username"
-                    className="rw-label"
-                    errorClassName="rw-label rw-label-error"
-                  >
-                    Votre mél
-                  </Label>
-                  <TextField
-                    name="username"
-                    className="rw-input"
-                    errorClassName="rw-input rw-input-error"
-                    ref={usernameRef}
-                    validation={{
-                      required: {
-                        value: true,
-                        message: 'Veuillez saisir un mél',
-                      },
-                    }}
-                  />
+              <FieldError name="username" className="rw-field-error" />
 
-                  <FieldError name="username" className="rw-field-error" />
-
-                  <Label
-                    name="password"
-                    className="rw-label"
-                    errorClassName="rw-label rw-label-error"
-                  >
-                    Mot de passe
-                  </Label>
-                  <PasswordField
-                    name="password"
-                    className="rw-input"
-                    errorClassName="rw-input rw-input-error"
-                    autoComplete="current-password"
-                    validation={{
-                      required: {
-                        value: true,
-                        message: 'Veuillez saisir votre mot de passe',
-                      },
-                    }}
-                  />
-
-                  <div className="rw-forgot-link">
-                    <Link
-                      to={routes.forgotPassword()}
-                      className="rw-forgot-link"
-                    >
-                      Mot de passe oublié ?
-                    </Link>
-                  </div>
-
-                  <FieldError name="password" className="rw-field-error" />
-
-                  <div className="rw-button-group">
-                    <Submit className="rw-button rw-button-blue">Se connecter</Submit>
-                  </div>
-                </Form>
+              <Label
+                name="password"
+                className="rw-label"
+                errorClassName="rw-label rw-label-error"
+              >
+                Mot de passe
+              </Label>
+              <PasswordField
+                name="password"
+                className="bg-gray-200 rounded-md p-2 text-sm outline-green-700 w-full"
+                errorClassName="rw-input rw-input-error"
+                autoComplete="current-password"
+                validation={{
+                  required: {
+                    value: true,
+                    message: 'Veuillez saisir votre mot de passe',
+                  },
+                }}
+              />
+              <FieldError name="password" className="rw-field-error" />
+              <div className="rw-forgot-link">
+                <Link
+                  to={routes.forgotPassword()}
+                  className="rw-forgot-link hover:text-green-700"
+                >
+                  Mot de passe oublié ?
+                </Link>
               </div>
-            </div>
+              <div className="rw-button-group">
+                <Submit className="rw-button text-white bg-green-900 hover:bg-green-700 py-3 px-6">Se connecter</Submit>
+              </div>
+              <div className="rw-login-link">
+                <span>Pas encore inscrit ?</span>{' '}
+                <Link to={routes.signup()} className="rw-link text-green-900 hover:text-green-700">
+                  Abonnez-vous !
+                </Link>
+              </div>
+            </Form>
           </div>
-          <div className="rw-login-link">
-            <span>Pas encore inscrit ?</span>{' '}
-            <Link to={routes.signup()} className="rw-link">
-              Abonnez-vous !
-            </Link>
-          </div>
+          
         </div>
-      </main>
+      </div>
     </>
   )
 }

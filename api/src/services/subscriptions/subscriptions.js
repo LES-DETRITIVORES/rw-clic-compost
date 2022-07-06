@@ -11,6 +11,12 @@ export const subscription = ({ id }) => {
   })
 }
 
+export const contract = ({ email }) => {
+  return db.subscription.findMany({
+    where: { email },
+  })
+}
+
 export const createSubscription = ({ input }) => {
   return db.subscription.create({
     data: input,
@@ -31,6 +37,10 @@ export const deleteSubscription = ({ id }) => {
 }
 
 export const emailSubscription = async ({ id }) => {
+  function rounded(num) {
+    return ((+(Math.round(num + "e+2") + "e-2")).toFixed(2))
+  }
+
   const subscription = await db.subscription.findUnique({
     where: { id },
   })
@@ -49,7 +59,7 @@ export const emailSubscription = async ({ id }) => {
     'Mél : ' + subscription.email + '\n' +
     'Adresse de collecte : ' + subscription.location + '\n' +
     'Offre : ' + subscription.service + '\n' +
-    'Tarif : ' + subscription.rate + ' € ' + (subscription.profile == 'particulier' ? 'TTC' : 'HT') + ' par collecte' + '\n' +
+    'Tarif : ' + rounded(subscription.rate*(subscription.profile == 'particulier' ? 1.2 : 1)) + ' € ' + (subscription.profile == 'particulier' ? 'TTC' : 'HT') + ' par collecte' + '\n' +
     'Mode de réglement : ' + paymentMethod + '\n' +
     'Date de démarrage : ' + startedAt + '\n' +
     '-------------------------------------------------------\n\n' +
@@ -70,7 +80,7 @@ export const emailSubscription = async ({ id }) => {
     'Mél : ' + subscription.email + '<br/>' +
     'Adresse de collecte : ' + subscription.location + '<br/>' +
     'Offre : ' + subscription.service + '<br/>' +
-    'Tarif : ' + subscription.rate + ' € ' + (subscription.profile == 'particulier' ? 'TTC' : 'HT') + ' par collecte' + '<br/>' +
+    'Tarif : ' + rounded(subscription.rate*(subscription.profile == 'particulier' ? 1.2 : 1)) + ' € ' + (subscription.profile == 'particulier' ? 'TTC' : 'HT') + ' par collecte' + '<br/>' +
     'Mode de réglement : ' + paymentMethod + '<br/>' +
     'Date de démarrage : ' + startedAt + '<br/>' +
     '<hr/><br/>' +
@@ -79,7 +89,6 @@ export const emailSubscription = async ({ id }) => {
     '65 quai de Brazza 33100 Bordeaux<br/>' +
     'bonjour@les-detritivores.co | 05 56 67 14 47' 
 
-  console.log(text, html)
   const email = await sendEmail({ to: subscription.email, bcc: ['bonjour@les-detritivores.co' /*, 'Développement commercial <ec52413f.les-detritivores.co@fr.teams.ms>'*/], subject, text, html })
   return email.messageId
 }
