@@ -21,8 +21,8 @@ const CREATE_SUBSCRIPTION = gql`
 `
 
 const EMAIL_SUBSCRIPTION = gql`
-  mutation EmailSubscriptionMutation($id: Int!) {
-    emailSubscription(id: $id)
+  mutation EmailSubscriptionMutation($id: Int!, $password: String!) {
+    emailSubscription(id: $id, password: $password)
   }
 `
 
@@ -70,6 +70,8 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
   const [card, setCard] = useState(false)
   const [iban, setIban] = useState(false)
   const [coupon, setCoupon] = useState()
+  const [submit, setSubmit] = useState(false)
+
   const { currentUser, signUp } = useAuth()
 
   const [createSubscription, {loading, error}] = useMutation(CREATE_SUBSCRIPTION, {
@@ -185,7 +187,20 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
   })
 
   const subscriptionSubmit = async (data) => {
+    setSubmit(true)
     let sub = subscription
+    /* Save user for authentification */
+    // Generate a random password on 4 digit
+    const password = Math.floor(Math.random() * 10).toString() + Math.floor(Math.random() * 10).toString()+ Math.floor(Math.random() * 10).toString()+ Math.floor(Math.random() * 10).toString()
+
+    // Sign up user
+    const user = await signUp({username: subscription.email, password: password })
+    console.log(JSON.stringify(user))
+    if (user) {
+      toast.success('Utilisateur ajouté')
+      sub.user = user.id
+    }
+
     sub.startedAt = data.startedAt
     
     /* Save customer on Stripe */
@@ -197,14 +212,6 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
     }})
     console.log(JSON.stringify(customer))
     sub.customer = customer.data.customer.id
-
-    /* Save user for authentification */
-    const user = await signUp({username: subscription.email, password:"0000"  })
-    console.log(JSON.stringify(user))
-    if (user) {
-      toast.success('Utilisateur ajouté')
-      sub.user = user.id
-    }
 
     /* Add CARD payment */
     if (elements.getElement(CardElement)) {
@@ -280,7 +287,7 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
     console.log(JSON.stringify(sub))
 
     /* Send email subscription */
-    emailSubscription({ variables: { id: sub.data.subscription.id } })
+    emailSubscription({ variables: { id: sub.data.subscription.id, password: password } })
 
     /* Send SMS subscription */
     // console.log(JSON.stringify(subscription))
@@ -304,8 +311,8 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
     }
     console.log(deal)
     createDeal({ variables: { input: deal }})  
-
     navigate(routes.confirm())
+    setSubmit(false)
   }
 
   return (
@@ -432,8 +439,8 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
                 </div>
                 <div>
                   <Submit
-                    disabled={loading || !(card || iban)}
-                    className={`sm:text-sm md:text-lg uppercase font-bold ${(card || iban) ? 'bg-yellow-400 text-black' : 'bg-gray-600 text-white'} rounded-b-md p-4 w-full shadow-lg`}>S'abonner</Submit>
+                    disabled={submit || !(card || iban)}
+                    className={`sm:text-sm md:text-lg uppercase font-bold ${!submit & (card || iban) ? 'bg-yellow-400 text-black' : 'bg-gray-600 text-white'} rounded-b-md p-4 w-full shadow-lg`}>S'abonner</Submit>
                 </div>
               </Form>
             </div>

@@ -17,6 +17,7 @@ export const QUERY = gql`
       customer
       card
       iban
+      user
     }
   }
 `

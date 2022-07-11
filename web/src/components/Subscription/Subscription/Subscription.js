@@ -128,6 +128,10 @@ const Subscription = ({ subscription }) => {
               <th>Iban</th>
               <td>{subscription.iban}</td>
             </tr>
+            <tr>
+              <th>User</th>
+              <td>{subscription.user}</td>
+            </tr>
           </tbody>
         </table>
       </div>

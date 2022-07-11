@@ -37,7 +37,7 @@ export const deleteSubscription = ({ id }) => {
   })
 }
 
-export const emailSubscription = async ({ id }) => {
+export const emailSubscription = async ({ id, password }) => {
   function rounded(num) {
     return ((+(Math.round(num + "e+2") + "e-2")).toFixed(2))
   }
@@ -64,6 +64,8 @@ export const emailSubscription = async ({ id }) => {
     'Mode de réglement : ' + paymentMethod + '\n' +
     'Date de démarrage : ' + startedAt + '\n' +
     '-------------------------------------------------------\n\n' +
+    'CODE DE CONNEXION : ' + password + '\n' + 
+    '-------------------------------------------------------\n\n' +
     'N\'hésitez pas à nous contacter pour toutes questions :\n' +
     'LES DETRITIVORES\n' +
     '65 quai de Brazza 33100 Bordeaux\n' +
@@ -84,7 +86,9 @@ export const emailSubscription = async ({ id }) => {
     'Tarif : ' + rounded(subscription.rate*(subscription.profile == 'particulier' ? 1.2 : 1)) + ' € ' + (subscription.profile == 'particulier' ? 'TTC' : 'HT') + ' par collecte' + '<br/>' +
     'Mode de réglement : ' + paymentMethod + '<br/>' +
     'Date de démarrage : ' + startedAt + '<br/>' +
-    '<hr/><br/>' +
+    '<hr/>' +
+    'CODE DE CONNEXION : ' + password + '<br/>' +
+    '<hr/>' +    
     'N\'hésitez pas à nous contacter pour toutes questions :<br/>' +
     'LES DETRITIVORES<br/>' +
     '65 quai de Brazza 33100 Bordeaux<br/>' +

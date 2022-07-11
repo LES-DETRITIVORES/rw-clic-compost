@@ -69,6 +69,6 @@ export const schema = gql`
       input: UpdateSubscriptionInput!
     ): Subscription! @skipAuth
     deleteSubscription(id: Int!): Subscription! @skipAuth
-    emailSubscription(id: Int!): String! @skipAuth
+    emailSubscription(id: Int!, password: String!): String! @skipAuth
   }
 `
