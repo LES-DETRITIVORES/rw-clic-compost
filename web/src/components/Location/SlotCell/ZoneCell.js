@@ -27,13 +27,12 @@ export const Success = ({ geocoder }) => {
   const MAX_DISTANCE = 3
 
   return (
-    <>
-      {(distance <= MAX_DISTANCE) &&
-        <div className="text-center mt-3 text-sm">9h - 12h</div>
-      }
-      {(distance > MAX_DISTANCE) &&
-        <div className="text-center mt-3 text-sm">13h - 15h</div>
-      }
-    </>
+    <div className="text-center mt-2 text-md">
+      Collecte prévue entre&nbsp;
+      <span class="underline font-medium">
+        {(distance <= MAX_DISTANCE) && "9h et 12h"}
+        {(distance > MAX_DISTANCE) && "13h et 15h"}
+      </span>
+    </div>
   )
 }

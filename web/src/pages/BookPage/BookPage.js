@@ -141,6 +141,10 @@ const BookPage = () => {
                 <h1 className="uppercase font-bold text-lg text-center">Votre contrat de tri des biodéchets</h1>
                 <hr className="my-3 -mx-8"/>
                 <ContractCell user={currentUser.id}/>
+                <hr className="my-3 -mx-8"/>
+                <p className="font-medium text-md text-center">
+                    Le service est facturé pour chaque collecte réalisée :<br/> vous payez uniquement à l'usage !
+                </p>
               </div>
             </div>
             <div className="md:w-1/2">
@@ -149,10 +153,6 @@ const BookPage = () => {
                     className="mx-auto font-sans">
                 <FormError error={error} wrapperClassName="form-error" />
                 <div className="bg-white rounded-t-lg shadow-lg p-8 mt-8">
-                  <p className="font-medium text-md text-center">
-                    Le service est facturé pour chaque collecte réalisée :<br/> vous payez uniquement à l'usage !
-                  </p>
-                  <hr className="my-3 -mx-8"/>
                   <Label className="font-medium block text-center">
                     Veuillez choisir un jour de collecte
                   </Label>
@@ -160,7 +160,7 @@ const BookPage = () => {
                     name="pickedAt"
                     step="7"
                     onChange={(date) => setDeliverDate(delayDate(new Date(date.target.value),0))} min={formatDate(delayDate(new Date(Date.now()),1))} value={formatDate(deliverDate)}
-                    className="block mx-auto text-center w-48 bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                    className="block mx-auto text-center w-32 bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                   <SlotCell user={currentUser.id} />
                   <Label className="font-medium mt-6 block text-center">
                     Précisions sur la collecte (code, sonnerie, etc.)
