@@ -10,7 +10,7 @@ const ConfirmLayout = (props) => {
 
   const imageUrl = "https://ik.imagekit.io/dttv/SHOOTING/DETRI_211007_672_xq8S3r6j5.jpg?ik-sdk-version=javascript-1.4.3&updatedAt=1651843629362"
   return (
-    <div className="p-6 min-h-screen bg-gray-300 bg-cover bg-no-repeat bg-center" style={{ backgroundImage: `url(${imageUrl})` }}>
+    <div className="p-6 min-h-screen min-w-screen bg-gray-300 bg-cover bg-no-repeat bg-center" style={{ backgroundImage: `url(${imageUrl})` }}>
        <Transition
           appear={true}
           show={isShowing}

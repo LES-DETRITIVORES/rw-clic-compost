@@ -190,8 +190,8 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
     setSubmit(true)
     let sub = subscription
     /* Save user for authentification */
-    // Generate a random password on 4 digit
-    const password = Math.floor(Math.random() * 10).toString() + Math.floor(Math.random() * 10).toString()+ Math.floor(Math.random() * 10).toString()+ Math.floor(Math.random() * 10).toString()
+    // Generate a random password on 6 digits (0-9)
+    const password = Math.floor(Math.random() * 10).toString() + Math.floor(Math.random() * 10).toString()+ Math.floor(Math.random() * 10).toString()+ Math.floor(Math.random() * 10).toString()+Math.floor(Math.random() * 10).toString() + Math.floor(Math.random() * 10).toString()
 
     // Sign up user
     const user = await signUp({username: subscription.email, password: password })
@@ -202,7 +202,7 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
     }
 
     sub.startedAt = data.startedAt
-    
+
     /* Save customer on Stripe */
     const customer = await createCustomer({ variables: {
       input: {
@@ -310,7 +310,7 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
       status: 'won'
     }
     console.log(deal)
-    createDeal({ variables: { input: deal }})  
+    createDeal({ variables: { input: deal }})
     navigate(routes.confirm())
     setSubmit(false)
   }
@@ -363,7 +363,7 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
             </div>
             <div>
               <Toaster />
-              <Form onSubmit={subscriptionSubmit} config={{ mode: 'onBlur' }} error={error} 
+              <Form onSubmit={subscriptionSubmit} config={{ mode: 'onBlur' }} error={error}
                     className="mx-auto font-sans">
                 <FormError error={error} wrapperClassName="form-error" />
                 <div className="bg-white rounded-t-lg shadow-lg p-8 mt-8">
@@ -375,33 +375,33 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
                     Date de démarrage souhaitée
                   </Label>
                   {
-                    subscription.profile == "particulier" && 
-                    <DateField name="startedAt" 
-                              onChange={(date) => setDeliverDate(delayDate(new Date(date.target.value),0))} min={formatDate(delayDate(new Date(Date.now()),1))} value={formatDate(deliverDate)} 
+                    subscription.profile == "particulier" &&
+                    <DateField name="startedAt"
+                              onChange={(date) => setDeliverDate(delayDate(new Date(date.target.value),0))} min={formatDate(delayDate(new Date(Date.now()),1))} value={formatDate(deliverDate)}
                               className="block text-center w-32 bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                   }
                   {
-                    subscription.profile == "professionnel" && 
-                    <DateField name="startedAt" 
-                              onChange={(date) => setDeliverDate(delayDate(new Date(date.target.value),0))} min={formatDate(delayDate(new Date(Date.now()),6))} value={formatDate(deliverDate)} 
+                    subscription.profile == "professionnel" &&
+                    <DateField name="startedAt"
+                              onChange={(date) => setDeliverDate(delayDate(new Date(date.target.value),0))} min={formatDate(delayDate(new Date(Date.now()),6))} value={formatDate(deliverDate)}
                               className="block text-center w-32 bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                   }
-                  { subscription.profile == "particulier" && 
+                  { subscription.profile == "particulier" &&
                   <>
                     <Label className="font-medium block mt-6">
                       Code de réduction
                     </Label>
-                    <TextField 
-                      name="coupon" 
+                    <TextField
+                      name="coupon"
                       value={coupon}
                       onChange={(e) => setCoupon(e.target.value.toUpperCase())}
                       className="uppercase text-center block w-32 bg-gray-200 rounded-md p-2 text-sm outline-orange-300"
                     />
-                    {coupon == "RECUP40" && 
+                    {coupon == "RECUP40" &&
                     <p className="font-medium text-orange-600">Réduction appliquée de -40% sur le tarif de collecte</p>}
                   </>
                   }
-                  
+
                   <Label className="font-medium block mt-6">
                     Mode de réglement
                   </Label>
@@ -432,7 +432,7 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
                       </Tab.Panel>
                       <Tab.Panel>
                         Veuillez renseigner votre IBAN :
-                        <IbanElement onChange={(e) => {setIban(e.complete)}} options={IBAN_ELEMENT_OPTIONS} placeholder="FR1420041010050500013M02606" className="block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>  
+                        <IbanElement onChange={(e) => {setIban(e.complete)}} options={IBAN_ELEMENT_OPTIONS} placeholder="FR1420041010050500013M02606" className="block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                       </Tab.Panel>
                     </Tab.Panels>
                   </Tab.Group>

@@ -28,6 +28,5 @@ const SearchLayout = (props) => {
         </div>
     )
 };
-  
+
 export default SearchLayout
-  

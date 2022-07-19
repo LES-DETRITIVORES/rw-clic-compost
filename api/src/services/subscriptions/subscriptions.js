@@ -13,7 +13,7 @@ export const subscription = ({ id }) => {
 }
 
 export const contract = ({ user }) => {
-  return db.subscription.findMany({
+  return db.subscription.findFirst({
     where: { user : user },
   })
 }
@@ -64,12 +64,12 @@ export const emailSubscription = async ({ id, password }) => {
     'Mode de réglement : ' + paymentMethod + '\n' +
     'Date de démarrage : ' + startedAt + '\n' +
     '-------------------------------------------------------\n\n' +
-    'CODE DE CONNEXION : ' + password + '\n' + 
+    'CODE DE CONNEXION : ' + password + '\n' +
     '-------------------------------------------------------\n\n' +
     'N\'hésitez pas à nous contacter pour toutes questions :\n' +
     'LES DETRITIVORES\n' +
     '65 quai de Brazza 33100 Bordeaux\n' +
-    'bonjour@les-detritivores.co | 05 56 67 14 47' 
+    'bonjour@les-detritivores.co | 05 56 67 14 47'
 
   const html =
     'Bienvenu ' + subscription.firstname + ' !<br/><br/>' +
@@ -88,11 +88,11 @@ export const emailSubscription = async ({ id, password }) => {
     'Date de démarrage : ' + startedAt + '<br/>' +
     '<hr/>' +
     'CODE DE CONNEXION : ' + password + '<br/>' +
-    '<hr/>' +    
+    '<hr/>' +
     'N\'hésitez pas à nous contacter pour toutes questions :<br/>' +
     'LES DETRITIVORES<br/>' +
     '65 quai de Brazza 33100 Bordeaux<br/>' +
-    'bonjour@les-detritivores.co | 05 56 67 14 47' 
+    'bonjour@les-detritivores.co | 05 56 67 14 47'
 
   const email = await sendEmail({ to: subscription.email, bcc: ['bonjour@les-detritivores.co' /*, 'Développement commercial <ec52413f.les-detritivores.co@fr.teams.ms>'*/], subject, text, html })
   return email.messageId
