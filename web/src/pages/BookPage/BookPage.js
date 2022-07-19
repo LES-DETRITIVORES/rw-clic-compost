@@ -102,23 +102,25 @@ const BookPage = () => {
     return nextDate;
   }
 
-  const subscriptionSubmit = async (data) => {
-    sub.startedAt = data.startedAt
+  const bookSubmit = async (data) => {
+    let booking =  {
+      user : currentUser.id,
+      pickedAt : data.pickedAt,
+      details : data.details,
+      status : ''
+    }
+    console.log(JSON.stringify(booking))
 
-    /* Save subscription */
-    sub.rate = (parseFloat(sub.rate)*(coupon == "RECUP40" ? 4/1.2/parseFloat(sub.rate) : 1)).toFixed(2) // apply coupon
-    setSubscription(sub)
-    sub = await createSubscription({ variables: { input: subscription } })
-    console.log(JSON.stringify(sub))
+    /* Save booking */
+    //book = await createBooking({ variables: { input: booking } })
 
-    /* Send email subscription */
-    emailSubscription({ variables: { id: sub.data.subscription.id } })
+    /* Send email booking */
+    //emailBooking({ variables: { id: book.data.booking.id } })
 
-    /* Send SMS subscription */
-    // console.log(JSON.stringify(subscription))
-    //SMSSubscription({ variables: { input: {text: "Abonnement prêt", from:'+1 207 705 5921', 'to': subscription.phone }} })
+     /* Send SMS booking */
+     /* TODO */
 
-    navigate(routes.confirm())
+    //navigate(routes.confirmBook())
   }
 
   return (
@@ -149,7 +151,7 @@ const BookPage = () => {
             </div>
             <div className="md:w-1/2">
               <Toaster />
-              <Form onSubmit={subscriptionSubmit} config={{ mode: 'onBlur' }} error={error}
+              <Form onSubmit={bookSubmit} config={{ mode: 'onBlur' }} error={error}
                     className="mx-auto font-sans">
                 <FormError error={error} wrapperClassName="form-error" />
                 <div className="bg-white rounded-t-lg shadow-lg p-8 mt-8">
