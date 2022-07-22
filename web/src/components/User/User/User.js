@@ -80,10 +80,6 @@ const User = ({ user }) => {
               <th>Email</th>
               <td>{user.email}</td>
             </tr>
-            <tr>
-              <th>Name</th>
-              <td>{user.name}</td>
-            </tr>
           </tbody>
         </table>
       </div>

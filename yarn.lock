@@ -25206,6 +25206,7 @@ __metadata:
   dependencies:
     "@headlessui/react": ^1.6.0
     "@heroicons/react": ^1.0.6
+    "@redwoodjs/auth": 1.0.0
     "@redwoodjs/forms": 1.0.0
     "@redwoodjs/router": 1.0.0
     "@redwoodjs/web": 1.0.0

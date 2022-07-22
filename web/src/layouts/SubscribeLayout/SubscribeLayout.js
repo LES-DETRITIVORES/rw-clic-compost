@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react'
 
 const SubscribeLayout = (props) => {
     const imageUrl = "https://ik.imagekit.io/dttv/SHOOTING/DETRI_211202_599__s4xTKpKa.jpg?ik-sdk-version=javascript-1.4.3&updatedAt=1651844829335"
-    
+
     let [isShowing, setIsShowing] = useState(false)
     useEffect(() => {
     // Update the transition state after component mounting
@@ -16,7 +16,7 @@ const SubscribeLayout = (props) => {
 
     return (
       <Elements stripe={stripePromise}>
-        <div className="p-6 bg-gray-300 bg-cover bg-no-repeat bg-center" style={{ backgroundImage: `url(${imageUrl})` }}>
+        <div className="p-6 min-h-screen min-w-screen bg-gray-300 bg-cover bg-no-repeat bg-center" style={{ backgroundImage: `url(${imageUrl})` }}>
           <Transition
             appear={true}
             show={isShowing}

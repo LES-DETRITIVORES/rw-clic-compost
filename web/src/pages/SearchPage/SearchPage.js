@@ -1,7 +1,8 @@
-import { navigate, routes } from '@redwoodjs/router'
+import { navigate, routes, Link } from '@redwoodjs/router'
 import { useState } from 'react'
 import { MetaTags } from '@redwoodjs/web'
 import { Form, Label, NumberField, RadioField, Submit } from '@redwoodjs/forms'
+import { useAuth } from '@redwoodjs/auth'
 import { RadioGroup } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/solid'
 import LocationField from 'src/components/Location/LocationField'
@@ -11,6 +12,7 @@ const SearchPage = ({u, l, m}) => {
   const [profile, setProfile] = useState(u)
   const [location, setLocation] = useState(l)
   const [meals, setMeals] = useState(m)
+  const { currentUser, isAuthenticated, logOut } = useAuth()
 
   const logger = (log) => {
     console.log(log)
@@ -24,6 +26,17 @@ const SearchPage = ({u, l, m}) => {
   return (
   <>
     <MetaTags title="Recherche" description="Trouvez la meilleure solution de tri pour vos restes alimentaires et biodéchets" />
+    <div className="text-white text-right">
+      {isAuthenticated &&
+        <span>
+          <span className="text-sm font-light">[<LoginCell id={currentUser.id} />]</span>&nbsp;
+          <Link className="underline cursor-pointer font-medium text-md" onClick={logOut}>Se déconnecter</Link>
+        </span>
+      }
+      {!isAuthenticated &&
+        <Link className="underline cursor-pointer font-medium text-md" to={routes.book()}>[Espace usager]</Link>
+      }
+    </div>
     <div className="flex flex-row">
       <div className="basis-auto md:basis-1/2"></div>
       <div className="basis-full md:basis-2/2">
@@ -38,9 +51,9 @@ const SearchPage = ({u, l, m}) => {
                 <Label className="font-medium block">
                     Je suis...
                 </Label>
-                <RadioGroup value={profile} onChange={setProfile} 
+                <RadioGroup value={profile} onChange={setProfile}
                   className="flex flex-row gap-4">
-                  <RadioGroup.Option value="particulier" 
+                  <RadioGroup.Option value="particulier"
                     className={({ checked }) => `basis-1/2 border border-gray-100 hover:border-green-900 rounded-lg shadow-md p-6 cursor-pointer ${checked ? 'bg-green-900 text-white' : 'bg-white'}`}>
                     {({ checked }) => (
                       <RadioGroup.Label as="p" className={`font-medium ${checked ? 'text-white' : 'text-gray-900'}`}>
@@ -60,15 +73,15 @@ const SearchPage = ({u, l, m}) => {
                 {
                   profile &&
                   <>
-                    <Label 
+                    <Label
                       name="location"
                       className="font-medium mt-6 block">
                       Adresse à trier
                     </Label>
-                    <LocationField 
+                    <LocationField
                       name="location"
-                      value={location} 
-                      onChange={setLocation} 
+                      value={location}
+                      onChange={setLocation}
                       className="block text-center w-full rounded-md bg-gray-200 py-2 pl-3 pr-10 text-sm outline-green-800 leading-5 text-gray-900 focus:ring-0"
                     />
                     {
@@ -76,18 +89,18 @@ const SearchPage = ({u, l, m}) => {
                         <GeocoderCell query={location} />
                     }
                     {
-                      profile == 'professionnel' && 
+                      profile == 'professionnel' &&
                       <>
-                        <Label 
+                        <Label
                           name="meals"
                           className="font-medium mt-6 block">
                           Repas par semaine
                         </Label>
-                        <NumberField 
-                          name="meals" 
-                          onChange={(e) => setMeals(e.target.value)} 
-                          value={meals} 
-                          className="block w-1/3 mx-auto text-center bg-gray-200 rounded-md p-2 text-sm outline-green-800" 
+                        <NumberField
+                          name="meals"
+                          onChange={(e) => setMeals(e.target.value)}
+                          value={meals}
+                          className="block w-1/3 mx-auto text-center bg-gray-200 rounded-md p-2 text-sm outline-green-800"
                         />
                       </>
                     }
@@ -95,19 +108,19 @@ const SearchPage = ({u, l, m}) => {
                 }
               </div>
               <div>
-                {profile == "particulier" && 
+                {profile == "particulier" &&
                   <Submit
                     disabled={!profile || !location }
                     className={`text-xs sm:text-sm md:text-lg uppercase font-bold ${(profile && location) ? 'bg-green-800' : 'bg-gray-600'} rounded-b-md p-4 text-white w-full shadow-lg`}>
                       Chercher une solution locale
-                  </Submit>                
+                  </Submit>
                 }
-                {profile == "professionnel" && 
+                {profile == "professionnel" &&
                   <Submit
                     disabled={!profile || !location || !meals}
                     className={`text-xs sm:text-sm md:text-lg uppercase font-bold ${(profile && location && meals) ? 'bg-green-800' : 'bg-gray-600'} rounded-b-md p-4 text-white w-full shadow-lg`}>
                       Chercher une solution locale
-                  </Submit>                
+                  </Submit>
                 }
               </div>
             </Form>

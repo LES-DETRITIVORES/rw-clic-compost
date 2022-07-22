@@ -9,7 +9,6 @@ export const QUERY = gql`
     user: user(id: $id) {
       id
       email
-      name
     }
   }
 `
@@ -18,7 +17,6 @@ const UPDATE_USER_MUTATION = gql`
     updateUser(id: $id, input: $input) {
       id
       email
-      name
     }
   }
 `

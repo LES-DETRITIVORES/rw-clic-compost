@@ -16,11 +16,13 @@ export const schema = gql`
     customer: String
     card: String
     iban: String
+    user: Int!
   }
 
   type Query {
     subscriptions: [Subscription!]! @requireAuth
     subscription(id: Int!): Subscription @requireAuth
+    contract(user: Int!): Subscription @requireAuth
   }
 
   input CreateSubscriptionInput {
@@ -38,6 +40,7 @@ export const schema = gql`
     customer: String
     card: String
     iban: String
+    user: Int
   }
 
   input UpdateSubscriptionInput {
@@ -55,16 +58,17 @@ export const schema = gql`
     customer: String
     card: String
     iban: String
+    user: Int
   }
 
   type Mutation {
     createSubscription(input: CreateSubscriptionInput!): Subscription!
-      @requireAuth
+      @skipAuth
     updateSubscription(
       id: Int!
       input: UpdateSubscriptionInput!
-    ): Subscription! @requireAuth
-    deleteSubscription(id: Int!): Subscription! @requireAuth
-    emailSubscription(id: Int!): String! @requireAuth
+    ): Subscription! @skipAuth
+    deleteSubscription(id: Int!): Subscription! @skipAuth
+    emailSubscription(id: Int!, password: String!): String! @skipAuth
   }
 `

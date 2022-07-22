@@ -7,7 +7,6 @@ export const QUERY = gql`
     users {
       id
       email
-      name
     }
   }
 `

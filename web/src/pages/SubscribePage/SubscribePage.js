@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { Form, Label, TextField, FormError, DateField, Submit } from '@redwoodjs/forms'
 import { useStripe, useElements, IbanElement, CardElement } from '@stripe/react-stripe-js';
 import { Tab } from '@headlessui/react'
+import { useAuth } from '@redwoodjs/auth'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -20,8 +21,8 @@ const CREATE_SUBSCRIPTION = gql`
 `
 
 const EMAIL_SUBSCRIPTION = gql`
-  mutation EmailSubscriptionMutation($id: Int!) {
-    emailSubscription(id: $id)
+  mutation EmailSubscriptionMutation($id: Int!, $password: String!) {
+    emailSubscription(id: $id, password: $password)
   }
 `
 
@@ -69,6 +70,9 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
   const [card, setCard] = useState(false)
   const [iban, setIban] = useState(false)
   const [coupon, setCoupon] = useState()
+  const [submit, setSubmit] = useState(false)
+
+  const { currentUser, signUp } = useAuth()
 
   const [createSubscription, {loading, error}] = useMutation(CREATE_SUBSCRIPTION, {
     onCompleted: (result) => {
@@ -98,7 +102,7 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
   const [createCustomer] = useMutation(CREATE_CUSTOMER, {
     onCompleted: (result) => {
       //console.log(JSON.stringify(result.customer))
-      toast.success('Usager ajouté.')
+      //toast.success('Usager ajouté.')
     },
   })
 
@@ -178,14 +182,28 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
     rate : r,
     startedAt : '',
     card: '',
-    iban: ''
+    iban: '',
+    user: ''
   })
 
   const subscriptionSubmit = async (data) => {
+    setSubmit(true)
     let sub = subscription
+    /* Save user for authentification */
+    // Generate a random password on 6 digits (0-9)
+    const password = Math.floor(Math.random() * 10).toString() + Math.floor(Math.random() * 10).toString()+ Math.floor(Math.random() * 10).toString()+ Math.floor(Math.random() * 10).toString()+Math.floor(Math.random() * 10).toString() + Math.floor(Math.random() * 10).toString()
+
+    // Sign up user
+    const user = await signUp({username: subscription.email, password: password })
+    console.log(JSON.stringify(user))
+    if (user) {
+      toast.success('Utilisateur ajouté')
+      sub.user = user.id
+    }
+
     sub.startedAt = data.startedAt
-    
-    /* Save customer */
+
+    /* Save customer on Stripe */
     const customer = await createCustomer({ variables: {
       input: {
         description: subscription.firstname + ' ' + subscription.lastname.toUpperCase(),
@@ -194,7 +212,6 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
     }})
     console.log(JSON.stringify(customer))
     sub.customer = customer.data.customer.id
-
 
     /* Add CARD payment */
     if (elements.getElement(CardElement)) {
@@ -270,7 +287,7 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
     console.log(JSON.stringify(sub))
 
     /* Send email subscription */
-    emailSubscription({ variables: { id: sub.data.subscription.id } })
+    emailSubscription({ variables: { id: sub.data.subscription.id, password: password } })
 
     /* Send SMS subscription */
     // console.log(JSON.stringify(subscription))
@@ -293,9 +310,9 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
       status: 'won'
     }
     console.log(deal)
-    createDeal({ variables: { input: deal }})  
-
+    createDeal({ variables: { input: deal }})
     navigate(routes.confirm())
+    setSubmit(false)
   }
 
   return (
@@ -346,11 +363,11 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
             </div>
             <div>
               <Toaster />
-              <Form onSubmit={subscriptionSubmit} config={{ mode: 'onBlur' }} error={error} 
+              <Form onSubmit={subscriptionSubmit} config={{ mode: 'onBlur' }} error={error}
                     className="mx-auto font-sans">
                 <FormError error={error} wrapperClassName="form-error" />
                 <div className="bg-white rounded-t-lg shadow-lg p-8 mt-8">
-                  <p className="font-bold text-md mb-6">
+                  <p className="font-bold text-md mb-6 text-center">
                     Notre service est facturé chaque mois en fonction du nombre de collectes réalisées : vous payez uniquement à l'usage !
                   </p>
                   <hr/>
@@ -358,33 +375,33 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
                     Date de démarrage souhaitée
                   </Label>
                   {
-                    subscription.profile == "particulier" && 
-                    <DateField name="startedAt" 
-                              onChange={(date) => setDeliverDate(delayDate(new Date(date.target.value),0))} min={formatDate(delayDate(new Date(Date.now()),1))} value={formatDate(deliverDate)} 
+                    subscription.profile == "particulier" &&
+                    <DateField name="startedAt"
+                              onChange={(date) => setDeliverDate(delayDate(new Date(date.target.value),0))} min={formatDate(delayDate(new Date(Date.now()),1))} value={formatDate(deliverDate)}
                               className="block text-center w-32 bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                   }
                   {
-                    subscription.profile == "professionnel" && 
-                    <DateField name="startedAt" 
-                              onChange={(date) => setDeliverDate(delayDate(new Date(date.target.value),0))} min={formatDate(delayDate(new Date(Date.now()),6))} value={formatDate(deliverDate)} 
+                    subscription.profile == "professionnel" &&
+                    <DateField name="startedAt"
+                              onChange={(date) => setDeliverDate(delayDate(new Date(date.target.value),0))} min={formatDate(delayDate(new Date(Date.now()),6))} value={formatDate(deliverDate)}
                               className="block text-center w-32 bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                   }
-                  { subscription.profile == "particulier" && 
+                  { subscription.profile == "particulier" &&
                   <>
                     <Label className="font-medium block mt-6">
                       Code de réduction
                     </Label>
-                    <TextField 
-                      name="coupon" 
+                    <TextField
+                      name="coupon"
                       value={coupon}
                       onChange={(e) => setCoupon(e.target.value.toUpperCase())}
                       className="uppercase text-center block w-32 bg-gray-200 rounded-md p-2 text-sm outline-orange-300"
                     />
-                    {coupon == "RECUP40" && 
+                    {coupon == "RECUP40" &&
                     <p className="font-medium text-orange-600">Réduction appliquée de -40% sur le tarif de collecte</p>}
                   </>
                   }
-                  
+
                   <Label className="font-medium block mt-6">
                     Mode de réglement
                   </Label>
@@ -415,15 +432,15 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
                       </Tab.Panel>
                       <Tab.Panel>
                         Veuillez renseigner votre IBAN :
-                        <IbanElement onChange={(e) => {setIban(e.complete)}} options={IBAN_ELEMENT_OPTIONS} placeholder="FR1420041010050500013M02606" className="block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>  
+                        <IbanElement onChange={(e) => {setIban(e.complete)}} options={IBAN_ELEMENT_OPTIONS} placeholder="FR1420041010050500013M02606" className="block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
                       </Tab.Panel>
                     </Tab.Panels>
                   </Tab.Group>
                 </div>
                 <div>
                   <Submit
-                    disabled={loading || !(card || iban)}
-                    className={`sm:text-sm md:text-lg uppercase font-bold ${(card || iban) ? 'bg-yellow-400 text-black' : 'bg-gray-600 text-white'} rounded-b-md p-4 w-full shadow-lg`}>S'abonner</Submit>
+                    disabled={submit || !(card || iban)}
+                    className={`sm:text-sm md:text-lg uppercase font-bold ${!submit & (card || iban) ? 'bg-yellow-400 text-black' : 'bg-gray-600 text-white'} rounded-b-md p-4 w-full shadow-lg`}>S'abonner</Submit>
                 </div>
               </Form>
             </div>

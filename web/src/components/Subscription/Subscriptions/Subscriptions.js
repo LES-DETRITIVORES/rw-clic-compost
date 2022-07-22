@@ -93,6 +93,7 @@ const SubscriptionsList = ({ subscriptions }) => {
             <th>Customer</th>
             <th>Card</th>
             <th>Iban</th>
+            <th>User</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -113,6 +114,7 @@ const SubscriptionsList = ({ subscriptions }) => {
               <td>{truncate(subscription.customer)}</td>
               <td>{truncate(subscription.card)}</td>
               <td>{truncate(subscription.iban)}</td>
+              <td>{truncate(subscription.user)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link

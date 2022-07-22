@@ -1,5 +1,6 @@
 import { db } from 'src/lib/db'
 import { sendEmail } from 'src/lib/email'
+import { logger } from 'src/lib/logger'
 
 export const subscriptions = () => {
   return db.subscription.findMany()
@@ -8,6 +9,12 @@ export const subscriptions = () => {
 export const subscription = ({ id }) => {
   return db.subscription.findUnique({
     where: { id },
+  })
+}
+
+export const contract = ({ user }) => {
+  return db.subscription.findFirst({
+    where: { user : user },
   })
 }
 
@@ -30,12 +37,17 @@ export const deleteSubscription = ({ id }) => {
   })
 }
 
-export const emailSubscription = async ({ id }) => {
+export const emailSubscription = async ({ id, password }) => {
+  function rounded(num) {
+    return ((+(Math.round(num + "e+2") + "e-2")).toFixed(2))
+  }
+
   const subscription = await db.subscription.findUnique({
     where: { id },
   })
   let paymentMethod = subscription.card ? 'Carte bancaire' : 'Prélèvement SEPA'
   let startedAt = new Date(subscription.startedAt).toLocaleDateString("fr")
+  let app_url = process.env.APP_URL + '/collecte'
   const subject = 'CLIC & COMPOST #' + subscription.id + ' - Vous êtes prêts à trier vos biodéchets !'
   const text =
     'Bienvenu ' + subscription.firstname + ' !\n\n' +
@@ -49,14 +61,17 @@ export const emailSubscription = async ({ id }) => {
     'Mél : ' + subscription.email + '\n' +
     'Adresse de collecte : ' + subscription.location + '\n' +
     'Offre : ' + subscription.service + '\n' +
-    'Tarif : ' + subscription.rate + ' € ' + (subscription.profile == 'particulier' ? 'TTC' : 'HT') + ' par collecte' + '\n' +
+    'Tarif : ' + rounded(subscription.rate*(subscription.profile == 'particulier' ? 1.2 : 1)) + ' € ' + (subscription.profile == 'particulier' ? 'TTC' : 'HT') + ' par collecte' + '\n' +
     'Mode de réglement : ' + paymentMethod + '\n' +
     'Date de démarrage : ' + startedAt + '\n' +
-    '-------------------------------------------------------\n\n' +
+    '-------------------------------------------------------\n' +
+    'ESPACE USAGER : ' + app_url + '\n' +
+    'CODE DE CONNEXION : ' + password + '\n' +
+    '-------------------------------------------------------\n' +
     'N\'hésitez pas à nous contacter pour toutes questions :\n' +
     'LES DETRITIVORES\n' +
     '65 quai de Brazza 33100 Bordeaux\n' +
-    'bonjour@les-detritivores.co | 05 56 67 14 47' 
+    'bonjour@les-detritivores.co | 05 56 67 14 47'
 
   const html =
     'Bienvenu ' + subscription.firstname + ' !<br/><br/>' +
@@ -70,16 +85,18 @@ export const emailSubscription = async ({ id }) => {
     'Mél : ' + subscription.email + '<br/>' +
     'Adresse de collecte : ' + subscription.location + '<br/>' +
     'Offre : ' + subscription.service + '<br/>' +
-    'Tarif : ' + subscription.rate + ' € ' + (subscription.profile == 'particulier' ? 'TTC' : 'HT') + ' par collecte' + '<br/>' +
+    'Tarif : ' + rounded(subscription.rate*(subscription.profile == 'particulier' ? 1.2 : 1)) + ' € ' + (subscription.profile == 'particulier' ? 'TTC' : 'HT') + ' par collecte' + '<br/>' +
     'Mode de réglement : ' + paymentMethod + '<br/>' +
     'Date de démarrage : ' + startedAt + '<br/>' +
-    '<hr/><br/>' +
+    '<hr/>' +
+    'ESPACE USAGER : <a href=' + app_url + '>'+ app_url + '</a><br/>' +
+    'CODE DE CONNEXION : ' + password + '<br/>' +
+    '<hr/>' +
     'N\'hésitez pas à nous contacter pour toutes questions :<br/>' +
     'LES DETRITIVORES<br/>' +
     '65 quai de Brazza 33100 Bordeaux<br/>' +
-    'bonjour@les-detritivores.co | 05 56 67 14 47' 
+    'bonjour@les-detritivores.co | 05 56 67 14 47'
 
-  console.log(text, html)
   const email = await sendEmail({ to: subscription.email, bcc: ['bonjour@les-detritivores.co' /*, 'Développement commercial <ec52413f.les-detritivores.co@fr.teams.ms>'*/], subject, text, html })
   return email.messageId
 }
