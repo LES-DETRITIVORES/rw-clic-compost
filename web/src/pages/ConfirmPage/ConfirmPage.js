@@ -15,10 +15,10 @@ const ConfirmPage = () => {
         <div className="font-bold text-center text-3xl md:text-5xl mt-16 text-white w-min mx-auto -rotate-2">
           <span className="bg-green-900 p-1 block w-min">Vous&nbsp;êtes&nbsp;formidable&nbsp;!</span>
         </div>
-        <div className="container mx-auto max-w-xl font-sans bg-white rounded-lg shadow-lg p-8 mt-8 text-center">  
-          <p className="mt-6 font-bold text-lg">Merci de votre confiance,<br/>votre contrat est prêt :)</p> 
+        <div className="container mx-auto max-w-xl font-sans bg-white rounded-lg shadow-lg p-8 mt-8 text-center">
+          <p className="mt-6 font-bold text-lg">Merci de votre confiance,<br/>votre contrat est prêt :)</p>
           <p className="mt-6 text-left">1) Un mél récapitulatif vient de vous être envoyé.</p>
-          <p className="text-left">2) Notre équipe prépare l'organisation de votre collecte.</p>
+          <p className="text-left">2) Notre équipe prépare l'organisation de vos services.</p>
           <p className="text-left">3) Nous sommes présents pour répondre à toutes vos questions.</p>
           <p className='text-center mt-6 font-bold'>L'équipe LES DETRITIVORES</p>
           <p className='text-center mt-6'>65 quai de Brazza 33100 Bordeaux</p>

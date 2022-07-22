@@ -47,6 +47,7 @@ export const emailSubscription = async ({ id, password }) => {
   })
   let paymentMethod = subscription.card ? 'Carte bancaire' : 'Prélèvement SEPA'
   let startedAt = new Date(subscription.startedAt).toLocaleDateString("fr")
+  let app_url = process.env.APP_URL + '/collecte'
   const subject = 'CLIC & COMPOST #' + subscription.id + ' - Vous êtes prêts à trier vos biodéchets !'
   const text =
     'Bienvenu ' + subscription.firstname + ' !\n\n' +
@@ -63,9 +64,10 @@ export const emailSubscription = async ({ id, password }) => {
     'Tarif : ' + rounded(subscription.rate*(subscription.profile == 'particulier' ? 1.2 : 1)) + ' € ' + (subscription.profile == 'particulier' ? 'TTC' : 'HT') + ' par collecte' + '\n' +
     'Mode de réglement : ' + paymentMethod + '\n' +
     'Date de démarrage : ' + startedAt + '\n' +
-    '-------------------------------------------------------\n\n' +
+    '-------------------------------------------------------\n' +
+    'ESPACE USAGER : ' + app_url + '\n' +
     'CODE DE CONNEXION : ' + password + '\n' +
-    '-------------------------------------------------------\n\n' +
+    '-------------------------------------------------------\n' +
     'N\'hésitez pas à nous contacter pour toutes questions :\n' +
     'LES DETRITIVORES\n' +
     '65 quai de Brazza 33100 Bordeaux\n' +
@@ -87,6 +89,7 @@ export const emailSubscription = async ({ id, password }) => {
     'Mode de réglement : ' + paymentMethod + '<br/>' +
     'Date de démarrage : ' + startedAt + '<br/>' +
     '<hr/>' +
+    'ESPACE USAGER : <a href=' + app_url + '>'+ app_url + '</a><br/>' +
     'CODE DE CONNEXION : ' + password + '<br/>' +
     '<hr/>' +
     'N\'hésitez pas à nous contacter pour toutes questions :<br/>' +
