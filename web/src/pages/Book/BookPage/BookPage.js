@@ -125,7 +125,7 @@ const BookPage = () => {
       user : currentUser.id,
       subscription : subscription.id,
       pickedAt : data.pickedAt,
-      timeslot : timeslot(geocoder.data.geocoder) <= MAX_DISTANCE ? "9h - 12h" : "13h - 15h",
+      timeslot : timeslot(geocoder.data.geocoder) <= MAX_DISTANCE ? "9h - 12h" : "12h - 15h",
       firstname : subscription.firstname,
       lastname : subscription.lastname,
       email : subscription.email,

@@ -31,7 +31,7 @@ export const Success = ({ geocoder }) => {
       Collecte prévue entre&nbsp;
       <span className="underline font-medium">
         {(distance <= MAX_DISTANCE) && "9h et 12h"}
-        {(distance > MAX_DISTANCE) && "13h et 15h"}
+        {(distance > MAX_DISTANCE) && "12h et 15h"}
       </span>
     </div>
   )
