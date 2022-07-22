@@ -1,5 +1,7 @@
 import { db } from 'src/lib/db'
 import { DbAuthHandler } from '@redwoodjs/api'
+import { sendEmail } from 'src/lib/email'
+import { routes } from '@redwoodjs/router'
 
 export const handler = async (event, context) => {
   const forgotPasswordOptions = {
@@ -16,6 +18,31 @@ export const handler = async (event, context) => {
     // address in a toast message so the user will know it worked and where
     // to look for the email.
     handler: (user) => {
+      //const resetLink = routes.resetPassword({ resetToken: user.resetToken })
+      const RESET_URL = process.env.APP_URL +'/reset-password?resetToken='+ user.resetToken
+      const subject = 'CLIC & COMPOST' + ' - Réinitialisation du mot de passe'
+      const text =
+        'Bonjour,' + '\n' +
+        'Voici votre lien de réinitialisation de mot de passe : ' +
+        RESET_URL + '\n' +
+        '-------------------------------------------------------\n\n' +
+        'N\'hésitez pas à nous contacter pour toutes questions :\n' +
+        'LES DETRITIVORES\n' +
+        '65 quai de Brazza 33100 Bordeaux\n' +
+        'bonjour@les-detritivores.co | 05 56 67 14 47'
+
+      const html =
+        'Bonjour,' + '<br/>' +
+        'Voici votre lien de réinitialisation de mot de passe : ' +
+        '<a href=' + RESET_URL + '>' + RESET_URL + '</a>' + '<br/>' +
+        '<hr/>' +
+        'N\'hésitez pas à nous contacter pour toutes questions :<br/>' +
+        'LES DETRITIVORES<br/>' +
+        '65 quai de Brazza 33100 Bordeaux<br/>' +
+        'bonjour@les-detritivores.co | 05 56 67 14 47'
+
+      sendEmail({ to: user.email, subject, text, html })
+
       return user
     },
 

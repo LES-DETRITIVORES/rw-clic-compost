@@ -37,51 +37,42 @@ const ForgotPasswordPage = () => {
 
   return (
     <>
-      <MetaTags title="Forgot Password" />
-
-      <main className="rw-main">
+      <MetaTags title="Mot de passe oublié" />
+      <div className="font-sans">
         <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />
-        <div className="rw-scaffold rw-login-container">
-          <div className="rw-segment">
-            <header className="rw-segment-header">
-              <h2 className="rw-heading rw-heading-secondary">
-                Mot de passe oublié
-              </h2>
-            </header>
+        <div className="max-w-md mx-auto">
+          <div className="bg-white rounded-md shadow-lg p-8 mt-32">
+            <h1 className="uppercase font-bold text-lg text-center">Mot de passe oublié</h1>
+            <hr className="my-3 -mx-8"/>
+            <Form onSubmit={onSubmit} className="mx-auto font-sans">
+              <Label
+                name="username"
+                className="rw-label"
+                errorClassName="rw-label rw-label-error"
+              >
+                Votre mél
+              </Label>
+              <TextField
+                name="username"
+                className="bg-gray-200 rounded-md p-2 text-sm outline-green-700 w-full"
+                errorClassName="rw-input rw-input-error"
+                ref={usernameRef}
+                validation={{
+                  required: {
+                    value: true,
+                    message: 'Veuillez saisir un mél',
+                  },
+                }}
+              />
 
-            <div className="rw-segment-main">
-              <div className="rw-form-wrapper">
-                <Form onSubmit={onSubmit} className="rw-form-wrapper">
-                  <div className="text-left">
-                    <Label
-                      name="username"
-                      className="rw-label"
-                      errorClassName="rw-label rw-label-error"
-                    >
-                      Votre mél
-                    </Label>
-                    <TextField
-                      name="username"
-                      className="rw-input"
-                      errorClassName="rw-input rw-input-error"
-                      ref={usernameRef}
-                      validation={{
-                        required: true,
-                      }}
-                    />
-
-                    <FieldError name="username" className="rw-field-error" />
-                  </div>
-
-                  <div className="rw-button-group">
-                    <Submit className="rw-button rw-button-blue">Réinitialiser</Submit>
-                  </div>
-                </Form>
+              <FieldError name="username" className="rw-field-error" />
+              <div className="rw-button-group">
+                <Submit className="rw-button text-white bg-green-900 hover:bg-green-700 py-3 px-6">Réinitialiser</Submit>
               </div>
-            </div>
+            </Form>
           </div>
         </div>
-      </main>
+      </div>
     </>
   )
 }
