@@ -81,11 +81,18 @@ const BookingsList = ({ bookings }) => {
           <tr>
             <th>Id</th>
             <th>Created at</th>
-            <th>Updated at</th>
             <th>Picked at</th>
+            <th>Timeslot</th>
             <th>User</th>
+            <th>Subscription</th>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Location</th>
             <th>Details</th>
             <th>Status</th>
+            <th>Updated at</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -94,11 +101,18 @@ const BookingsList = ({ bookings }) => {
             <tr key={booking.id}>
               <td>{truncate(booking.id)}</td>
               <td>{timeTag(booking.createdAt)}</td>
-              <td>{timeTag(booking.updatedAt)}</td>
               <td>{timeTag(booking.pickedAt)}</td>
+              <td>{truncate(booking.timeslot)}</td>
               <td>{truncate(booking.user)}</td>
+              <td>{truncate(booking.subscription)}</td>
+              <td>{truncate(booking.firstname)}</td>
+              <td>{truncate(booking.lastname)}</td>
+              <td>{truncate(booking.email)}</td>
+              <td>{truncate(booking.phone)}</td>
+              <td>{truncate(booking.location)}</td>
               <td>{truncate(booking.details)}</td>
               <td>{truncate(booking.status)}</td>
+              <td>{timeTag(booking.updatedAt)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link

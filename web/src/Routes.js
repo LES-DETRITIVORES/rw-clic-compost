@@ -30,7 +30,8 @@ const Routes = () => {
       </Set>
       <Private unauthenticated="login">
         <Set wrap={BookLayout}>
-          <Route path="/book" page={BookPage} name="book" />
+          <Route path="/collecte" page={BookBookPage} name="book" />
+          <Route path="/collecte/confirm" page={BookConfirmPage} name="confirmBook" />
         </Set>
         <Set wrap={SubscriptionsLayout}>
           <Route path="/subscriptions/new" page={SubscriptionNewSubscriptionPage} name="newSubscription" />
@@ -63,7 +64,7 @@ const Routes = () => {
       <Set wrap={ConfirmLayout}>
         <Route path="/confirm" page={ConfirmPage} name="confirm" />
       </Set>
-      
+
       <Route path="/front" page={FrontPage} name="front" />
       <Route path="/connect" page={ConnectPage} name="connect" />
       <Route path="/schedule" page={SchedulePage} name="schedule" />
