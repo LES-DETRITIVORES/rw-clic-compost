@@ -105,13 +105,13 @@ const LoginPage = ({redirectTo}) => {
               </div>
               <div className="rw-login-link">
                 <span>Pas encore inscrit ?</span>{' '}
-                <Link to={routes.search()} className="rw-link text-green-900 hover:text-green-700">
+                <Link to={routes.signup()} className="rw-link text-green-900 hover:text-green-700">
                   Abonnez-vous !
                 </Link>
               </div>
             </Form>
           </div>
-
+          
         </div>
       </div>
     </>

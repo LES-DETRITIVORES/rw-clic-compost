@@ -7,18 +7,11 @@ export const QUERY = gql`
     bookings {
       id
       createdAt
+      updatedAt
       pickedAt
-      timeslot
       user
-      subscription
-      firstname
-      lastname
-      email
-      phone
-      location
       details
       status
-      updatedAt
     }
   }
 `

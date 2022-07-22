@@ -1,5 +1,5 @@
 import { navigate, Link, routes } from '@redwoodjs/router'
-import { MetaTags, useMutation } from '@redwoodjs/web'
+import { MetaTags, useMutation, useQuery } from '@redwoodjs/web'
 import { useLazyQuery } from '@apollo/client'
 import { toast, Toaster } from '@redwoodjs/web/toast'
 import { useState } from 'react'
@@ -8,43 +8,22 @@ import { useAuth } from '@redwoodjs/auth'
 import LoginCell from 'src/components/User/LoginCell'
 import ContractCell from 'src/components/Subscription/ContractCell'
 import SlotCell from 'src/components/Location/SlotCell/SlotCell'
-import * as turf from '@turf/turf'
 
-const GET_GEOCODER = gql`
-  query GetGeocoderQuery($location: String!) {
-    geocoder: location(query: $location) {
-      query,
-      address,
-      longitude,
-      latitude
-    }
-  }
-`
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ')
+}
 
-const GET_CONTRACT = gql`
-  query GetContractQuery($user: Int!) {
-    subscription: contract(user: $user) {
-      id,
-      firstname,
-      lastname,
-      email,
-      phone,
-      location
-    }
-  }
-`
-
-const CREATE_BOOKING = gql`
-  mutation CreateBookingMutation($input: CreateBookingInput!) {
-    booking: createBooking(input: $input) {
+const CREATE_SUBSCRIPTION = gql`
+  mutation CreateSubscriptionMutation($input: CreateSubscriptionInput!) {
+    subscription: createSubscription(input: $input) {
       id
     }
   }
 `
 
-const EMAIL_BOOKING = gql`
-  mutation EmailBookingMutation($id: Int!) {
-    emailBooking(id: $id)
+const EMAIL_SUBSCRIPTION = gql`
+  mutation EmailSubscriptionMutation($id: Int!) {
+    emailSubscription(id: $id)
   }
 `
 
@@ -56,46 +35,58 @@ const SMS_SUBSCRIPTION = gql`
   }
 `
 
+const CREATE_CUSTOMER = gql`
+  mutation CreateCustomerMutation($input: CreateCustomerInput!) {
+    customer: createCustomer(input: $input) {
+      id
+    }
+  }
+`
+
+const GET_CLIENT_SECRET = gql`
+  query GetClientSecretQuery($query: String!) {
+    customer: getClientSecret(query: $query) {
+      secret
+    }
+  }
+`
+
+const CREATE_DEAL = gql`
+  mutation CreateDealMutation($input: CreateDealInput!) {
+    deal: createDeal(input: $input) {
+      id
+    }
+  }
+`
+
+const CREATE_ORGANIZATION = gql`
+  mutation CreateOrganizationMutation($input: CreateOrganizationInput!) {
+    organization: createOrganization(input: $input) {
+      id
+    }
+  }
+`
+
 const BookPage = () => {
-  const MAX_DISTANCE = 3
   const { currentUser, isAuthenticated, logIn, logOut } = useAuth()
 
-  function timeslot (geocoder) {
-    var from = turf.point([-0.548885, 44.856188]);
-    var to = turf.point([geocoder.longitude, geocoder.latitude]);
-    var options = {units: 'kilometers'};
-    var distance = turf.distance(from, to, options);
-    return distance
-  }
-
-  const [getGeocoder] = useLazyQuery(GET_GEOCODER, {
+  const [createSubscription, {loading, error}] = useMutation(CREATE_SUBSCRIPTION, {
     onCompleted: (result) => {
-      console.log(JSON.stringify(result.geocoder))
-      return result.geocoder
+      //console.log(JSON.stringify(result.subscription))
+      toast.success('Abonnement ajouté.')
     },
   })
 
-  const [getContract, {loading, error}] = useLazyQuery(GET_CONTRACT, {
-    onCompleted: (result) => {
-      return result.subscription
-    },
-  })
-
-  const [createBooking] = useMutation(CREATE_BOOKING, {
-    onCompleted: (result) => {
-      //console.log(JSON.stringify(result.booking))
-      toast.success('Demande enregistrée.')
-    },
-  })
-
-  const [emailBooking] = useMutation(EMAIL_BOOKING, {
+  const [emailSubscription] = useMutation(EMAIL_SUBSCRIPTION, {
     onCompleted: () => {
       toast.success('Mél de confirmation envoyé.')
+    },
+    onError: (error) => {
+      toast.error(error.message)
     },
   })
 
   const [deliverDate, setDeliverDate] = useState(delayDate(Date(Date.now()), 1))
-  const [submit, setSubmit] = useState(false)
 
   const formatDate = (value) => {
     if (value) {
@@ -112,42 +103,24 @@ const BookPage = () => {
   }
 
   const bookSubmit = async (data) => {
-    setSubmit(true)
-
-    /* Search subscription */
-    const contract = await getContract({ variables: { user: currentUser.id}})
-    const subscription = contract.data.subscription
-
-    /* Search timeslot */
-    const geocoder = await getGeocoder({ variables: { location: subscription.location}})
-
-    const bookingInput =  {
+    let booking =  {
       user : currentUser.id,
-      subscription : subscription.id,
       pickedAt : data.pickedAt,
-      timeslot : timeslot(geocoder.data.geocoder) <= MAX_DISTANCE ? "9h - 12h" : "13h - 15h",
-      firstname : subscription.firstname,
-      lastname : subscription.lastname,
-      email : subscription.email,
-      phone : subscription.phone,
-      location : subscription.location,
       details : data.details,
-      status: 'NEW',
-      updatedAt: new Date()
+      status : ''
     }
-    //console.log(JSON.stringify(bookingInput))
+    console.log(JSON.stringify(booking))
 
     /* Save booking */
-    const booking = await createBooking({ variables: { input: bookingInput } })
-    //console.log(JSON.stringify(booking))
+    //book = await createBooking({ variables: { input: booking } })
 
     /* Send email booking */
-    emailBooking({ variables: { id: booking.data.booking.id } })
+    //emailBooking({ variables: { id: book.data.booking.id } })
 
      /* Send SMS booking */
      /* TODO */
 
-    navigate(routes.confirmBook())
+    //navigate(routes.confirmBook())
   }
 
   return (
@@ -160,7 +133,7 @@ const BookPage = () => {
           <Link className="underline cursor-pointer font-bold text-md" onClick={logOut}>Se déconnecter</Link>
         </div>
         <div className="font-bold text-center text-xl sm:text-3xl md:text-5xl mt-16 text-black w-min mx-auto -rotate-2">
-          <span className="bg-yellow-400 p-1 block w-min">Réservez&nbsp;votre&nbsp;collecte,</span>
+          <span className="bg-yellow-400 p-1 block w-min">Réservez&nbsp;votre&nbsp;créneau,</span>
           <span className="bg-yellow-400 p-1 block w-min mt-1">On&nbsp;composte&nbsp;vos&nbsp;biodéchets&nbsp;!</span>
         </div>
         <div className="container mx-auto max-w-6xl font-sans">
@@ -200,8 +173,8 @@ const BookPage = () => {
                 </div>
                 <div>
                   <Submit
-                    disabled={submit}
-                    className={`sm:text-sm md:text-lg uppercase font-bold ${(!submit) ? 'bg-yellow-400 text-black' : 'bg-gray-600 text-white'} rounded-b-md p-4 w-full shadow-lg`}>Envoyer la demande</Submit>
+                    disabled={loading}
+                    className={`sm:text-sm md:text-lg uppercase font-bold ${(!loading) ? 'bg-yellow-400 text-black' : 'bg-gray-600 text-white'} rounded-b-md p-4 w-full shadow-lg`}>Réserver</Submit>
                 </div>
               </Form>
             </div>

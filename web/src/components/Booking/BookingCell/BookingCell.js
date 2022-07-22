@@ -5,18 +5,11 @@ export const QUERY = gql`
     booking: booking(id: $id) {
       id
       createdAt
+      updatedAt
       pickedAt
-      timeslot
       user
-      subscription
-      firstname
-      lastname
-      email
-      phone
-      location
       details
       status
-      updatedAt
     }
   }
 `
