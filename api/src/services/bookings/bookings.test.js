@@ -27,21 +27,30 @@ describe('bookings', () => {
 
   scenario('creates a booking', async () => {
     const result = await createBooking({
-      input: { pickedAt: '2022-07-19T16:23:00Z', user: 2099779 },
+      input: {
+        pickedAt: '2022-07-22T16:46:46Z',
+        timeslot: 'String',
+        user: 1203785,
+        subscription: 2132453,
+        updatedAt: '2022-07-22T16:46:46Z',
+      },
     })
 
-    expect(result.pickedAt).toEqual('2022-07-19T16:23:00Z')
-    expect(result.user).toEqual(2099779)
+    expect(result.pickedAt).toEqual('2022-07-22T16:46:46Z')
+    expect(result.timeslot).toEqual('String')
+    expect(result.user).toEqual(1203785)
+    expect(result.subscription).toEqual(2132453)
+    expect(result.updatedAt).toEqual('2022-07-22T16:46:46Z')
   })
 
   scenario('updates a booking', async (scenario) => {
     const original = await booking({ id: scenario.booking.one.id })
     const result = await updateBooking({
       id: original.id,
-      input: { pickedAt: '2022-07-20T16:23:00Z' },
+      input: { pickedAt: '2022-07-23T16:46:46Z' },
     })
 
-    expect(result.pickedAt).toEqual('2022-07-20T16:23:00Z')
+    expect(result.pickedAt).toEqual('2022-07-23T16:46:46Z')
   })
 
   scenario('deletes a booking', async (scenario) => {

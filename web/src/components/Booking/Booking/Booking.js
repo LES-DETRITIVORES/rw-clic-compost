@@ -81,16 +81,40 @@ const Booking = ({ booking }) => {
               <td>{timeTag(booking.createdAt)}</td>
             </tr>
             <tr>
-              <th>Updated at</th>
-              <td>{timeTag(booking.updatedAt)}</td>
-            </tr>
-            <tr>
               <th>Picked at</th>
               <td>{timeTag(booking.pickedAt)}</td>
             </tr>
             <tr>
+              <th>Timeslot</th>
+              <td>{booking.timeslot}</td>
+            </tr>
+            <tr>
               <th>User</th>
               <td>{booking.user}</td>
+            </tr>
+            <tr>
+              <th>Subscription</th>
+              <td>{booking.subscription}</td>
+            </tr>
+            <tr>
+              <th>Firstname</th>
+              <td>{booking.firstname}</td>
+            </tr>
+            <tr>
+              <th>Lastname</th>
+              <td>{booking.lastname}</td>
+            </tr>
+            <tr>
+              <th>Email</th>
+              <td>{booking.email}</td>
+            </tr>
+            <tr>
+              <th>Phone</th>
+              <td>{booking.phone}</td>
+            </tr>
+            <tr>
+              <th>Location</th>
+              <td>{booking.location}</td>
             </tr>
             <tr>
               <th>Details</th>
@@ -99,6 +123,10 @@ const Booking = ({ booking }) => {
             <tr>
               <th>Status</th>
               <td>{booking.status}</td>
+            </tr>
+            <tr>
+              <th>Updated at</th>
+              <td>{timeTag(booking.updatedAt)}</td>
             </tr>
           </tbody>
         </table>
