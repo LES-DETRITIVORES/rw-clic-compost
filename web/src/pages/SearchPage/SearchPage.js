@@ -7,6 +7,7 @@ import { RadioGroup } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/solid'
 import LocationField from 'src/components/Location/LocationField'
 import GeocoderCell from 'src/components/Location/GeocoderCell'
+import LoginCell from 'src/components/User/LoginCell'
 
 const SearchPage = ({u, l, m}) => {
   const [profile, setProfile] = useState(u)
