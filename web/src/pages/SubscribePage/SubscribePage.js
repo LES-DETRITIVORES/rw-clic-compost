@@ -440,7 +440,9 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
                 <div>
                   <Submit
                     disabled={submit || !(card || iban)}
-                    className={`sm:text-sm md:text-lg uppercase font-bold ${!submit & (card || iban) ? 'bg-yellow-400 text-black' : 'bg-gray-600 text-white'} rounded-b-md p-4 w-full shadow-lg`}>S'abonner</Submit>
+                    className={`sm:text-sm md:text-lg uppercase font-bold ${!submit & (card || iban) ? 'bg-yellow-400 text-black' : 'bg-gray-600 text-white'} rounded-b-md p-4 w-full shadow-lg`}>
+                    { !submit ? "S'abonner gratuitement" : "Envoi en cours, veuillez patienter..."}
+                  </Submit>
                 </div>
               </Form>
             </div>
