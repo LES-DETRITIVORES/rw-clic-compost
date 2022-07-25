@@ -10,6 +10,12 @@ export const user = ({ id }) => {
   })
 }
 
+export const userByEmail = ({ email }) => {
+  return db.user.findFirst({
+    where: { email : email },
+  })
+}
+
 export const createUser = ({ input }) => {
   return db.user.create({
     data: input,

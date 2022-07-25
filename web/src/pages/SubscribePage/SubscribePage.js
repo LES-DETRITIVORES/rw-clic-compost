@@ -12,6 +12,22 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
+const GET_USER = gql`
+query GetUserQuery($email: String!) {
+  user: userByEmail(email: $email) {
+    id
+  }
+}
+`
+
+const DELETE_USER = gql`
+mutation DeleteUserMutation($id: Int!) {
+  user: deleteUser(id: $id) {
+    id
+  }
+}
+`
+
 const CREATE_SUBSCRIPTION = gql`
   mutation CreateSubscriptionMutation($input: CreateSubscriptionInput!) {
     subscription: createSubscription(input: $input) {
@@ -73,6 +89,8 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
   const [submit, setSubmit] = useState(false)
 
   const { currentUser, signUp } = useAuth()
+  const [getUser] = useLazyQuery(GET_USER)
+  const [deleteUser] = useMutation(DELETE_USER)
 
   const [createSubscription, {loading, error}] = useMutation(CREATE_SUBSCRIPTION, {
     onCompleted: (result) => {
@@ -189,19 +207,30 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
   const subscriptionSubmit = async (data) => {
     setSubmit(true)
     let sub = subscription
+    sub.startedAt = data.startedAt
+
     /* Save user for authentification */
     // Generate a random password on 6 digits (0-9)
     const password = Math.floor(Math.random() * 10).toString() + Math.floor(Math.random() * 10).toString()+ Math.floor(Math.random() * 10).toString()+ Math.floor(Math.random() * 10).toString()+Math.floor(Math.random() * 10).toString() + Math.floor(Math.random() * 10).toString()
 
+    // Check if user exist and delete it first
+    const check = await getUser({ variables : {email: subscription.email}})
+    if (check) {
+      console.log("User already exist...", check.data.user.id)
+      const old = await deleteUser({ variables : {id: check.data.user.id}})
+      if (old) {
+        console.log("User deleted!", JSON.stringify(old))
+      }
+    }
+
     // Sign up user
     const user = await signUp({username: subscription.email, password: password })
-    console.log(JSON.stringify(user))
     if (user) {
+      // user is signed in automatically
+      console.log(JSON.stringify(user))
       toast.success('Utilisateur ajouté')
       sub.user = user.id
     }
-
-    sub.startedAt = data.startedAt
 
     /* Save customer on Stripe */
     const customer = await createCustomer({ variables: {
