@@ -13,7 +13,7 @@ generator client {
 // TODO: Please remove the following example:
 model User {
   id                  Int     @id @default(autoincrement())
-  email               String
+  email               String  @unique
   hashedPassword      String
   salt                String
   resetToken          String?
