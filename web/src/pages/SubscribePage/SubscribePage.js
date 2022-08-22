@@ -215,7 +215,7 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
 
     // Check if user exist and delete it first
     const check = await getUser({ variables : {email: subscription.email}})
-    if (check) {
+    if (check.data.user) {
       console.log("User already exist...", check.data.user.id)
       const old = await deleteUser({ variables : {id: check.data.user.id}})
       if (old) {
