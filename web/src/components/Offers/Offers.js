@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { RadioGroup } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/solid'
-import Estimate from 'src/components/Estimate'
 
 const Offers = ({meals, onOffer, onService, onRate, defaultValue}) => {
   const PRICE_BY_LITER = 0.25 // Add Tax 20%
@@ -33,7 +32,7 @@ const Offers = ({meals, onOffer, onService, onRate, defaultValue}) => {
       name: 'Bioseau',
       liter: 22,
       dimensions: "29 x 42 x 28 cm (l x L x h)",
-      get qty() {return Math.max(Math.round(meals*LITER_BY_MEAL/this.liter), 1)},
+      get qty() {return Math.max(Math.round(meals*LITER_BY_MEAL/this.liter), 2)},
       get rate() {return parseFloat((this.qty*this.liter*PRICE_BY_LITER).toFixed(2))},
       get service() {return this.qty + 'x ' + this.name + ' ' + this.liter + 'L'}
     },
@@ -48,7 +47,16 @@ const Offers = ({meals, onOffer, onService, onRate, defaultValue}) => {
     },
     {
       index: '3',
-      name : 'Caisse-palette',
+      name : 'Caisse-palette standard',
+      liter : 250,
+      dimensions : "79,5 x 119,5 x 79 cm (l x L x h)",
+      get qty() {return Math.round(meals*LITER_BY_MEAL/this.liter)},
+      get rate() {return  parseFloat((this.qty*this.liter*PRICE_BY_LITER).toFixed(2))},
+      get service() {return this.qty + 'x ' + this.name + ' ' + this.liter + 'L'}
+    },
+    {
+      index: '4',
+      name : 'Caisse-palette XL',
       liter : 500,
       dimensions : "79,5 x 119,5 x 79 cm (l x L x h)",
       get qty() {return Math.round(meals*LITER_BY_MEAL/this.liter)},
@@ -97,8 +105,8 @@ const Offers = ({meals, onOffer, onService, onRate, defaultValue}) => {
                           }`}
                         >
                           <span className="block">{offer.dimensions}</span>
-                          {meals == 0 && <span className="block font-bold">{(offer.rate*1.2).toFixed(2)}€ TTC / collecte</span>}
-                          {meals > 0 && <span className="block font-bold">{offer.rate.toFixed(2)}€ HT / collecte ({(offer.rate/meals).toFixed(2)} € HT / repas)</span>}
+                          {meals == 0 && <span className="block font-bold">{(offer.rate*1.2).toFixed(2)}€ TTC / semaine</span>}
+                          {meals > 0 && <span className="block font-bold">{offer.rate.toFixed(2)}€ HT / semaine ({(offer.rate/meals).toFixed(2)} € HT / repas)</span>}
                         </RadioGroup.Description>
                       </div>
                     </div>

@@ -1,5 +1,5 @@
 const Estimate = ({meals}) => {
-  const PRICE_BY_LITER = 0.15
+  const PRICE_BY_LITER = 0.25
   const WEEKS_BY_MONTH = 52/12
   const WEIGHT_BY_MEAL = 0.14
   const WEIGHT_BY_LITER = 1/3
