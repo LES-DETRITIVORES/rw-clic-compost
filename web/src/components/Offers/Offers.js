@@ -32,7 +32,7 @@ const Offers = ({meals, onOffer, onService, onRate, defaultValue}) => {
       name: 'Bioseau',
       liter: 22,
       dimensions: "29 x 42 x 28 cm (l x L x h)",
-      get qty() {return Math.max(Math.round(meals*LITER_BY_MEAL/this.liter), 2)},
+      get qty() {return Math.max(Math.round(meals*LITER_BY_MEAL/this.liter), meals == 0 ? 1 : 2)},
       get rate() {return parseFloat((this.qty*this.liter*PRICE_BY_LITER).toFixed(2))},
       get service() {return this.qty + 'x ' + this.name + ' ' + this.liter + 'L'}
     },

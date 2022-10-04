@@ -408,11 +408,11 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
     // Create deal
     const deal = {
       title: '#' + sub.data.subscription.id + ' - ' + organization.name,
-      value: (subscription.rate).toString(),
+      value: (subscription.rate*52).toString(),
       orgId: org.data.organization.id,
-      pipelineId: '8',
-      stageId: '55',
-      status: 'won'
+      pipelineId: '6',
+      stageId: '34',
+      status: 'open'
     }
     console.log(deal)
     createDeal({ variables: { input: deal }})
