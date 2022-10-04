@@ -74,6 +74,14 @@ const CREATE_DEAL = gql`
   }
 `
 
+const CREATE_PERSON = gql`
+  mutation CreatePersonMutation($input: CreatePersonInput!) {
+    person: createPerson(input: $input) {
+      id
+    }
+  }
+`
+
 const CREATE_ORGANIZATION = gql`
   mutation CreateOrganizationMutation($input: CreateOrganizationInput!) {
     organization: createOrganization(input: $input) {
@@ -138,7 +146,13 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
 
   const [createOrganization] = useMutation(CREATE_ORGANIZATION, {
     onCompleted: (result) => {
-      //toast.success('Organisation ajoutée.')
+      toast.success('Organisation ajoutée.')
+    },
+  })
+
+  const [createPerson] = useMutation(CREATE_PERSON, {
+    onCompleted: (result) => {
+      toast.success('Contact ajouté.')
     },
   })
 
@@ -375,21 +389,12 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
       toast.success('Utilisateur ajouté')
       sub.user = user.id
     }
-
-    /* Save customer on Stripe */
-    const customer = await createCustomer({ variables: {
-      input: {
-        description: subscription.firstname + ' ' + subscription.lastname.toUpperCase(),
-        email: subscription.email
-      }
-    }})
-    console.log(JSON.stringify(customer))
-    sub.customer = customer.data.customer.id
+    console.log('user:', JSON.stringify(user))
 
     /* Save subscription */
     setSubscription(sub)
     sub = await createSubscription({ variables: { input: subscription } })
-    console.log(JSON.stringify(sub))
+    console.log('subscription:', JSON.stringify(subscription))
 
     /* Send email subscription */
     emailSubscription({ variables: { id: sub.data.subscription.id, password: password } })
@@ -401,21 +406,35 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
     /* Add new deal to pipedrive (CRM) */
     // Create organization
     const organization = {
-      name: subscription.profile == "particulier" ? subscription.firstname + ' ' + subscription.lastname.toUpperCase() + ' ' + '(Particulier)': subscription.company
+      name: subscription.profile == "particulier" ? subscription.firstname + ' ' + subscription.lastname.toUpperCase() + ' ' + '(Particulier)': subscription.company.toUpperCase(),
     }
     const org = await createOrganization({ variables: { input: organization }})
+    console.log('organization:',JSON.stringify(org))
+
+    //address: subscription.location,
+
+    // Create person (contact)
+    const person = {
+      name: subscription.firstname + ' ' + subscription.lastname.toUpperCase(),
+      orgId: org.data.organization.id,
+      email: subscription.email,
+      phone: subscription.phone,
+    }
+    const pers = await createPerson({ variables: { input: person }})
+    console.log('person:', JSON.stringify(pers))
 
     // Create deal
     const deal = {
-      title: '#' + sub.data.subscription.id + ' - ' + organization.name,
+      title: '#' + sub.data.subscription.id + ' - ' + subscription.company.toUpperCase(),
       value: (subscription.rate*52).toString(),
       orgId: org.data.organization.id,
       pipelineId: '6',
       stageId: '34',
       status: 'open'
     }
-    console.log(deal)
     createDeal({ variables: { input: deal }})
+    console.log('deal:', JSON.stringify(deal))
+
     navigate(routes.confirm())
     setSubmit(false)
   }

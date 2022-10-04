@@ -24,3 +24,15 @@ export const createOrganization = async ({ input }) => {
     id : organization.data.id
   }
 }
+
+export const createPerson = async ({ input }) => {
+  const apiInstance = new pipedrive.PersonsApi();
+  input.email = [{value: input.email, primary:true, label:"Travail"}]
+  input.phone = [{value: input.phone, primary:true, label:"Travail"}]
+  let opts = pipedrive.NewPerson.constructFromObject(input);
+  const person = await apiInstance.addPerson(opts);
+
+  return {
+    id : person.data.id
+  }
+}

@@ -7,6 +7,10 @@ export const schema = gql`
     id: String!
   }
 
+  type Person {
+    id: String!
+  }
+
   input CreateDealInput {
     title: String!
     value: String!
@@ -20,8 +24,16 @@ export const schema = gql`
     name: String!
   }
 
+  input CreatePersonInput {
+    name: String!
+    orgId: String!
+    email: String!
+    phone: String!
+  }
+
   type Mutation {
     createDeal(input: CreateDealInput!): Deal! @skipAuth
     createOrganization(input: CreateOrganizationInput!): Organization! @skipAuth
+    createPerson(input: CreatePersonInput!): Person! @skipAuth
   }
 `
