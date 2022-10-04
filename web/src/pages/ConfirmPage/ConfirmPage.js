@@ -16,7 +16,7 @@ const ConfirmPage = () => {
           <span className="bg-green-900 p-1 block w-min">Vous&nbsp;êtes&nbsp;formidable&nbsp;!</span>
         </div>
         <div className="container mx-auto max-w-xl font-sans bg-white rounded-lg shadow-lg p-8 mt-8 text-center">
-          <p className="mt-6 font-bold text-lg">Merci de votre confiance,<br/>votre contrat est prêt :)</p>
+          <p className="mt-6 font-bold text-lg">Merci de votre confiance,<br/>votre inscription est enregistrée :)</p>
           <p className="mt-6 text-left">1) Un mél récapitulatif vient de vous être envoyé.</p>
           <p className="text-left">2) Notre équipe prépare l'organisation de vos services.</p>
           <p className="text-left">3) Nous sommes présents pour répondre à toutes vos questions.</p>

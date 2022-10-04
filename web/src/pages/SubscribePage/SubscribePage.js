@@ -205,6 +205,11 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
   })
 
   const subscriptionSubmit = async (data) => {
+    if (subscription.profile == 'particulier') {subscriptionIndividual(data)}
+    if (subscription.profile == 'professionnel') {subscriptionProfessional(data)}
+  }
+
+  const subscriptionIndividual = async (data) => {
     setSubmit(true)
     let sub = subscription
     sub.startedAt = data.startedAt
@@ -277,7 +282,6 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
       }
     }
 
-
     /* Add IBAN payment */
     if (elements.getElement(IbanElement)) {
       /* Get customer secret */
@@ -311,6 +315,78 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
 
     /* Save subscription */
     sub.rate = (parseFloat(sub.rate)*(coupon == "RECUP40" ? 4/1.2/parseFloat(sub.rate) : 1)).toFixed(2) // apply coupon
+    setSubscription(sub)
+    sub = await createSubscription({ variables: { input: subscription } })
+    console.log(JSON.stringify(sub))
+
+    /* Send email subscription */
+    emailSubscription({ variables: { id: sub.data.subscription.id, password: password } })
+
+    /* Send SMS subscription */
+    // console.log(JSON.stringify(subscription))
+    //SMSSubscription({ variables: { input: {text: "Abonnement prêt", from:'+1 207 705 5921', 'to': subscription.phone }} })
+
+    /* Add new deal to pipedrive (CRM) */
+    // Create organization
+    const organization = {
+      name: subscription.profile == "particulier" ? subscription.firstname + ' ' + subscription.lastname.toUpperCase() + ' ' + '(Particulier)': subscription.company
+    }
+    const org = await createOrganization({ variables: { input: organization }})
+
+    // Create deal
+    const deal = {
+      title: '#' + sub.data.subscription.id + ' - ' + organization.name,
+      value: (subscription.rate).toString(),
+      orgId: org.data.organization.id,
+      pipelineId: '8',
+      stageId: '55',
+      status: 'won'
+    }
+    console.log(deal)
+    createDeal({ variables: { input: deal }})
+    navigate(routes.confirm())
+    setSubmit(false)
+  }
+
+  const subscriptionProfessional = async (data) => {
+    setSubmit(true)
+    let sub = subscription
+    sub.startedAt = data.startedAt
+
+    /* Save user for authentification */
+    // Generate a random password on 6 digits (0-9)
+    const password = Math.floor(Math.random() * 10).toString() + Math.floor(Math.random() * 10).toString()+ Math.floor(Math.random() * 10).toString()+ Math.floor(Math.random() * 10).toString()+Math.floor(Math.random() * 10).toString() + Math.floor(Math.random() * 10).toString()
+
+    // Check if user exist and delete it first
+    const check = await getUser({ variables : {email: subscription.email}})
+    if (check.data.user) {
+      console.log("User already exist...", check.data.user.id)
+      const old = await deleteUser({ variables : {id: check.data.user.id}})
+      if (old) {
+        console.log("User deleted!", JSON.stringify(old))
+      }
+    }
+
+    // Sign up user
+    const user = await signUp({username: subscription.email, password: password })
+    if (user) {
+      // user is signed in automatically
+      console.log(JSON.stringify(user))
+      toast.success('Utilisateur ajouté')
+      sub.user = user.id
+    }
+
+    /* Save customer on Stripe */
+    const customer = await createCustomer({ variables: {
+      input: {
+        description: subscription.firstname + ' ' + subscription.lastname.toUpperCase(),
+        email: subscription.email
+      }
+    }})
+    console.log(JSON.stringify(customer))
+    sub.customer = customer.data.customer.id
+
+    /* Save subscription */
     setSubscription(sub)
     sub = await createSubscription({ variables: { input: subscription } })
     console.log(JSON.stringify(sub))
@@ -384,10 +460,14 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
                   </li>
                 </ul>
                 {/* Display mandate acceptance text. */}
-                <hr className="mt-2"/>
-                <div className="text-xs block mt-2 text-justify">
-                  En fournissant vos informations de paiement et en confirmant ce paiement, vous autorisez (A) LES DETRITIVORES et Stripe, notre prestataire de services de paiement et/ou PPRO, son prestataire de services local, à envoyer des instructions à votre banque pour débiter votre compte et (B) votre banque à débiter votre compte conformément à ces instructions. Vous avez, entre autres, le droit de vous faire rembourser par votre banque selon les modalités et conditions du contrat conclu avec votre banque. La demande de remboursement doit être soumise dans un délai de 8 semaines à compter de la date à laquelle votre compte a été débité. Vos droits sont expliqués dans une déclaration disponible auprès de votre banque. Vous acceptez de recevoir des notifications des débits à venir dans les 2 jours précédant leur réalisation.
-                </div>
+                { subscription.profile == "particulier" &&
+                <>
+                  <hr className="mt-2"/>
+                  <div className="text-xs block mt-2 text-justify">
+                    En fournissant vos informations de paiement et en confirmant ce paiement, vous autorisez (A) LES DETRITIVORES et Stripe, notre prestataire de services de paiement et/ou PPRO, son prestataire de services local, à envoyer des instructions à votre banque pour débiter votre compte et (B) votre banque à débiter votre compte conformément à ces instructions. Vous avez, entre autres, le droit de vous faire rembourser par votre banque selon les modalités et conditions du contrat conclu avec votre banque. La demande de remboursement doit être soumise dans un délai de 8 semaines à compter de la date à laquelle votre compte a été débité. Vos droits sont expliqués dans une déclaration disponible auprès de votre banque. Vous acceptez de recevoir des notifications des débits à venir dans les 2 jours précédant leur réalisation.
+                  </div>
+                </>
+                }
               </div>
             </div>
             <div>
@@ -428,50 +508,59 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
                     />
                     {coupon == "RECUP40" &&
                     <p className="font-medium text-orange-600">Réduction appliquée de -40% sur le tarif de collecte</p>}
+
+                    <Label className="font-medium block mt-6">
+                      Mode de réglement
+                    </Label>
+                    <Tab.Group defaultIndex={0}>
+                      <Tab.List className="flex space-x-3">
+                        <Tab
+                          className={({ selected }) =>
+                            classNames(
+                              'p-3 w-1/2 border-2 border-gray-500 text-gray-500 rounded-md hover:border-yellow-500 outline-none',
+                              selected
+                                ? 'bg-yellow-400 text-black font-bold border-none'
+                                : 'bg-none'
+                            )}>Carte bancaire</Tab>
+                        <div className="p-1 my-auto">ou</div>
+                        <Tab
+                          className={({ selected }) =>
+                            classNames(
+                              'p-3 w-1/2 border-2 border-gray-500 text-gray-500 rounded-md hover:border-yellow-500 outline-none',
+                              selected
+                                ? 'bg-yellow-400 text-black font-bold border-none'
+                                : 'bg-none'
+                            )}>Prélèvement SEPA</Tab>
+                      </Tab.List>
+                      <Tab.Panels className="mt-3">
+                        <Tab.Panel>
+                          Veuillez renseigner les informations de votre carte :
+                          <CardElement onChange={(e) => {setCard(e.complete)}} options={{hidePostalCode:true}} placeholder="4242424242424242" className="block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                        </Tab.Panel>
+                        <Tab.Panel>
+                          Veuillez renseigner votre IBAN :
+                          <IbanElement onChange={(e) => {setIban(e.complete)}} options={IBAN_ELEMENT_OPTIONS} placeholder="FR1420041010050500013M02606" className="block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                        </Tab.Panel>
+                      </Tab.Panels>
+                    </Tab.Group>
                   </>
                   }
-
-                  <Label className="font-medium block mt-6">
-                    Mode de réglement
-                  </Label>
-                  <Tab.Group defaultIndex={0}>
-                    <Tab.List className="flex space-x-3">
-                      <Tab
-                        className={({ selected }) =>
-                          classNames(
-                            'p-3 w-1/2 border-2 border-gray-500 text-gray-500 rounded-md hover:border-yellow-500 outline-none',
-                            selected
-                              ? 'bg-yellow-400 text-black font-bold border-none'
-                              : 'bg-none'
-                          )}>Carte bancaire</Tab>
-                      <div className="p-1 my-auto">ou</div>
-                      <Tab
-                        className={({ selected }) =>
-                          classNames(
-                            'p-3 w-1/2 border-2 border-gray-500 text-gray-500 rounded-md hover:border-yellow-500 outline-none',
-                            selected
-                              ? 'bg-yellow-400 text-black font-bold border-none'
-                              : 'bg-none'
-                          )}>Prélèvement SEPA</Tab>
-                    </Tab.List>
-                    <Tab.Panels className="mt-3">
-                      <Tab.Panel>
-                        Veuillez renseigner les informations de votre carte :
-                        <CardElement onChange={(e) => {setCard(e.complete)}} options={{hidePostalCode:true}} placeholder="4242424242424242" className="block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
-                      </Tab.Panel>
-                      <Tab.Panel>
-                        Veuillez renseigner votre IBAN :
-                        <IbanElement onChange={(e) => {setIban(e.complete)}} options={IBAN_ELEMENT_OPTIONS} placeholder="FR1420041010050500013M02606" className="block w-full bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
-                      </Tab.Panel>
-                    </Tab.Panels>
-                  </Tab.Group>
                 </div>
                 <div>
-                  <Submit
-                    disabled={submit || !(card || iban)}
-                    className={`sm:text-sm md:text-lg uppercase font-bold ${!submit & (card || iban) ? 'bg-yellow-400 text-black' : 'bg-gray-600 text-white'} rounded-b-md p-4 w-full shadow-lg`}>
-                    { !submit ? "S'abonner gratuitement" : "Envoi en cours, veuillez patienter..."}
-                  </Submit>
+                  {subscription.profile == "particulier" && 
+                    <Submit
+                      disabled={submit || !(card || iban)}
+                      className={`sm:text-sm md:text-lg uppercase font-bold ${!submit && (card || iban) ? 'bg-yellow-400 text-black' : 'bg-gray-600 text-white'} rounded-b-md p-4 w-full shadow-lg`}>
+                      { !submit ? "Envoyer la demande" : "Enregistrement en cours, veuillez patienter..."}
+                    </Submit>
+                  }
+                  {subscription.profile == "professionnel" && 
+                    <Submit
+                      disabled={submit}
+                      className={`sm:text-sm md:text-lg uppercase font-bold ${!submit ? 'bg-yellow-400 text-black' : 'bg-gray-600 text-white'} rounded-b-md p-4 w-full shadow-lg`}>
+                      { !submit ? "Envoyer la demande" : "Enregistrement en cours, veuillez patienter..."}
+                    </Submit>
+                  }
                 </div>
               </Form>
             </div>
