@@ -11,6 +11,10 @@ export const schema = gql`
     id: String!
   }
 
+  type Note {
+    id: String!
+  }
+
   input CreateDealInput {
     title: String!
     value: String!
@@ -24,6 +28,13 @@ export const schema = gql`
     name: String!
   }
 
+  input CreateNoteInput {
+    content: String!
+    dealId: String
+    personId: String
+    orgId: String
+  }
+
   input CreatePersonInput {
     name: String!
     orgId: String!
@@ -35,5 +46,6 @@ export const schema = gql`
     createDeal(input: CreateDealInput!): Deal! @skipAuth
     createOrganization(input: CreateOrganizationInput!): Organization! @skipAuth
     createPerson(input: CreatePersonInput!): Person! @skipAuth
+    createNote(input: CreateNoteInput!): Note! @skipAuth
   }
 `

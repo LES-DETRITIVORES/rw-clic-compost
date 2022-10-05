@@ -90,6 +90,14 @@ const CREATE_ORGANIZATION = gql`
   }
 `
 
+const CREATE_NOTE = gql`
+  mutation CreateNoteMutation($input: CreateNoteInput!) {
+    note: createNote(input: $input) {
+      id
+    }
+  }
+`
+
 const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
   const [card, setCard] = useState(false)
   const [iban, setIban] = useState(false)
@@ -153,6 +161,12 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
   const [createPerson] = useMutation(CREATE_PERSON, {
     onCompleted: (result) => {
       toast.success('Contact ajouté.')
+    },
+  })
+
+  const [createNote] = useMutation(CREATE_NOTE, {
+    onCompleted: (result) => {
+      toast.success('Détails ajoutés.')
     },
   })
 
@@ -420,8 +434,8 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
       email: subscription.email,
       phone: subscription.phone,
     }
-    const pers = await createPerson({ variables: { input: person }})
-    console.log('person:', JSON.stringify(pers))
+    const pr = await createPerson({ variables: { input: person }})
+    console.log('person:', JSON.stringify(pr))
 
     // Create deal
     const deal = {
@@ -432,8 +446,36 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
       stageId: '34',
       status: 'open'
     }
-    createDeal({ variables: { input: deal }})
-    console.log('deal:', JSON.stringify(deal))
+    const dl = await createDeal({ variables: { input: deal }})
+    console.log('deal:', JSON.stringify(dl))
+    
+    // Add details to deal
+    function rounded(num) {
+      return ((+(Math.round(num + "e+2") + "e-2")).toFixed(2))
+    }
+    let paymentMethod = subscription.card ? 'Carte bancaire' : 'Prélèvement SEPA'
+    let startedAt = new Date(subscription.startedAt).toLocaleDateString("fr")
+    let app_url = process.env.APP_URL + '/collecte'
+    let txt = '<b>Numéro d\'adhésion :</b> ' + sub.data.subscription.id + '<br/>' +
+    '<b>Société :</b> ' + subscription.company.toUpperCase() + '<br/>' +
+    '<b>Adresse :</b> ' + subscription.location + '<br/>' +
+    '<b>Contact :</b> ' + subscription.firstname + ' ' + subscription.lastname + '<br/>' +
+    '<b>Tél :</b> ' + subscription.phone + '<br/>' +
+    '<b>Mél :</b> ' + subscription.email + '<br/>' +
+    '<hr>' +
+    '<b>Couverts </b>: ' + subscription.meals + ' repas par semaine' + '<br/>' +
+    '<b>Offre :</b> ' + subscription.service + '<br/>' +
+    '<b>Tarif :</b> ' + rounded(subscription.rate) + ' € HT par collecte' + '<br/>' +
+    '<b>Démarrage :</b> ' + startedAt
+
+    const note = {
+      content: txt,
+      dealId: dl.data.deal.id,
+      orgId: '',
+      personId: ''
+    }
+    const nt = await createNote({ variables: { input: note }})
+    console.log('note:', JSON.stringify(nt))
 
     navigate(routes.confirm())
     setSubmit(false)

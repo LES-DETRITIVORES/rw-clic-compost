@@ -36,3 +36,13 @@ export const createPerson = async ({ input }) => {
     id : person.data.id
   }
 }
+
+export const createNote = async ({ input }) => {
+  const apiInstance = new pipedrive.NotesApi();
+  let opts = pipedrive.AddNoteRequest.constructFromObject(input)
+  const note = await apiInstance.addNote(opts);
+
+  return {
+    id : note.data.id
+  }
+}
