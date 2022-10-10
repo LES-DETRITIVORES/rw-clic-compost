@@ -7,13 +7,10 @@ const Comboboxes = ({
   options,
   value,
   onChange,
-  name,
-  label,
+  name
 }) => {
 
-  const [query, setQuery] = useState('')
-  const nameUppercase = name.charAt(0).toUpperCase() + name.slice(1)
-  
+  const [query, setQuery] = useState('')  
   const filtered =
   query === ''
     ? options
@@ -27,18 +24,12 @@ const Comboboxes = ({
       onChange={onChange}
       name={name}
     >
-      <Label
-        name={nameUppercase}
-        className="mt-7 block text-sm font-medium text-gray-700"
-      >
-        {label}
-      </Label>
       <div className="relative mt-1">
         <div className="relative w-full cursor-default overflow-hidden rounded-lg border border-gray-300 bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
           <Combobox.Input
             className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
             onChange={(event) => setQuery(event.target.value)}
-            displayValue={(item) => '#' + item?.id + ' - ' + item?.firstname + ' ' + item?.lastname?.toUpperCase()}
+            displayValue={(item) => '#' + item?.id + ' - ' + item?.firstname + ' ' + item?.lastname?.toUpperCase() + ' - ' + item?.location}
           />
           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
             <ChevronDownIcon
@@ -86,7 +77,7 @@ const Comboboxes = ({
                           selected ? 'font-medium' : 'font-normal'
                         }`}
                       >
-                        {'#' + item?.id + ' - ' + item?.firstname + ' ' + item?.lastname?.toUpperCase()}
+                        {'#' + item?.id + ' - ' + item?.firstname + ' ' + item?.lastname?.toUpperCase() + ' - ' + item?.location}
                       </span>
                       {selected ? (
                         <span

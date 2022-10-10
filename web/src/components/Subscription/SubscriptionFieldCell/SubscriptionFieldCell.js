@@ -1,11 +1,13 @@
 import Comboboxes from 'src/components/Comboboxes'
 
 export const QUERY = gql`
-  query FindSubscriptions {
-    subscriptions {
+  query FindSubscriptionsByProfile($profile: String!) {
+    subscriptions: subscriptionsByProfile(profile:$profile) {
       id
       firstname
       lastname
+      location
+      user
     }
   }
 `
@@ -18,12 +20,11 @@ export const Failure = ({ error }) => (
   <div style={{ color: 'red' }}>Error: {error.message}</div>
 )
 
-export const Success = ({ subscriptions, value, onChange, name, label }) => {
+export const Success = ({ subscriptions, value, onChange, name }) => {
   return <Comboboxes
       options={subscriptions}
       value={value}
       onChange={onChange}
       name={name}
-      label={label}
     />
 }

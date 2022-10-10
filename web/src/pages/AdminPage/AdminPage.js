@@ -98,7 +98,7 @@ const AdminPage = () => {
 
   const [deliverDate, setDeliverDate] = useState(delayDate(Date(Date.now()), 1))
   const [submit, setSubmit] = useState(false)
-  const [selectedSubscription, setSelectedSubscription] = useState('')
+  const [selectedSubscription, setSelectedSubscription] = useState(1)
 
   const formatDate = (value) => {
     if (value) {
@@ -118,14 +118,14 @@ const AdminPage = () => {
     setSubmit(true)
 
     /* Search subscription */
-    const contract = await getContract({ variables: { user: currentUser.id}})
+    const contract = await getContract({ variables: { user: selectedSubscription.user}})
     const subscription = contract.data.subscription
 
     /* Search timeslot */
     const geocoder = await getGeocoder({ variables: { location: subscription.location}})
 
     const bookingInput =  {
-      user : currentUser.id,
+      user : selectedSubscription.user,
       subscription : subscription.id,
       pickedAt : data.pickedAt,
       timeslot : timeslot(geocoder.data.geocoder) <= MAX_DISTANCE ? "9h - 12h" : "12h - 15h",
@@ -149,8 +149,6 @@ const AdminPage = () => {
 
      /* Send SMS booking */
      /* TODO */
-
-    navigate(routes.confirmBook())
   }
 
   return (
@@ -184,15 +182,18 @@ const AdminPage = () => {
                     className="mx-auto font-sans">
                 <FormError error={error} wrapperClassName="form-error" />
                 <div className="bg-white rounded-t-lg shadow-lg p-8 mt-8">
+                  <h1 className="uppercase font-bold text-lg text-center">Nouvelle demande</h1>
+                  <hr className="my-3 -mx-8"/>
                   <Label className="font-medium block">
-                    Contrat
+                    Sélectionner un contrat
                   </Label>
                   <SubscriptionFieldCell
                     value={selectedSubscription}
                     onChange={setSelectedSubscription}
                     name="usager"
-                    label="Usager"          
+                    profile="particulier"
                   />
+
                   <Label className="font-medium block mt-6">
                     Jour de collecte
                   </Label>
@@ -201,7 +202,8 @@ const AdminPage = () => {
                     step="7"
                     onChange={(date) => setDeliverDate(delayDate(new Date(date.target.value),0))} min={formatDate(delayDate(new Date(Date.now()),1))} value={formatDate(deliverDate)}
                     className="block w-32 bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
-                  <SlotCell user={currentUser.id} />
+                  <SlotCell user={selectedSubscription.user} className="mt-3 text-md"/>
+
                   <Label className="font-medium mt-6 block">
                     Précisions sur la collecte (code, sonnerie, etc.)
                   </Label>
@@ -212,7 +214,7 @@ const AdminPage = () => {
                 <div>
                   <Submit
                     disabled={submit}
-                    className={`sm:text-sm md:text-lg uppercase font-bold ${(!submit) ? 'bg-yellow-400 text-black' : 'bg-gray-600 text-white'} rounded-b-md p-4 w-full shadow-lg`}>Envoyer la demande</Submit>
+                    className={`sm:text-sm md:text-lg uppercase font-bold ${(!submit) ? 'bg-yellow-400 text-black' : 'bg-gray-600 text-white'} rounded-b-md p-4 w-full shadow-lg`}>Enregistrer la demande</Submit>
                 </div>
               </Form>
             </div>
