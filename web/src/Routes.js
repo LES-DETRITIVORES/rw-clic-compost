@@ -17,18 +17,21 @@ import SubscribeLayout from 'src/layouts/SubscribeLayout'
 import ConfirmLayout from 'src/layouts/ConfirmLayout'
 import AuthLayout from 'src/layouts/AuthLayout'
 import BookLayout from 'src/layouts/BookLayout'
-
+import AdminLayout from 'src/layouts/AdminLayout'
 
 const Routes = () => {
   return (
     <Router>
-      <Set wrap={BookingsLayout}>
-        <Route path="/bookings/new" page={BookingNewBookingPage} name="newBooking" />
-        <Route path="/bookings/{id:Int}/edit" page={BookingEditBookingPage} name="editBooking" />
-        <Route path="/bookings/{id:Int}" page={BookingBookingPage} name="booking" />
-        <Route path="/bookings" page={BookingBookingsPage} name="bookings" />
-      </Set>
       <Private unauthenticated="login">
+        <Set wrap={AdminLayout}>
+          <Route path="/admin" page={AdminPage} name="admin" />
+        </Set>
+        <Set wrap={BookingsLayout}>
+          <Route path="/bookings/new" page={BookingNewBookingPage} name="newBooking" />
+          <Route path="/bookings/{id:Int}/edit" page={BookingEditBookingPage} name="editBooking" />
+          <Route path="/bookings/{id:Int}" page={BookingBookingPage} name="booking" />
+          <Route path="/bookings" page={BookingBookingsPage} name="bookings" />
+        </Set>
         <Set wrap={BookLayout}>
           <Route path="/collecte" page={BookBookPage} name="book" />
           <Route path="/collecte/confirm" page={BookConfirmPage} name="confirmBook" />

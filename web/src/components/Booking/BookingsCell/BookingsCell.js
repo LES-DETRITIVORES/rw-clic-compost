@@ -28,10 +28,7 @@ export const Loading = () => <div>Loading...</div>
 export const Empty = () => {
   return (
     <div className="rw-text-center">
-      {'No bookings yet. '}
-      <Link to={routes.newBooking()} className="rw-link">
-        {'Create one?'}
-      </Link>
+      {'Aucune demande en cours.'}
     </div>
   )
 }
