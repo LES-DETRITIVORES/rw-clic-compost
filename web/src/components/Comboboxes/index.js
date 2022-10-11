@@ -15,7 +15,7 @@ const Comboboxes = ({
   query === ''
     ? options
     : options.filter((item) =>
-        item.nom.toLowerCase().includes(query.toLowerCase())
+        (item?.firstname + ' ' + item?.lastname).toLowerCase().includes(query.toLowerCase())
       )
 
   return (

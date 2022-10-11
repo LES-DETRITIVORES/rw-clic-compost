@@ -6,7 +6,8 @@ import { useState } from 'react'
 import { Form, Label, TextAreaField, FormError, DateField, Submit } from '@redwoodjs/forms'
 import { useAuth } from '@redwoodjs/auth'
 import LoginCell from 'src/components/User/LoginCell'
-import BookingsCell from 'src/components/Booking/BookingsCell'
+import BookingsAdminCell from 'src/components/Booking/BookingsAdminCell'
+import BookingAdmin  from 'src/components/Booking/BookingAdmin'
 import SlotCell from 'src/components/Location/SlotCell/SlotCell'
 import SubscriptionFieldCell from 'src/components/Subscription/SubscriptionFieldCell'
 
@@ -58,6 +59,27 @@ const SMS_SUBSCRIPTION = gql`
   }
 `
 
+const UPDATE_BOOKING_MUTATION = gql`
+  mutation UpdateBookingMutation($id: Int!, $input: UpdateBookingInput!) {
+    updateBooking(id: $id, input: $input) {
+      id
+      createdAt
+      pickedAt
+      timeslot
+      user
+      subscription
+      firstname
+      lastname
+      email
+      phone
+      location
+      details
+      status
+      updatedAt
+    }
+  }
+`
+
 const AdminPage = () => {
   const MAX_DISTANCE = 3
   const { currentUser, isAuthenticated, logIn, logOut } = useAuth()
@@ -96,8 +118,22 @@ const AdminPage = () => {
     },
   })
 
+  const [updateBooking, { loadingBooking, errorBooking }] = useMutation(
+    UPDATE_BOOKING_MUTATION,
+    {
+      onCompleted: () => {
+        toast.success('Demande mise à jour')
+        navigate(routes.bookings())
+      },
+      onError: (error) => {
+        toast.error(error.message)
+      },
+    }
+  )
+
   const [deliverDate, setDeliverDate] = useState(delayDate(Date(Date.now()), 1))
   const [submit, setSubmit] = useState(false)
+  const [selectedBooking, setSelectedBooking] = useState()
   const [selectedSubscription, setSelectedSubscription] = useState(1)
 
   const formatDate = (value) => {
@@ -135,7 +171,7 @@ const AdminPage = () => {
       phone : subscription.phone,
       location : subscription.location,
       details : data.details,
-      status: 'NEW',
+      status: 'A collecter',
       updatedAt: new Date()
     }
     //console.log(JSON.stringify(bookingInput))
@@ -151,11 +187,16 @@ const AdminPage = () => {
      /* TODO */
   }
 
+  const onSave = (input, id) => {
+    updateBooking({ variables: { id, input } })
+  }
+
   return (
     <>
       <MetaTags title="Gestion" description="Page de gestion des demandes de collectes" />
       { currentUser &&
       <div>
+        <Toaster />
         <div className="text-white text-right">
           <span className="text-sm font-light">[<LoginCell id={currentUser.id} />]</span>&nbsp;
           <Link className="underline cursor-pointer font-bold text-md" onClick={logOut}>Se déconnecter</Link>
@@ -164,8 +205,8 @@ const AdminPage = () => {
           <span className="bg-yellow-400 p-1 block w-min">Gavé&nbsp;de&nbsp;boulot&nbsp;?</span>
         </div>
         <div className="container mx-auto max-w-6xl font-sans">
-          <div className="flex flex-col-reverse gap-8 md:flex-row ">
-            <div className="md:w-1/2">
+          <div className="flex flex-col gap-8 md:flex-row ">
+            <div className="md:w-3/5">
               <div className="bg-white rounded-md shadow-lg p-8 mt-8">
                 <h1 className="uppercase font-bold text-lg text-center">Demandes à traiter</h1>
                 <hr className="my-3 -mx-8"/>
@@ -173,11 +214,21 @@ const AdminPage = () => {
                       className="rw-button rw-button-green mb-6 p-3">
                   {'Nouvelle demande'}
                 </Link>
-                <BookingsCell />
+                <BookingsAdminCell callback={setSelectedBooking}/>
               </div>
             </div>
-            <div className="md:w-1/2">
-              <Toaster />
+            <div className="md:w-2/5">
+              {selectedBooking?.id && 
+                <div className="mx-auto font-sans bg-white rounded-t-lg shadow-lg p-8 mt-8">
+                  <h1 className="uppercase font-bold text-lg text-center mb-6">Demande #{selectedBooking?.id}</h1>
+                  <BookingAdmin 
+                    booking={selectedBooking}
+                    onSave={onSave}
+                    error={errorBooking}
+                    loading={loadingBooking} 
+                  />
+                </div>
+              }
               <Form onSubmit={bookSubmit} config={{ mode: 'onBlur' }} error={error}
                     className="mx-auto font-sans">
                 <FormError error={error} wrapperClassName="form-error" />
@@ -193,7 +244,6 @@ const AdminPage = () => {
                     name="usager"
                     profile="particulier"
                   />
-
                   <Label className="font-medium block mt-6">
                     Jour de collecte
                   </Label>
