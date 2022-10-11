@@ -132,7 +132,7 @@ const BookPage = () => {
       phone : subscription.phone,
       location : subscription.location,
       details : data.details,
-      status: 'NEW',
+      status: 'A collecter',
       updatedAt: new Date()
     }
     //console.log(JSON.stringify(bookingInput))

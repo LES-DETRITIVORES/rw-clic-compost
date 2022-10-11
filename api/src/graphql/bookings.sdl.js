@@ -18,6 +18,7 @@ export const schema = gql`
 
   type Query {
     bookings: [Booking!]! @requireAuth
+    bookingsByStatus(status: String!): [Booking!]! @requireAuth
     booking(id: Int!): Booking @requireAuth
   }
 

@@ -21,6 +21,7 @@ export const schema = gql`
 
   type Query {
     subscriptions: [Subscription!]! @requireAuth
+    subscriptionsByProfile(profile: String!): [Subscription!]! @requireAuth
     subscription(id: Int!): Subscription @requireAuth
     contract(user: Int!): Subscription @requireAuth
   }

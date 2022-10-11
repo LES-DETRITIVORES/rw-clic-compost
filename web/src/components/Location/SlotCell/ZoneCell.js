@@ -19,7 +19,7 @@ export const Failure = ({ error }) => (
   <div style={{ color: 'red' }}>Error: {error.message}</div>
 )
 
-export const Success = ({ geocoder }) => {
+export const Success = ({ geocoder, className }) => {
   var from = turf.point([-0.548885, 44.856188]);
   var to = turf.point([geocoder.longitude, geocoder.latitude]);
   var options = {units: 'kilometers'};
@@ -27,7 +27,7 @@ export const Success = ({ geocoder }) => {
   const MAX_DISTANCE = 3
 
   return (
-    <div className="text-center mt-2 text-md">
+    <div className={className}>
       Collecte prévue entre&nbsp;
       <span className="underline font-medium">
         {(distance <= MAX_DISTANCE) && "9h et 12h"}

@@ -6,6 +6,14 @@ export const subscriptions = () => {
   return db.subscription.findMany()
 }
 
+export const subscriptionsByProfile = ( { profile } ) => {
+  return db.subscription.findMany(
+    {
+      where: { profile : profile }
+    }
+  )
+}
+
 export const subscription = ({ id }) => {
   return db.subscription.findUnique({
     where: { id },

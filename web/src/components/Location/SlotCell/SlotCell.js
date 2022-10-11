@@ -16,6 +16,6 @@ export const Failure = ({ error }) => (
   <div className="rw-cell-error">{error.message}</div>
 )
 
-export const Success = ({ subscription }) => {
-  return <ZoneCell query={subscription.location}></ZoneCell>
+export const Success = ({ subscription, className }) => {
+  return <ZoneCell query={subscription.location} className={className}></ZoneCell>
 }

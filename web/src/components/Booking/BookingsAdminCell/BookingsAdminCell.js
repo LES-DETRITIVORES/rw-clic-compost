@@ -1,10 +1,10 @@
 import { Link, routes } from '@redwoodjs/router'
 
-import Bookings from 'src/components/Booking/Bookings'
+import BookingsAdmin from 'src/components/Booking/BookingsAdmin'
 
 export const QUERY = gql`
-  query FindBookings {
-    bookings {
+  query FindBookingsByStatus ($status: String!) {
+    bookings:bookingsByStatus(status:$status) {
       id
       createdAt
       pickedAt
@@ -37,6 +37,6 @@ export const Failure = ({ error }) => (
   <div className="rw-cell-error">{error.message}</div>
 )
 
-export const Success = ({ bookings }) => {
-  return <Bookings bookings={bookings} />
+export const Success = ({ bookings, callback }) => {
+  return <BookingsAdmin bookings={bookings} callback={callback}/>
 }

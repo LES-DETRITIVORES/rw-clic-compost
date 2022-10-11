@@ -344,11 +344,11 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
     /* Save subscription */
     sub.rate = (parseFloat(sub.rate)*(coupon == "RECUP40" ? 4/1.2/parseFloat(sub.rate) : 1)).toFixed(2) // apply coupon
     setSubscription(sub)
-    sub = await createSubscription({ variables: { input: subscription } })
-    console.log(JSON.stringify(sub))
+    let newSub = await createSubscription({ variables: { input: sub } })
+    console.log(JSON.stringify(newSub))
 
     /* Send email subscription */
-    emailSubscription({ variables: { id: sub.data.subscription.id, password: password } })
+    emailSubscription({ variables: { id: newSub.data.subscription.id, password: password } })
 
     /* Send SMS subscription */
     // console.log(JSON.stringify(subscription))
@@ -357,14 +357,14 @@ const SubscribePage = ({u, f, n, c, e, p, l, m, o, s, r}) => {
     /* Add new deal to pipedrive (CRM) */
     // Create organization
     const organization = {
-      name: subscription.profile == "particulier" ? subscription.firstname + ' ' + subscription.lastname.toUpperCase() + ' ' + '(Particulier)': subscription.company
+      name: sub.profile == "particulier" ? sub.firstname + ' ' + sub.lastname.toUpperCase() + ' ' + '(Particulier)': sub.company
     }
     const org = await createOrganization({ variables: { input: organization }})
 
     // Create deal
     const deal = {
-      title: '#' + sub.data.subscription.id + ' - ' + organization.name,
-      value: (subscription.rate).toString(),
+      title: '#' + newSub.data.subscription.id + ' - ' + organization.name,
+      value: (sub.rate).toString(),
       orgId: org.data.organization.id,
       pipelineId: '8',
       stageId: '55',
