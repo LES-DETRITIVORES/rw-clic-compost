@@ -48,7 +48,7 @@ const BookingAdmin = ( props ) => {
   const [deleteBooking] = useMutation(DELETE_BOOKING_MUTATION, {
     onCompleted: () => {
       toast.success('Demande supprimée')
-      navigate(routes.admin())
+      window.location.reload()
     },
     onError: (error) => {
       toast.error(error.message)
@@ -123,6 +123,13 @@ const BookingAdmin = ( props ) => {
             onClick={() => onDeleteClick(props.booking?.id)}
           >
             Supprimer
+          </button>
+          <button
+            type="button"
+            className="rw-button rw-button-gray"
+            onClick={props.onCancel}
+          >
+            Fermer
           </button>
         </div>
       </Form>

@@ -1,4 +1,4 @@
-import Comboboxes from 'src/components/Comboboxes'
+import Comboboxes from 'src/components/Comboboxes/Comboboxes'
 
 export const QUERY = gql`
   query FindSubscriptionsByProfile($profile: String!) {

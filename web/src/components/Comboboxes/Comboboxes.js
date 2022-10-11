@@ -29,7 +29,7 @@ const Comboboxes = ({
           <Combobox.Input
             className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
             onChange={(event) => setQuery(event.target.value)}
-            displayValue={(item) => '#' + item?.id + ' - ' + item?.firstname + ' ' + item?.lastname?.toUpperCase() + ' - ' + item?.location}
+            displayValue={(item) => item?.id > 0 ? '#' + item?.id + ' - ' + item?.firstname + ' ' + item?.lastname?.toUpperCase() + ' - ' + item?.location : '-'}
           />
           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
             <ChevronDownIcon

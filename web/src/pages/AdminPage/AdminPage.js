@@ -134,8 +134,9 @@ const AdminPage = () => {
 
   const [deliverDate, setDeliverDate] = useState(delayDate(Date(Date.now()), 1))
   const [submit, setSubmit] = useState(false)
+  const [newBooking, setNewBooking] = useState(false)
   const [selectedBooking, setSelectedBooking] = useState()
-  const [selectedSubscription, setSelectedSubscription] = useState(1)
+  const [selectedSubscription, setSelectedSubscription] = useState({id:0, user:0})
 
   const formatDate = (value) => {
     if (value) {
@@ -204,15 +205,12 @@ const AdminPage = () => {
         </div>
         <div className="font-bold text-center text-xl sm:text-3xl md:text-5xl mt-16 text-black w-min mx-auto -rotate-2">
           <span className="bg-yellow-400 p-1 block w-min">Gavé&nbsp;de&nbsp;boulot&nbsp;?</span>
+          <span className="bg-yellow-400 p-1 block w-min">C'est&nbsp;pas&nbsp;fini&nbsp;!</span>
         </div>
         <div className="container mx-auto max-w-6xl font-sans">
           <div className="flex flex-col gap-8 md:flex-row ">
-            <div className="md:w-3/5">
-              <Link to={routes.newBooking()} 
-                    className="rw-button rw-button-green mt-8 p-3">
-                {'Nouvelle demande'}
-              </Link>
-              <div className="bg-white rounded-md shadow-lg p-8 mt-6">
+            <div className="md:w-3/5 mt-8">
+              <div className="bg-white rounded-md shadow-lg p-8">
                 <h1 className="uppercase font-bold text-lg text-center">A collecter</h1>
                 <hr className="my-3 -mx-8"/>
                 <BookingsAdminCell callback={setSelectedBooking} status="A collecter"/>
@@ -233,56 +231,76 @@ const AdminPage = () => {
                 <BookingsAdminCell callback={setSelectedBooking} status="Annulé"/>
               </div>
             </div>
-            <div className="md:w-2/5">
-              {selectedBooking?.id && 
-                <div className="mx-auto font-sans bg-white rounded-t-lg shadow-lg p-8 mt-8">
+            <div className="md:w-2/5 mt-8">
+              {!newBooking &&
+                <button
+                  type="button"
+                  className="rw-button rw-button-green p-3 text-lg"
+                  onClick={() => setNewBooking(!newBooking)} >
+                    Nouvelle demande
+                </button>
+              }
+              {(selectedBooking?.id && !newBooking) && 
+                <div className="mx-auto font-sans bg-white rounded-lg shadow-lg p-8 mt-6">
                   <h1 className="uppercase font-bold text-lg text-center mb-6">Demande #{selectedBooking?.id}</h1>
                   <BookingAdmin 
                     booking={selectedBooking}
                     onSave={onSave}
+                    onCancel={() => setSelectedBooking('')}
                     error={errorBooking}
                     loading={loadingBooking} 
                   />
                 </div>
               }
-              <Form onSubmit={bookSubmit} config={{ mode: 'onBlur' }} error={error}
-                    className="mx-auto font-sans">
-                <FormError error={error} wrapperClassName="form-error" />
-                <div className="bg-white rounded-t-lg shadow-lg p-8 mt-8">
-                  <h1 className="uppercase font-bold text-lg text-center">Nouvelle demande</h1>
-                  <hr className="my-3 -mx-8"/>
-                  <Label className="font-medium block">
-                    Sélectionner un contrat
-                  </Label>
-                  <SubscriptionFieldCell
-                    value={selectedSubscription}
-                    onChange={setSelectedSubscription}
-                    name="usager"
-                    profile="particulier"
-                  />
-                  <Label className="font-medium block mt-6">
-                    Jour de collecte
-                  </Label>
-                  <DateField
-                    name="pickedAt"
-                    step="7"
-                    onChange={(date) => setDeliverDate(delayDate(new Date(date.target.value),0))} min={formatDate(delayDate(new Date(Date.now()),1))} value={formatDate(deliverDate)}
-                    className="block w-32 bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
-                  <SlotCell user={selectedSubscription.user} className="mt-3 text-md"/>
-
-                  <Label className="font-medium mt-6 block">
-                    Précisions sur la collecte (code, sonnerie, etc.)
-                  </Label>
-                  <TextAreaField
-                    name="details"
-                    className="block w-full h-24 bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
-                </div>
-                <div>
-                  <Submit
-                    disabled={submit}
-                    className={`sm:text-sm md:text-lg uppercase font-bold ${(!submit) ? 'bg-yellow-400 text-black' : 'bg-gray-600 text-white'} rounded-b-md p-4 w-full shadow-lg`}>Enregistrer la demande</Submit>
-                </div>
-              </Form>
+              {newBooking && 
+                <Form onSubmit={bookSubmit} config={{ mode: 'onBlur' }} error={error}
+                  className="mx-auto font-sans">
+                  <FormError error={error} wrapperClassName="form-error" />
+                  <div className="bg-white rounded-t-lg shadow-lg p-8">
+                    <h1 className="uppercase font-bold text-lg text-center">Nouvelle demande</h1>
+                    <hr className="my-3 -mx-8"/>
+                    <Label className="font-medium block">
+                      Sélectionner un contrat
+                    </Label>
+                    <SubscriptionFieldCell
+                      value={selectedSubscription}
+                      onChange={setSelectedSubscription}
+                      name="usager"
+                      profile="particulier"
+                    />
+                    <Label className="font-medium block mt-6">
+                      Jour de collecte
+                    </Label>
+                    <DateField
+                      name="pickedAt"
+                      step="7"
+                      onChange={(date) => setDeliverDate(delayDate(new Date(date.target.value),0))} min={formatDate(delayDate(new Date(Date.now()),1))} value={formatDate(deliverDate)}
+                      className="block w-32 bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                    {selectedSubscription.user > 0 && 
+                      <SlotCell user={selectedSubscription.user} className="mt-3 text-md"/>
+                    }
+                    <Label className="font-medium mt-6 block">
+                      Précisions sur la collecte (code, sonnerie, etc.)
+                    </Label>
+                    <TextAreaField
+                      name="details"
+                      className="block w-full h-24 bg-gray-200 rounded-md p-2 text-sm outline-orange-300"/>
+                    <hr />
+                    <div className="rw-button-group">
+                      <Submit disabled={submit} className="rw-button rw-button-blue">
+                        Enregistrer
+                      </Submit>
+                      <button
+                        type="button"
+                        className="rw-button rw-button-red"
+                        onClick={() => setNewBooking(false)}
+                      >
+                        Annuler
+                      </button>
+                    </div>
+                  </div>
+                </Form>
+              }
             </div>
           </div>
         </div>
