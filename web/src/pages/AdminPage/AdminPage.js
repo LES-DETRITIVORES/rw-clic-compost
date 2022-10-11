@@ -109,6 +109,7 @@ const AdminPage = () => {
     onCompleted: (result) => {
       //console.log(JSON.stringify(result.booking))
       toast.success('Demande enregistrée.')
+      window.location.reload()
     },
   })
 

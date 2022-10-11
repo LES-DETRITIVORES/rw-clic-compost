@@ -8,6 +8,9 @@ export const bookings = () => {
 export const bookingsByStatus = ({ status }) => {
   return db.booking.findMany({
     where: { status : status },
+    orderBy:{
+      pickedAt:"asc"
+    }
   })
 }
 
