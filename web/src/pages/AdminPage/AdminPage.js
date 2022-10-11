@@ -123,7 +123,7 @@ const AdminPage = () => {
     {
       onCompleted: () => {
         toast.success('Demande mise à jour')
-        navigate(routes.bookings())
+        window.location.reload()
       },
       onError: (error) => {
         toast.error(error.message)
@@ -207,14 +207,29 @@ const AdminPage = () => {
         <div className="container mx-auto max-w-6xl font-sans">
           <div className="flex flex-col gap-8 md:flex-row ">
             <div className="md:w-3/5">
-              <div className="bg-white rounded-md shadow-lg p-8 mt-8">
-                <h1 className="uppercase font-bold text-lg text-center">Demandes à traiter</h1>
+              <Link to={routes.newBooking()} 
+                    className="rw-button rw-button-green mt-8 p-3">
+                {'Nouvelle demande'}
+              </Link>
+              <div className="bg-white rounded-md shadow-lg p-8 mt-6">
+                <h1 className="uppercase font-bold text-lg text-center">A collecter</h1>
                 <hr className="my-3 -mx-8"/>
-                <Link to={routes.newBooking()} 
-                      className="rw-button rw-button-green mb-6 p-3">
-                  {'Nouvelle demande'}
-                </Link>
-                <BookingsAdminCell callback={setSelectedBooking}/>
+                <BookingsAdminCell callback={setSelectedBooking} status="A collecter"/>
+              </div>
+              <div className="bg-white rounded-md shadow-lg p-8 mt-6"> 
+                <h1 className="uppercase font-bold text-lg text-center">A facturer</h1>
+                <hr className="my-3 -mx-8"/>
+                <BookingsAdminCell callback={setSelectedBooking} status="A facturer"/>
+              </div>
+              <div className="bg-white rounded-md shadow-lg p-8 mt-6"> 
+                <h1 className="uppercase font-bold text-lg text-center">Terminé</h1>
+                <hr className="my-3 -mx-8"/>
+                <BookingsAdminCell callback={setSelectedBooking} status="Terminé"/>
+              </div>
+              <div className="bg-white rounded-md shadow-lg p-8 mt-6"> 
+                <h1 className="uppercase font-bold text-lg text-center">Annulé</h1>
+                <hr className="my-3 -mx-8"/>
+                <BookingsAdminCell callback={setSelectedBooking} status="Annulé"/>
               </div>
             </div>
             <div className="md:w-2/5">

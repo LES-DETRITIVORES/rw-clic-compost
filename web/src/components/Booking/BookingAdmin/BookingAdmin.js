@@ -48,7 +48,7 @@ const BookingAdmin = ( props ) => {
   const [deleteBooking] = useMutation(DELETE_BOOKING_MUTATION, {
     onCompleted: () => {
       toast.success('Demande supprimée')
-      navigate(routes.bookings())
+      navigate(routes.admin())
     },
     onError: (error) => {
       toast.error(error.message)

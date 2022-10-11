@@ -3,8 +3,8 @@ import { Link, routes } from '@redwoodjs/router'
 import BookingsAdmin from 'src/components/Booking/BookingsAdmin'
 
 export const QUERY = gql`
-  query FindBookings {
-    bookings {
+  query FindBookingsByStatus ($status: String!) {
+    bookings:bookingsByStatus(status:$status) {
       id
       createdAt
       pickedAt

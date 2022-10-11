@@ -5,6 +5,12 @@ export const bookings = () => {
   return db.booking.findMany()
 }
 
+export const bookingsByStatus = ({ status }) => {
+  return db.booking.findMany({
+    where: { status : status },
+  })
+}
+
 export const booking = ({ id }) => {
   return db.booking.findUnique({
     where: { id },
