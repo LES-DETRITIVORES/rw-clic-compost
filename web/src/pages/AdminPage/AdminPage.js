@@ -193,6 +193,11 @@ const AdminPage = () => {
     updateBooking({ variables: { id, input } })
   }
 
+  const onBookingSelect = (booking) => {
+    setNewBooking(false);
+    setSelectedBooking(booking);
+  }
+
   return (
     <>
       <MetaTags title="Gestion" description="Page de gestion des demandes de collectes" />
@@ -213,30 +218,30 @@ const AdminPage = () => {
               <div className="bg-white rounded-md shadow-lg p-8">
                 <h1 className="uppercase font-bold text-lg text-center">A collecter</h1>
                 <hr className="my-3 -mx-8"/>
-                <BookingsAdminCell callback={setSelectedBooking} status="A collecter"/>
+                <BookingsAdminCell callback={onBookingSelect} status="A collecter"/>
               </div>
               <div className="bg-white rounded-md shadow-lg p-8 mt-6"> 
                 <h1 className="uppercase font-bold text-lg text-center">A facturer</h1>
                 <hr className="my-3 -mx-8"/>
-                <BookingsAdminCell callback={setSelectedBooking} status="A facturer"/>
+                <BookingsAdminCell callback={onBookingSelect} status="A facturer"/>
               </div>
               <div className="bg-white rounded-md shadow-lg p-8 mt-6"> 
                 <h1 className="uppercase font-bold text-lg text-center">Terminé</h1>
                 <hr className="my-3 -mx-8"/>
-                <BookingsAdminCell callback={setSelectedBooking} status="Terminé"/>
+                <BookingsAdminCell callback={onBookingSelect} status="Terminé"/>
               </div>
               <div className="bg-white rounded-md shadow-lg p-8 mt-6"> 
                 <h1 className="uppercase font-bold text-lg text-center">Annulé</h1>
                 <hr className="my-3 -mx-8"/>
-                <BookingsAdminCell callback={setSelectedBooking} status="Annulé"/>
+                <BookingsAdminCell callback={onBookingSelect} status="Annulé"/>
               </div>
             </div>
             <div className="md:w-2/5 mt-8">
               {!newBooking &&
                 <button
                   type="button"
-                  className="rw-button rw-button-green p-3 text-lg"
-                  onClick={() => setNewBooking(!newBooking)} >
+                  className="rw-button bg-gray-600 text-white hover:text-black hover:bg-yellow-400 p-3 text-lg"
+                  onClick={() => {setNewBooking(!newBooking); setSelectedBooking('')}} >
                     Nouvelle demande
                 </button>
               }
@@ -246,13 +251,13 @@ const AdminPage = () => {
                   <BookingAdmin 
                     booking={selectedBooking}
                     onSave={onSave}
-                    onCancel={() => setSelectedBooking('')}
+                    onCancel={() => {setSelectedBooking(''); setNewBooking(false)}}
                     error={errorBooking}
                     loading={loadingBooking} 
                   />
                 </div>
               }
-              {newBooking && 
+              {(newBooking && !selectedBooking?.id) && 
                 <Form onSubmit={bookSubmit} config={{ mode: 'onBlur' }} error={error}
                   className="mx-auto font-sans">
                   <FormError error={error} wrapperClassName="form-error" />
