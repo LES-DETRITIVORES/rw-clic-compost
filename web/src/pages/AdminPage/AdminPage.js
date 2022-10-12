@@ -237,7 +237,7 @@ const AdminPage = () => {
               </div>
             </div>
             <div className="md:w-2/5 mt-8">
-              {!newBooking &&
+              {(!newBooking && !selectedBooking?.id) &&
                 <button
                   type="button"
                   className="rw-button bg-gray-600 text-white hover:text-black hover:bg-yellow-400 p-3 text-lg"
@@ -246,7 +246,7 @@ const AdminPage = () => {
                 </button>
               }
               {(selectedBooking?.id && !newBooking) && 
-                <div className="mx-auto font-sans bg-white rounded-lg shadow-lg p-8 mt-6">
+                <div className="mx-auto font-sans bg-white rounded-lg shadow-lg p-8">
                   <h1 className="uppercase font-bold text-lg text-center mb-6">Demande #{selectedBooking?.id}</h1>
                   <BookingAdmin 
                     booking={selectedBooking}
@@ -297,7 +297,7 @@ const AdminPage = () => {
                       </Submit>
                       <button
                         type="button"
-                        className="rw-button rw-button-red"
+                        className="rw-button rw-button-gray"
                         onClick={() => setNewBooking(false)}
                       >
                         Annuler
