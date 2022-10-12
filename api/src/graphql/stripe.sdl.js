@@ -51,5 +51,6 @@ export const schema = gql`
     createCustomer(input: CreateCustomerInput!): Customer! @skipAuth
     createCard(input: CreateCardInput!): Card! @skipAuth
     createPayment(input: CreatePaymentInput!): Payment! @requireAuth
+    emailPayment(id: Int!): String! @requireAuth
   }
 `

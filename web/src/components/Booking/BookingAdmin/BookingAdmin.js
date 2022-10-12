@@ -4,7 +4,6 @@ import { useLazyQuery } from '@apollo/client'
 import { toast } from '@redwoodjs/web/toast'
 import { Form, SelectField, Submit } from '@redwoodjs/forms'
 import { QUERY } from 'src/components/Subscription/ContractCell'
-import { PaymentElement } from '@stripe/react-stripe-js'
 
 const DELETE_BOOKING_MUTATION = gql`
   mutation DeleteBookingMutation($id: Int!) {
@@ -19,6 +18,12 @@ const CREATE_PAYMENT_MUTATION = gql`
     payment: createPayment(input: $input) {
       id
     }
+  }
+`
+
+const EMAIL_PAYMENT = gql`
+  mutation EmailPaymentMutation($id: Int!) {
+    emailPayment(id: $id)
   }
 `
 
@@ -89,6 +94,12 @@ const BookingAdmin = ( props ) => {
     },
   })
 
+  const [emailPayment] = useMutation(EMAIL_PAYMENT, {
+    onCompleted: () => {
+      toast.success('Mél de paiement envoyé.')
+    },
+  })
+
   const [getContract, {loading, error}] = useLazyQuery(QUERY, {
     onCompleted: (result) => {
       return result.subscription
@@ -116,14 +127,20 @@ const BookingAdmin = ( props ) => {
       })
       console.log('Payment:', JSON.stringify(payment?.data?.payment?.id))
       
-      /* Save payment */
+
       if (payment?.data?.payment?.id) {
+        /* Email payment */
+        emailPayment({ variables: { id: subscription.id } })
+
+        /* Save payment */
+        /*
         props.onSave(
           {
             status: "Terminé", 
             payment: payment.data.payment.id
           }, 
           props?.booking?.id)
+        */
       }
     }
   }

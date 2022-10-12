@@ -1,4 +1,6 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_TOKEN);
+import { db } from 'src/lib/db'
+import { sendEmail } from 'src/lib/email'
 
 export const createCustomer = async ({ input }) => {
   const customer = await stripe.customers.create(input);
@@ -79,4 +81,55 @@ export const createPayment = async ({ input }) => {
   return {
     id: paymentIntent.id,
   }
+}
+
+export const emailPayment = async ({ id }) => {
+  function rounded(num) {
+    return ((+(Math.round(num + "e+2") + "e-2")).toFixed(2))
+  }
+
+  const subscription = await db.subscription.findUnique({
+    where: { id },
+  })
+  let paymentMethod = subscription.card ? 'Carte bancaire' : 'Prélèvement SEPA'
+  let pickedAt = new Date(subscription.startedAt).toLocaleDateString("fr")
+  const subject = 'CLIC & COMPOST #' + subscription.id + ' - Collecte réalisée'
+  const text =
+    'Bonjour ' + subscription.firstname + ' !\n\n' +
+    'Votre collecte a bien été réalisée !\n' +
+    'Nous avons envoyé la demande de paiement suivante :' +
+    '-------------------------------------------------------\n' +
+    'Numéro d\'adhésion : ' + subscription.id + '\n' +
+    (subscription.profile == 'professionnel' ? 'Société : ' + subscription.company + '\n' : '') +
+    'Contact : ' + subscription.firstname + ' ' + subscription.lastname + '\n' +
+    'Offre : ' + subscription.service + '\n' +
+    'Date de collecte : ' + pickedAt + '\n' +
+    'Mode de réglement : ' + paymentMethod + '\n' +
+    'Montant débité : ' + rounded(subscription.rate*1.2) + ' € TTC' + '\n' +
+    '-------------------------------------------------------\n\n' +
+    'N\'hésitez pas à nous contacter pour toutes questions :\n' +
+    'LES DETRITIVORES\n' +
+    '65 quai de Brazza 33100 Bordeaux\n' +
+    'bonjour@les-detritivores.co | 05 56 67 14 47'
+
+  const html =
+    'Bonjour ' + subscription.firstname + ' !<br/><br/>' +
+    'Votre collecte a bien été réalisée !<br/>' +
+    'Nous avons envoyé la demande de paiement suivante :<br/>' +
+    '<hr/>' +
+    'Numéro d\'adhésion : ' + subscription.id + '<br/>' +
+    (subscription.profile == 'professionnel' ? 'Société : ' + subscription.company + '<br/>' : '') +
+    'Contact : ' + subscription.firstname + ' ' + subscription.lastname + '<br/>' +
+    'Offre : ' + subscription.service + '<br/>' +
+    'Date de collecte : ' + pickedAt + '<br/>' +
+    'Mode de réglement : ' + paymentMethod + '<br/>' +
+    'Montant débité : ' + rounded(subscription.rate*1.2) + ' € TTC' + '<br/>' +
+    '<hr/>' +
+    'N\'hésitez pas à nous contacter pour toutes questions :<br/>' +
+    'LES DETRITIVORES<br/>' +
+    '65 quai de Brazza 33100 Bordeaux<br/>' +
+    'bonjour@les-detritivores.co | 05 56 67 14 47'
+
+  const email = await sendEmail({ to: subscription.email, bcc: ['bonjour@les-detritivores.co' /*, 'Développement commercial <ec52413f.les-detritivores.co@fr.teams.ms>'*/], subject, text, html })
+  return email.messageId
 }
