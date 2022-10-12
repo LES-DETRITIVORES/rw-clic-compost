@@ -15,7 +15,6 @@ export const schema = gql`
   }
 
   type Payment {
-    query: Int!
     id: String!
   }
 
@@ -36,14 +35,21 @@ export const schema = gql`
     cvc: String!
   }
 
+  input CreatePaymentInput {
+    customer: String!
+    amount: Int!
+    payment_method: String!
+    receipt: String!
+  }
+
   type Query {
     addSEPAMethod(name: String!, email: String!, iban: String!): SEPAMethod! @skipAuth
-    addPayment(query: Int!): Payment! @skipAuth
     getClientSecret(query: String!): ClientSecret! @skipAuth
   }
 
   type Mutation {
     createCustomer(input: CreateCustomerInput!): Customer! @skipAuth
     createCard(input: CreateCardInput!): Card! @skipAuth
+    createPayment(input: CreatePaymentInput!): Payment! @requireAuth
   }
 `

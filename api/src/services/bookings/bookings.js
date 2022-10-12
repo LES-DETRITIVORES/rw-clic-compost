@@ -39,6 +39,13 @@ export const deleteBooking = ({ id }) => {
   })
 }
 
+export const payBooking = ({ id, input }) => {
+  return db.booking.update({
+    data: input,
+    where: { id },
+  })
+}
+
 export const emailBooking = async ({ id }) => {
   const booking = await db.booking.findUnique({
     where: { id },

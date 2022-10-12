@@ -10,6 +10,7 @@ import BookingsAdminCell from 'src/components/Booking/BookingsAdminCell'
 import BookingAdmin  from 'src/components/Booking/BookingAdmin'
 import SlotCell from 'src/components/Location/SlotCell/SlotCell'
 import SubscriptionFieldCell from 'src/components/Subscription/SubscriptionFieldCell'
+import { QUERY } from 'src/components/Booking/BookingsCell'
 
 import * as turf from '@turf/turf'
 
@@ -111,6 +112,8 @@ const AdminPage = () => {
       toast.success('Demande enregistrée.')
       window.location.reload()
     },
+      //refetchQueries: [{ query: QUERY }],
+      //awaitRefetchQueries: true,
   })
 
   const [emailBooking] = useMutation(EMAIL_BOOKING, {
@@ -129,6 +132,8 @@ const AdminPage = () => {
       onError: (error) => {
         toast.error(error.message)
       },
+      //refetchQueries: [{ query: QUERY }],
+      //awaitRefetchQueries: true,
     }
   )
 

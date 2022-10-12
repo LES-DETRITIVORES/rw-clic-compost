@@ -57,5 +57,6 @@ export const schema = gql`
     updateBooking(id: Int!, input: UpdateBookingInput!): Booking! @requireAuth
     deleteBooking(id: Int!): Booking! @requireAuth
     emailBooking(id: Int!): String! @requireAuth
+    payBooking(id: Int!, input: UpdateBookingInput!): Booking! @requireAuth
   }
 `

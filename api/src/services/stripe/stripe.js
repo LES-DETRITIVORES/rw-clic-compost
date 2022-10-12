@@ -63,21 +63,20 @@ export const getClientSecret = async ({ query }) => {
   }
 }
 
-export const addPayment = async ({ query }) => {
+export const createPayment = async ({ input }) => {
   // Create a PaymentIntent with the order amount and currency
   const paymentIntent = await stripe.paymentIntents.create({
-    amount: query*100,
+    customer: input.customer, //'cus_LY4LysEO2dG6NP'
+    payment_method: input.payment_method, // 'pm_1KtHvzDczmPm9BYQ4FcSDx6Y (SEPA) | pm_1KqyWNDczmPm9BYQubUV4LZn (CARD)'
+    receipt_email: input.receipt, // 'admin@les-detritivores.co'
+    amount: input.amount*100,
     currency: "eur",
     confirm: true,
-    customer: 'cus_LY4LysEO2dG6NP',
+    off_session: true,
     payment_method_types: ['card', 'sepa_debit'],
-    //payment_method: 'pm_1KqyWNDczmPm9BYQubUV4LZn', // CARD
-    payment_method: 'pm_1KtHvzDczmPm9BYQ4FcSDx6Y', // SEPA
-    receipt_email: 'admin@les-detritivores.co'
   })
 
   return {
-    query,
     id: paymentIntent.id,
   }
 }
