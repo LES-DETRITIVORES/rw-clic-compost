@@ -25,7 +25,7 @@ const GET_GEOCODER = gql`
   }
 `
 
-const GET_CONTRACT = gql`
+export const GET_CONTRACT = gql`
   query GetContractQuery($user: Int!) {
     subscription: contract(user: $user) {
       id,
@@ -33,7 +33,10 @@ const GET_CONTRACT = gql`
       lastname,
       email,
       phone,
-      location
+      location,
+      customer,
+      card,
+      iban
     }
   }
 `
@@ -189,9 +192,6 @@ const AdminPage = () => {
 
     /* Send email booking */
     emailBooking({ variables: { id: booking.data.booking.id } })
-
-     /* Send SMS booking */
-     /* TODO */
   }
 
   const onSave = (input, id) => {

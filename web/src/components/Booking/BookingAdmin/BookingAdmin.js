@@ -1,10 +1,10 @@
 import humanize from 'humanize-string'
-
 import { useMutation } from '@redwoodjs/web'
-import { useState, useEffect } from 'react'
+import { useLazyQuery } from '@apollo/client'
 import { toast } from '@redwoodjs/web/toast'
-import { Link, routes, navigate } from '@redwoodjs/router'
 import { Form, SelectField, Submit } from '@redwoodjs/forms'
+import { QUERY } from 'src/components/Subscription/ContractCell'
+import { PaymentElement } from '@stripe/react-stripe-js'
 
 const DELETE_BOOKING_MUTATION = gql`
   mutation DeleteBookingMutation($id: Int!) {
@@ -82,34 +82,49 @@ const BookingAdmin = ( props ) => {
 
   const [payBooking] = useMutation(CREATE_PAYMENT_MUTATION, {
     onCompleted: () => {
-      toast.success('Demande facturée')
-      //window.location.reload()
+      toast.success('Paiement réalisé.')
     },
     onError: (error) => {
       toast.error(error.message)
     },
   })
 
+  const [getContract, {loading, error}] = useLazyQuery(QUERY, {
+    onCompleted: (result) => {
+      return result.subscription
+    },
+  })
+
   const onPayClick = async (id) => {
     if (confirm('Confirmez la facturation de la demande #' + id + ' ?')) {
       console.log("Lancement du paiement:", id)
-      /* Get customer secret */
+
+      /* Search subscription */
+      var contract = await getContract({ variables: { user: props?.booking?.user}})
+      var subscription = contract?.data?.subscription
+      console.log('Retrieve subscrition:',  subscription)
+
+      /* Create payment */
       var payment = await payBooking({ variables: {
         input: {
-            customer: 'cus_MaSYzxnklLaFH7',
+            customer: subscription.customer,
             amount: 4,
-            payment_method: 'pm_1LrHdKDczmPm9BYQMMkuAWs4',
-            receipt: 'do.huynh@les-detritivores.co',
+            payment_method: subscription.card ? subscription.card : subscription.iban,
+            receipt: subscription.email,
           }
         }
       })
-      console.log('Payment:', JSON.stringify(payment.data.payment.id))
-      props.onSave(
-        {
-          status: "Terminé", 
-          payment: payment.data.payment.id
-        }, 
-        props?.booking?.id)
+      console.log('Payment:', JSON.stringify(payment?.data?.payment?.id))
+      
+      /* Save payment */
+      if (payment?.data?.payment?.id) {
+        props.onSave(
+          {
+            status: "Terminé", 
+            payment: payment.data.payment.id
+          }, 
+          props?.booking?.id)
+      }
     }
   }
 
@@ -156,7 +171,10 @@ const BookingAdmin = ( props ) => {
                     </div>
                     <div className="my-auto">
                       {(!props.booking?.payment && (props.booking?.status === "A payer")) &&
-                        <button className="rw-button rw-button-green" onClick={(e) => {e.preventDefault(); onPayClick(props.booking?.id)}}>
+                        <button 
+                          className="rw-button rw-button-green" 
+                          onClick={(e) => {e.preventDefault(); onPayClick(props.booking?.id)}}
+                          disabled={loading}>
                           Payer
                         </button>
                       }
@@ -179,7 +197,7 @@ const BookingAdmin = ( props ) => {
           </table>
         </div>
         <div className="rw-button-group">
-          <Submit disabled={props?.loading} className="rw-button rw-button-blue">
+          <Submit disabled={loading} className="rw-button rw-button-blue">
             Enregistrer
           </Submit>
           <button

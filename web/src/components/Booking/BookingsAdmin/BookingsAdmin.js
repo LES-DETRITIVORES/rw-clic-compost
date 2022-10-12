@@ -1,10 +1,6 @@
 import humanize from 'humanize-string'
-
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
-import { Link, routes } from '@redwoodjs/router'
-import { useState } from 'react'
-
 import { QUERY } from 'src/components/Booking/BookingsCell'
 
 const DELETE_BOOKING_MUTATION = gql`
