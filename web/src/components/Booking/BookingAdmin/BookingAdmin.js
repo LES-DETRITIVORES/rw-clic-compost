@@ -47,10 +47,7 @@ const jsonDisplay = (obj) => {
 }
 
 const timeTag = (datetime) => {
-  const day = new Date(datetime)
-  return (
-    day && (day.getDate() + '/' + (day.getMonth()+1) + '/' + day.getFullYear())
-  )
+  return new Date(datetime).toLocaleDateString("fr")
 }
 
 const checkboxInputTag = (checked) => {
@@ -119,7 +116,7 @@ const BookingAdmin = ( props ) => {
       var payment = await payBooking({ variables: {
         input: {
             customer: subscription.customer,
-            amount: 4,
+            rate: subscription.rate,
             payment_method: subscription.card ? subscription.card : subscription.iban,
             receipt: subscription.email,
           }

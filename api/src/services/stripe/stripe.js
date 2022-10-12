@@ -65,13 +65,18 @@ export const getClientSecret = async ({ query }) => {
   }
 }
 
+function rounded(num) {
+  return ((+(Math.round(num + "e+2") + "e-2")).toFixed(2))
+}
+
 export const createPayment = async ({ input }) => {
   // Create a PaymentIntent with the order amount and currency
+  console.log(parseInt(rounded(input.rate*1.2)*100))
   const paymentIntent = await stripe.paymentIntents.create({
     customer: input.customer, //'cus_LY4LysEO2dG6NP'
     payment_method: input.payment_method, // 'pm_1KtHvzDczmPm9BYQ4FcSDx6Y (SEPA) | pm_1KqyWNDczmPm9BYQubUV4LZn (CARD)'
     receipt_email: input.receipt, // 'admin@les-detritivores.co'
-    amount: input.amount*100,
+    amount: parseInt(rounded(input.rate*1.2)*100),
     currency: "eur",
     confirm: true,
     off_session: true,
@@ -84,10 +89,6 @@ export const createPayment = async ({ input }) => {
 }
 
 export const emailPayment = async ({ id }) => {
-  function rounded(num) {
-    return ((+(Math.round(num + "e+2") + "e-2")).toFixed(2))
-  }
-
   const subscription = await db.subscription.findUnique({
     where: { id },
   })
@@ -96,8 +97,8 @@ export const emailPayment = async ({ id }) => {
   const subject = 'CLIC & COMPOST #' + subscription.id + ' - Collecte réalisée'
   const text =
     'Bonjour ' + subscription.firstname + ' !\n\n' +
-    'Votre collecte a bien été réalisée !\n' +
-    'Nous avons envoyé la demande de paiement suivante :' +
+    'Votre collecte est terminée !\n\n' +
+    'Nous avons réalisé le paiement suivant :' +
     '-------------------------------------------------------\n' +
     'Numéro d\'adhésion : ' + subscription.id + '\n' +
     (subscription.profile == 'professionnel' ? 'Société : ' + subscription.company + '\n' : '') +
@@ -114,8 +115,8 @@ export const emailPayment = async ({ id }) => {
 
   const html =
     'Bonjour ' + subscription.firstname + ' !<br/><br/>' +
-    'Votre collecte a bien été réalisée !<br/>' +
-    'Nous avons envoyé la demande de paiement suivante :<br/>' +
+    'Votre collecte est terminée !<br/><br/>' +
+    'Nous avons réalisé le paiement suivant :<br/>' +
     '<hr/>' +
     'Numéro d\'adhésion : ' + subscription.id + '<br/>' +
     (subscription.profile == 'professionnel' ? 'Société : ' + subscription.company + '<br/>' : '') +

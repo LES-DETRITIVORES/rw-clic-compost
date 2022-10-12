@@ -37,7 +37,7 @@ export const schema = gql`
 
   input CreatePaymentInput {
     customer: String!
-    amount: Int!
+    rate: String!
     payment_method: String!
     receipt: String!
   }
