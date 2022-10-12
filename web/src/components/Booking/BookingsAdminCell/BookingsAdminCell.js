@@ -23,7 +23,7 @@ export const QUERY = gql`
   }
 `
 
-export const Loading = () => <div>Loading...</div>
+export const Loading = () => <div>Chargement des données...</div>
 
 export const Empty = () => {
   return (
