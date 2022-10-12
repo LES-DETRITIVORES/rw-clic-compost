@@ -22,8 +22,8 @@ const CREATE_PAYMENT_MUTATION = gql`
 `
 
 const EMAIL_PAYMENT = gql`
-  mutation EmailPaymentMutation($id: Int!) {
-    emailPayment(id: $id)
+  mutation EmailPaymentMutation($subscriptionId: Int!, $bookingId: Int!, ) {
+    emailPayment(subscriptionId: $subscriptionId, bookingId: $bookingId)
   }
 `
 
@@ -127,7 +127,7 @@ const BookingAdmin = ( props ) => {
 
       if (payment?.data?.payment?.id) {
         /* Email payment */
-        emailPayment({ variables: { id: subscription.id } })
+        emailPayment({ variables: { subscriptionId: subscription.id, bookingId: props?.booking?.id} })
 
         /* Save payment */
         /*

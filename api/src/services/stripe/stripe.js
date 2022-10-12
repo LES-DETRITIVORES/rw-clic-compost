@@ -88,18 +88,21 @@ export const createPayment = async ({ input }) => {
   }
 }
 
-export const emailPayment = async ({ id }) => {
+export const emailPayment = async ({ subscriptionId, bookingId }) => {
   const subscription = await db.subscription.findUnique({
-    where: { id },
+    where: { id: subscriptionId },
+  })
+  const booking = await db.booking.findUnique({
+    where: { id: bookingId },
   })
   let paymentMethod = subscription.card ? 'Carte bancaire' : 'Prélèvement SEPA'
-  let pickedAt = new Date(subscription.startedAt).toLocaleDateString("fr")
-  const subject = 'CLIC & COMPOST #' + subscription.id + ' - Collecte réalisée'
+  let pickedAt = new Date(booking.pickedAt).toLocaleDateString("fr")
+  const subject = 'CLIC & COMPOST #' + booking.id + ' - Collecte terminée - ' + pickedAt
   const text =
     'Bonjour ' + subscription.firstname + ' !\n\n' +
     'Votre collecte est terminée !\n\n' +
-    'Nous avons réalisé le paiement suivant :' +
-    '-------------------------------------------------------\n' +
+    'Conformément à votre adhésion, nous avons réalisé le paiement suivant :' +
+    '-----------------------------------------------------------------------\n' +
     'Numéro d\'adhésion : ' + subscription.id + '\n' +
     (subscription.profile == 'professionnel' ? 'Société : ' + subscription.company + '\n' : '') +
     'Contact : ' + subscription.firstname + ' ' + subscription.lastname + '\n' +
@@ -107,7 +110,7 @@ export const emailPayment = async ({ id }) => {
     'Date de collecte : ' + pickedAt + '\n' +
     'Mode de réglement : ' + paymentMethod + '\n' +
     'Montant débité : ' + rounded(subscription.rate*1.2) + ' € TTC' + '\n' +
-    '-------------------------------------------------------\n\n' +
+    '-----------------------------------------------------------------------\n' +
     'N\'hésitez pas à nous contacter pour toutes questions :\n' +
     'LES DETRITIVORES\n' +
     '65 quai de Brazza 33100 Bordeaux\n' +
@@ -116,7 +119,7 @@ export const emailPayment = async ({ id }) => {
   const html =
     'Bonjour ' + subscription.firstname + ' !<br/><br/>' +
     'Votre collecte est terminée !<br/><br/>' +
-    'Nous avons réalisé le paiement suivant :<br/>' +
+    'Conformément à votre adhésion, nous avons réalisé le paiement suivant :<br/>' +
     '<hr/>' +
     'Numéro d\'adhésion : ' + subscription.id + '<br/>' +
     (subscription.profile == 'professionnel' ? 'Société : ' + subscription.company + '<br/>' : '') +
