@@ -46,9 +46,9 @@ const UPDATE_BOOKING_MUTATION = gql`
   }
 `
 
-export const Loading = () => <div>Loading...</div>
+export const Loading = () => <div>Recherche des contrats...</div>
 
-export const Empty = () => <div>Booking not found</div>
+export const Empty = () => <div>Aucun contrat en cours.</div>
 
 export const Failure = ({ error }) => (
   <div className="rw-cell-error">{error.message}</div>
