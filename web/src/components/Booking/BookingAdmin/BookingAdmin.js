@@ -36,7 +36,7 @@ const jsonDisplay = (obj) => {
 const timeTag = (datetime) => {
   const day = new Date(datetime)
   return (
-    day && (day.getDate() + '/' + day.getMonth() + '/' + day.getFullYear())
+    day && (day.getDate() + '/' + (day.getMonth()+1) + '/' + day.getFullYear())
   )
 }
 
