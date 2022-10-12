@@ -14,6 +14,7 @@ export const schema = gql`
     details: String
     status: String
     updatedAt: DateTime!
+    payment: String
   }
 
   type Query {
@@ -50,6 +51,7 @@ export const schema = gql`
     details: String
     status: String
     updatedAt: DateTime
+    payment: String
   }
 
   type Mutation {

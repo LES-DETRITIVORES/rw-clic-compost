@@ -55,4 +55,5 @@ model Booking {
   details       String?
   status        String?
   updatedAt     DateTime
+  payment       String? @default("")
 }
