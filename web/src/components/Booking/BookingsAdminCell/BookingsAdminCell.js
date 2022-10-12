@@ -19,6 +19,7 @@ export const QUERY = gql`
       details
       status
       updatedAt
+      payment
     }
   }
 `

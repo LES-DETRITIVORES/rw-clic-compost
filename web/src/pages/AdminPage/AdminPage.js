@@ -226,9 +226,9 @@ const AdminPage = () => {
                 <BookingsAdminCell callback={onBookingSelect} status="A collecter"/>
               </div>
               <div className="bg-white rounded-md shadow-lg p-8 mt-6"> 
-                <h1 className="uppercase font-bold text-lg text-center">A facturer</h1>
+                <h1 className="uppercase font-bold text-lg text-center">A payer</h1>
                 <hr className="my-3 -mx-8"/>
-                <BookingsAdminCell callback={onBookingSelect} status="A facturer"/>
+                <BookingsAdminCell callback={onBookingSelect} status="A payer"/>
               </div>
               <div className="bg-white rounded-md shadow-lg p-8 mt-6"> 
                 <h1 className="uppercase font-bold text-lg text-center">Terminé</h1>

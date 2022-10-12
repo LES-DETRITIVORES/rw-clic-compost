@@ -103,8 +103,13 @@ const BookingAdmin = ( props ) => {
           }
         }
       })
-      console.log(JSON.stringify(payment.data.payment.id))
-      props.onSave({status: "Terminé"}, props?.booking?.id)
+      console.log('Payment:', JSON.stringify(payment.data.payment.id))
+      props.onSave(
+        {
+          status: "Terminé", 
+          payment: payment.data.payment.id
+        }, 
+        props?.booking?.id)
     }
   }
 
@@ -143,21 +148,31 @@ const BookingAdmin = ( props ) => {
                 <td>{props.booking?.details}</td>
               </tr>
               <tr>
-                <th>Statut</th>
+                <th>Payé</th>
                 <td>
                   <div className="grid grid-cols-2 gap-3">
-                    <SelectField name="status">
-                      <option value="A collecter" selected={props.booking?.status === "A collecter" ? 'selected' : ''}>A collecter</option>
-                      <option value="A facturer" selected={props.booking?.status === "A facturer" ? 'selected' : ''}>A facturer</option>
-                      <option value="Terminé" selected={props.booking?.status === "Terminé" ? 'selected' : ''}>Terminé</option>
-                      <option value="Annulé" selected={props.booking?.status === "Annulé" ? 'selected' : ''}>Annulé</option>
-                    </SelectField>
-                    {(props.booking?.status === "A facturer") && 
-                      <button className="rw-button rw-button-green" onClick={(e) => {e.preventDefault(); onPayClick(props.booking?.id)}}>
-                        Facturer
-                      </button>
-                    }
+                    <div className="my-auto">
+                      {props.booking?.payment ? 'Oui' : 'Non'}
+                    </div>
+                    <div className="my-auto">
+                      {(!props.booking?.payment && (props.booking?.status === "A payer")) &&
+                        <button className="rw-button rw-button-green" onClick={(e) => {e.preventDefault(); onPayClick(props.booking?.id)}}>
+                          Payer
+                        </button>
+                      }
+                    </div>
                   </div>
+                </td>
+              </tr>
+              <tr>
+                <th>Statut</th>
+                <td>
+                  <SelectField name="status">
+                    <option value="A collecter" selected={props.booking?.status === "A collecter" ? 'selected' : ''}>A collecter</option>
+                    <option value="A payer" selected={props.booking?.status === "A payer" ? 'selected' : ''}>A payer</option>
+                    <option value="Terminé" selected={props.booking?.status === "Terminé" ? 'selected' : ''}>Terminé</option>
+                    <option value="Annulé" selected={props.booking?.status === "Annulé" ? 'selected' : ''}>Annulé</option>
+                  </SelectField>
                 </td>
               </tr>
             </tbody>
