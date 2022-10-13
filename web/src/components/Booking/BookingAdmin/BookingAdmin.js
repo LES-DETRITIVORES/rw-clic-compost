@@ -130,14 +130,12 @@ const BookingAdmin = ( props ) => {
         emailPayment({ variables: { subscriptionId: subscription.id, bookingId: props?.booking?.id} })
 
         /* Save payment */
-        /*
         props.onSave(
-          {
-            status: "Terminé", 
-            payment: payment.data.payment.id
-          }, 
-          props?.booking?.id)
-        */
+        {
+          status: "Terminé", 
+          payment: payment.data.payment.id
+        }, 
+        props?.booking?.id)
       }
     }
   }
