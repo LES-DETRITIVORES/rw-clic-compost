@@ -144,7 +144,7 @@ const SearchPage = ({ u, l, m }) => {
                     name="location"
                     value={location}
                     onChange={setLocation}
-                    className="block text-center w-full rounded-md bg-gray-200 py-2 pl-3 pr-10 text-sm outline-green-800 leading-5 text-gray-900 focus:ring-0"
+                    className="block text-center w-full transition rounded-md bg-gray-200 py-2 pl-3 pr-10 text-sm outline-green-800 leading-5 text-gray-900 focus:ring-0"
                   />
                   {location && <GeocoderCell query={location} />}
                   {profile == 'professionnel' && (
@@ -156,7 +156,7 @@ const SearchPage = ({ u, l, m }) => {
                         name="meals"
                         onChange={(e) => setMeals(e.target.value)}
                         value={meals}
-                        className="block w-1/3 mx-auto text-center bg-gray-200 rounded-md p-2 text-sm outline-green-800"
+                        className="block w-1/3 mx-auto transition text-center bg-gray-200 rounded-md p-2 text-sm outline-green-800"
                       />
                     </>
                   )}
@@ -168,7 +168,9 @@ const SearchPage = ({ u, l, m }) => {
                 <Submit
                   disabled={!profile || !location}
                   className={`text-xs sm:text-sm md:text-lg uppercase font-bold ${
-                    profile && location ? 'bg-green-800' : 'bg-gray-600'
+                    profile && location
+                      ? 'bg-green-800 cursor-pointer'
+                      : 'bg-gray-600'
                   } rounded-b-md p-4 text-white w-full shadow-lg`}
                 >
                   Chercher une solution locale
@@ -179,7 +181,7 @@ const SearchPage = ({ u, l, m }) => {
                   disabled={!profile || !location || !meals}
                   className={`text-xs sm:text-sm md:text-lg uppercase font-bold ${
                     profile && location && meals
-                      ? 'bg-green-800'
+                      ? 'bg-green-800 cursor-pointer'
                       : 'bg-gray-600'
                   } rounded-b-md p-4 text-white w-full shadow-lg`}
                 >
