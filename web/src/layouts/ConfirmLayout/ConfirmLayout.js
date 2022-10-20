@@ -18,10 +18,10 @@ const ConfirmLayout = (props) => {
       <Transition
         appear={true}
         show={isShowing}
-        enter="transition-opacity duration-[1500ms] ease-in-out"
-        enterFrom="opacity-0"
-        enterTo="opacity-100"
-        leave=" transition-opacity duration-[1500ms] ease-in-out"
+        enter="transform ease-out duration-300 transition"
+        enterFrom="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+        enterTo="translate-y-0 opacity-100 sm:translate-x-0"
+        leave="transition ease-in duration-100"
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >

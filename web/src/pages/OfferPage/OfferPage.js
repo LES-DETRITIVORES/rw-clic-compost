@@ -25,7 +25,7 @@ const OfferPage = ({ u, l, m, o, s, r, f, n, c, e, p }) => {
   const [phone, setPhone] = useState(p)
 
   const offerSubmit = (data) => {
-    var subscription = {
+    const subscription = {
       u: profile,
       c: data.company,
       f: data.firstname,
@@ -38,7 +38,6 @@ const OfferPage = ({ u, l, m, o, s, r, f, n, c, e, p }) => {
       s: service,
       r: rate,
     }
-    console.log(JSON.stringify(subscription))
     navigate(routes.subscribe(subscription))
   }
 
@@ -49,12 +48,27 @@ const OfferPage = ({ u, l, m, o, s, r, f, n, c, e, p }) => {
         description="Page de choix de l'offre et renseignement sur l'usager"
       />
       <div>
-        <div>
-          <Link
-            className="text-white"
-            to={routes.search({ u: profile, l: location, m: meals })}
+        <div className="font-light inline-flex space-x-2 group">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
           >
-            &lt; Modifier ma demande
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M11 17l-5-5m0 0l5-5m-5 5h12"
+            />
+          </svg>
+          <Link
+            to={routes.search({ u: profile, l: location, m: meals })}
+            className="text-white"
+          >
+            Modifier ma demande
+            <div className="group-hover:bg-white w-full h-0.5 transition" />
           </Link>
         </div>
         <div className="font-bold text-center text-xl sm:text-3xl md:text-5xl mt-16 text-white w-min mx-auto -rotate-2">

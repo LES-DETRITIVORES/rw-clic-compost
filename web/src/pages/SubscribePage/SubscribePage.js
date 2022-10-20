@@ -599,24 +599,41 @@ const SubscribePage = ({ u, f, n, c, e, p, l, m, o, s, r }) => {
       {subscription && (
         <div>
           <div>
-            <Link
-              className="text-white"
-              to={routes.offer({
-                u: u,
-                l: l,
-                m: m,
-                f: f,
-                n: n,
-                c: c,
-                e: e,
-                p: p,
-                o: o,
-                s: s,
-                r: r,
-              })}
-            >
-              &lt; Changer d'offre
-            </Link>
+            <div className="font-light inline-flex space-x-2 group">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11 17l-5-5m0 0l5-5m-5 5h12"
+                />
+              </svg>
+              <Link
+                to={routes.offer({
+                  u: u,
+                  l: l,
+                  m: m,
+                  f: f,
+                  n: n,
+                  c: c,
+                  e: e,
+                  p: p,
+                  o: o,
+                  s: s,
+                  r: r,
+                })}
+                className="text-white"
+              >
+                Changer d'offre
+                <div className="group-hover:bg-white w-full h-0.5 transition" />
+              </Link>
+            </div>
           </div>
           <div className="font-bold text-center text-xl sm:text-3xl md:text-5xl mt-16 text-black w-min mx-auto -rotate-2">
             <span className="bg-yellow-400 p-1 block w-min">
