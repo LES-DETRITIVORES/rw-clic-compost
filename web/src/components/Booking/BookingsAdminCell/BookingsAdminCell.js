@@ -3,8 +3,8 @@ import { Link, routes } from '@redwoodjs/router'
 import BookingsAdmin from 'src/components/Booking/BookingsAdmin'
 
 export const QUERY = gql`
-  query FindBookingsByStatus ($status: String!) {
-    bookings:bookingsByStatus(status:$status) {
+  query FindBookingsByStatus($status: String!) {
+    bookings: bookingsByStatus(status: $status) {
       id
       createdAt
       pickedAt
@@ -27,11 +27,7 @@ export const QUERY = gql`
 export const Loading = () => <div>Chargement des données...</div>
 
 export const Empty = () => {
-  return (
-    <div className="rw-text-center">
-      {'Aucune demande en cours.'}
-    </div>
-  )
+  return <div className="rw-text-center">{'Aucune demande en cours.'}</div>
 }
 
 export const Failure = ({ error }) => (
@@ -39,5 +35,5 @@ export const Failure = ({ error }) => (
 )
 
 export const Success = ({ bookings, callback }) => {
-  return <BookingsAdmin bookings={bookings} callback={callback}/>
+  return <BookingsAdmin bookings={bookings} callback={callback} />
 }

@@ -57,13 +57,18 @@ const ResetPasswordPage = ({ resetToken }) => {
 
   return (
     <>
-      <MetaTags title="Réinitialisation" description="Réinitialisation du mot de passe" />
+      <MetaTags
+        title="Réinitialisation"
+        description="Réinitialisation du mot de passe"
+      />
       <div className="font-sans">
         <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />
         <div className="max-w-md mx-auto">
           <div className="bg-white rounded-md shadow-lg p-8 mt-32">
-            <h1 className="uppercase font-bold text-lg text-center">Réinitialiser votre mot de passe</h1>
-            <hr className="my-3 -mx-8"/>
+            <h1 className="uppercase font-bold text-lg text-center">
+              Réinitialiser votre mot de passe
+            </h1>
+            <hr className="my-3 -mx-8" />
             <Form onSubmit={onSubmit} className="mx-auto font-sans">
               <Label
                 name="username"
@@ -88,7 +93,12 @@ const ResetPasswordPage = ({ resetToken }) => {
               />
               <FieldError name="password" className="rw-field-error" />
               <div className="rw-button-group">
-                <Submit className="rw-button text-white bg-green-900 hover:bg-green-700 py-3 px-6" disabled={!enabled}>Changer votre mot de passe</Submit>
+                <Submit
+                  className="rw-button text-white bg-green-900 hover:bg-green-700 py-3 px-6"
+                  disabled={!enabled}
+                >
+                  Changer votre mot de passe
+                </Submit>
               </div>
             </Form>
           </div>

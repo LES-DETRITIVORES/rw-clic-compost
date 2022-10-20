@@ -43,7 +43,10 @@ const SignupPage = () => {
 
   return (
     <>
-      <MetaTags title="Inscription" description="Page d'inscription à l'application" />
+      <MetaTags
+        title="Inscription"
+        description="Page d'inscription à l'application"
+      />
 
       <main className="rw-main">
         <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />

@@ -37,7 +37,7 @@ const jsonTruncate = (obj) => {
 }
 
 const timeTag = (datetime) => {
-  return new Date(datetime).toLocaleDateString("fr")
+  return new Date(datetime).toLocaleDateString('fr')
 }
 
 const checkboxInputTag = (checked) => {
@@ -45,10 +45,8 @@ const checkboxInputTag = (checked) => {
 }
 
 const locationTag = (location) => {
-  const address = location.split(",")
-  return (
-    address[0] + address[1]
-  )
+  const address = location.split(',')
+  return address[0] + address[1]
 }
 
 const BookingsList = ({ bookings, callback }) => {
@@ -84,13 +82,20 @@ const BookingsList = ({ bookings, callback }) => {
       </thead>
       <tbody>
         {bookings.map((booking) => (
-            <tr key={booking.id} className="hover:bg-yellow-400 hover:cursor-pointer border-t-2" onClick={() => callback(booking)}>
-              <td className="py-3">{timeTag(booking.pickedAt)}</td>
-              <td className="py-3">{timeTag(booking.pickedAt)}</td>
-              <td className="py-3">{truncate(booking.timeslot)}</td>
-              <td className="py-3">{truncate(booking.firstname)} {truncate(booking.lastname.toUpperCase())}</td>
-              <td className="py-3">{locationTag(booking.location)}</td>
-            </tr>
+          <tr
+            key={booking.id}
+            className="hover:bg-yellow-400 hover:cursor-pointer border-t-2"
+            onClick={() => callback(booking)}
+          >
+            <td className="py-3">{timeTag(booking.pickedAt)}</td>
+            <td className="py-3">{timeTag(booking.pickedAt)}</td>
+            <td className="py-3">{truncate(booking.timeslot)}</td>
+            <td className="py-3">
+              {truncate(booking.firstname)}{' '}
+              {truncate(booking.lastname.toUpperCase())}
+            </td>
+            <td className="py-3">{locationTag(booking.location)}</td>
+          </tr>
         ))}
       </tbody>
     </table>

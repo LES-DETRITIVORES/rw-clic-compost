@@ -22,7 +22,7 @@ const CREATE_PAYMENT_MUTATION = gql`
 `
 
 const EMAIL_PAYMENT = gql`
-  mutation EmailPaymentMutation($subscriptionId: Int!, $bookingId: Int!, ) {
+  mutation EmailPaymentMutation($subscriptionId: Int!, $bookingId: Int!) {
     emailPayment(subscriptionId: $subscriptionId, bookingId: $bookingId)
   }
 `
@@ -47,7 +47,7 @@ const jsonDisplay = (obj) => {
 }
 
 const timeTag = (datetime) => {
-  return new Date(datetime).toLocaleDateString("fr")
+  return new Date(datetime).toLocaleDateString('fr')
 }
 
 const checkboxInputTag = (checked) => {
@@ -55,13 +55,11 @@ const checkboxInputTag = (checked) => {
 }
 
 const locationTag = (location) => {
-  const address = location.split(",")
-  return (
-    address[0] + address[1]
-  )
+  const address = location.split(',')
+  return address[0] + address[1]
 }
 
-const BookingAdmin = ( props ) => {
+const BookingAdmin = (props) => {
   const [deleteBooking] = useMutation(DELETE_BOOKING_MUTATION, {
     onCompleted: () => {
       toast.success('Demande supprimée')
@@ -97,7 +95,7 @@ const BookingAdmin = ( props ) => {
     },
   })
 
-  const [getContract, {loading, error}] = useLazyQuery(QUERY, {
+  const [getContract, { loading, error }] = useLazyQuery(QUERY, {
     onCompleted: (result) => {
       return result.subscription
     },
@@ -105,37 +103,47 @@ const BookingAdmin = ( props ) => {
 
   const onPayClick = async (id) => {
     if (confirm('Confirmez la facturation de la demande #' + id + ' ?')) {
-      console.log("Lancement du paiement:", id)
+      console.log('Lancement du paiement:', id)
 
       /* Search subscription */
-      var contract = await getContract({ variables: { user: props?.booking?.user}})
+      var contract = await getContract({
+        variables: { user: props?.booking?.user },
+      })
       var subscription = contract?.data?.subscription
-      console.log('Retrieve subscrition:',  subscription)
+      console.log('Retrieve subscrition:', subscription)
 
       /* Create payment */
-      var payment = await payBooking({ variables: {
-        input: {
+      var payment = await payBooking({
+        variables: {
+          input: {
             customer: subscription.customer,
             rate: subscription.rate,
-            payment_method: subscription.card ? subscription.card : subscription.iban,
+            payment_method: subscription.card
+              ? subscription.card
+              : subscription.iban,
             receipt: subscription.email,
-          }
-        }
+          },
+        },
       })
       console.log('Payment:', JSON.stringify(payment?.data?.payment?.id))
-      
 
       if (payment?.data?.payment?.id) {
         /* Email payment */
-        emailPayment({ variables: { subscriptionId: subscription.id, bookingId: props?.booking?.id} })
+        emailPayment({
+          variables: {
+            subscriptionId: subscription.id,
+            bookingId: props?.booking?.id,
+          },
+        })
 
         /* Save payment */
         props.onSave(
-        {
-          status: "Terminé", 
-          payment: payment.data.payment.id
-        }, 
-        props?.booking?.id)
+          {
+            status: 'Terminé',
+            payment: payment.data.payment.id,
+          },
+          props?.booking?.id
+        )
       }
     }
   }
@@ -156,7 +164,10 @@ const BookingAdmin = ( props ) => {
               </tr>
               <tr>
                 <th>Usager</th>
-                <td>{props.booking?.firstname} {props.booking?.lastname.toUpperCase()}</td>
+                <td>
+                  {props.booking?.firstname}{' '}
+                  {props.booking?.lastname.toUpperCase()}
+                </td>
               </tr>
               <tr>
                 <th>Mél</th>
@@ -182,14 +193,19 @@ const BookingAdmin = ( props ) => {
                       {props.booking?.payment ? 'Oui' : 'Non'}
                     </div>
                     <div className="my-auto">
-                      {(!props.booking?.payment && (props.booking?.status === "A payer")) &&
-                        <button 
-                          className="rw-button rw-button-green" 
-                          onClick={(e) => {e.preventDefault(); onPayClick(props.booking?.id)}}
-                          disabled={loading}>
-                          Payer
-                        </button>
-                      }
+                      {!props.booking?.payment &&
+                        props.booking?.status === 'A payer' && (
+                          <button
+                            className="rw-button rw-button-green"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              onPayClick(props.booking?.id)
+                            }}
+                            disabled={loading}
+                          >
+                            Payer
+                          </button>
+                        )}
                     </div>
                   </div>
                 </td>
@@ -198,10 +214,40 @@ const BookingAdmin = ( props ) => {
                 <th>Statut</th>
                 <td>
                   <SelectField name="status">
-                    <option value="A collecter" selected={props.booking?.status === "A collecter" ? 'selected' : ''}>A collecter</option>
-                    <option value="A payer" selected={props.booking?.status === "A payer" ? 'selected' : ''}>A payer</option>
-                    <option value="Terminé" selected={props.booking?.status === "Terminé" ? 'selected' : ''}>Terminé</option>
-                    <option value="Annulé" selected={props.booking?.status === "Annulé" ? 'selected' : ''}>Annulé</option>
+                    <option
+                      value="A collecter"
+                      selected={
+                        props.booking?.status === 'A collecter'
+                          ? 'selected'
+                          : ''
+                      }
+                    >
+                      A collecter
+                    </option>
+                    <option
+                      value="A payer"
+                      selected={
+                        props.booking?.status === 'A payer' ? 'selected' : ''
+                      }
+                    >
+                      A payer
+                    </option>
+                    <option
+                      value="Terminé"
+                      selected={
+                        props.booking?.status === 'Terminé' ? 'selected' : ''
+                      }
+                    >
+                      Terminé
+                    </option>
+                    <option
+                      value="Annulé"
+                      selected={
+                        props.booking?.status === 'Annulé' ? 'selected' : ''
+                      }
+                    >
+                      Annulé
+                    </option>
                   </SelectField>
                 </td>
               </tr>

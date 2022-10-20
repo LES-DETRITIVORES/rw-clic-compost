@@ -1,7 +1,7 @@
 export const QUERY = gql`
   query newPaymentQuery($query: Int!) {
     payment: addPayment(query: $query) {
-      query,
+      query
       id
     }
   }

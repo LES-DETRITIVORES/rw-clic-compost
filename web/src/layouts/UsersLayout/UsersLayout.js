@@ -2,7 +2,6 @@ import { Link, routes } from '@redwoodjs/router'
 import { Toaster } from '@redwoodjs/web/toast'
 import { useAuth } from '@redwoodjs/auth'
 
-
 const UsersLayout = ({ children }) => {
   const { logOut } = useAuth()
 

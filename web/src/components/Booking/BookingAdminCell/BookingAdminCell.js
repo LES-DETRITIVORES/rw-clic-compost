@@ -72,9 +72,12 @@ export const Success = ({ booking }) => {
     }
   )
 
-  return <BookingAdmin 
-          booking={booking}
-          onSave={onSave}
-          error={error}
-          loading={loading} />
+  return (
+    <BookingAdmin
+      booking={booking}
+      onSave={onSave}
+      error={error}
+      loading={loading}
+    />
+  )
 }

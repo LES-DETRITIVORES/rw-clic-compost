@@ -2,12 +2,18 @@ import { useState } from 'react'
 import { Combobox, Transition } from '@headlessui/react'
 import LocationsCell from 'src/components/Location/LocationsCell'
 
-const LocationField = ({onChange, className, value}) => {
+const LocationField = ({ onChange, className, value }) => {
   const [query, setQuery] = useState(value)
   const [location, setLocation] = useState(value)
 
   return (
-    <Combobox value={location} onChange={(e) => {onChange(e); setLocation(e)}}>
+    <Combobox
+      value={location}
+      onChange={(e) => {
+        onChange(e)
+        setLocation(e)
+      }}
+    >
       <div className="relative mt-1">
         <div>
           <Combobox.Input

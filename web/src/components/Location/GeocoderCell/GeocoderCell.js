@@ -3,15 +3,17 @@ import * as turf from '@turf/turf'
 export const QUERY = gql`
   query GetGeocoderQuery($query: String!) {
     geocoder: location(query: $query) {
-      query,
-      address,
-      longitude,
+      query
+      address
+      longitude
       latitude
     }
   }
 `
 
-export const Loading = () => <p className="text-gray-400">Recherche de la meilleure solution...</p>
+export const Loading = () => (
+  <p className="text-gray-400">Recherche de la meilleure solution...</p>
+)
 
 export const Empty = () => <div>Aucune réponse</div>
 
@@ -20,14 +22,14 @@ export const Failure = ({ error }) => (
 )
 
 export const Success = ({ geocoder }) => {
-  var from = turf.point([-0.548885, 44.856188]);
-  var to = turf.point([geocoder.longitude, geocoder.latitude]);
-  var options = {units: 'kilometers'};
-  var distance = turf.distance(from, to, options);
+  var from = turf.point([-0.548885, 44.856188])
+  var to = turf.point([geocoder.longitude, geocoder.latitude])
+  var options = { units: 'kilometers' }
+  var distance = turf.distance(from, to, options)
   const MAX_DISTANCE = 110
 
   return (
-  /*
+    /*
   <ul className="list-disc">
     <li>Adresse : {geocoder.address}</li>
     <li>Coordonnées : [{geocoder.longitude}, {geocoder.latitude}]</li>
@@ -35,9 +37,11 @@ export const Success = ({ geocoder }) => {
   </ul>
   */
     <>
-      {(distance > MAX_DISTANCE) &&
-        <div className="text-center mt-3 text-sm text-red-600">Désolé, nous n'avons pas encore de solution hors Gironde :(</div>  
-      }
+      {distance > MAX_DISTANCE && (
+        <div className="text-center mt-3 text-sm text-red-600">
+          Désolé, nous n'avons pas encore de solution hors Gironde :(
+        </div>
+      )}
     </>
   )
 }

@@ -42,8 +42,10 @@ const ForgotPasswordPage = () => {
         <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />
         <div className="max-w-md mx-auto">
           <div className="bg-white rounded-md shadow-lg p-8 mt-32">
-            <h1 className="uppercase font-bold text-lg text-center">Mot de passe oublié</h1>
-            <hr className="my-3 -mx-8"/>
+            <h1 className="uppercase font-bold text-lg text-center">
+              Mot de passe oublié
+            </h1>
+            <hr className="my-3 -mx-8" />
             <Form onSubmit={onSubmit} className="mx-auto font-sans">
               <Label
                 name="username"
@@ -67,7 +69,9 @@ const ForgotPasswordPage = () => {
 
               <FieldError name="username" className="rw-field-error" />
               <div className="rw-button-group">
-                <Submit className="rw-button text-white bg-green-900 hover:bg-green-700 py-3 px-6">Réinitialiser</Submit>
+                <Submit className="rw-button text-white bg-green-900 hover:bg-green-700 py-3 px-6">
+                  Réinitialiser
+                </Submit>
               </div>
             </Form>
           </div>
