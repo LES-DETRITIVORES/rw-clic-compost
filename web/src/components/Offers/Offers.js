@@ -3,7 +3,8 @@ import { RadioGroup } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/solid'
 
 const Offers = ({ meals, onOffer, onService, onRate, defaultValue }) => {
-  const PRICE_BY_LITER = 0.25 // Add Tax 20%
+  //0.284
+  const PRICE_BY_LITER = 0.286 // Add Tax 20%
   const WEEKS_BY_MONTH = 52 / 12
   const WEIGHT_BY_MEAL = 0.14
   const WEIGHT_BY_LITER = 1 / 3
