@@ -3,9 +3,8 @@ import { RadioGroup } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/solid'
 
 const Offers = ({ meals, onOffer, onService, onRate, defaultValue }) => {
-  //0.284
   const PRICE_BY_LITER = 0.286 // Add Tax 20%
-  const WEEKS_BY_MONTH = 52 / 12
+  const PRICE_BY_LITER_PARTICULAR = 0.237
   const WEIGHT_BY_MEAL = 0.14
   const WEIGHT_BY_LITER = 1 / 3
   const LITER_BY_MEAL = WEIGHT_BY_MEAL / WEIGHT_BY_LITER + 0.08 // 0.42 + 0.08 = 0.5
@@ -16,7 +15,7 @@ const Offers = ({ meals, onOffer, onService, onRate, defaultValue }) => {
     // return best offer
     return items
       .filter((item) => item.qty > 0)
-      .sort(function (a, b) {
+      .sort((a, b) => {
         return a.rate - b.rate
       })[0].index
   }
@@ -40,7 +39,16 @@ const Offers = ({ meals, onOffer, onService, onRate, defaultValue }) => {
         )
       },
       get rate() {
-        return parseFloat((this.qty * this.liter * PRICE_BY_LITER).toFixed(2))
+        const queryString = window.location.search
+        const urlParams = new URLSearchParams(queryString)
+
+        if (urlParams.get('u') == 'particulier') {
+          return parseFloat(
+            (this.qty * this.liter * PRICE_BY_LITER_PARTICULAR).toFixed(2)
+          )
+        } else {
+          return parseFloat((this.qty * this.liter * PRICE_BY_LITER).toFixed(2))
+        }
       },
       get service() {
         return this.qty + 'x ' + this.name + ' ' + this.liter + 'L'
