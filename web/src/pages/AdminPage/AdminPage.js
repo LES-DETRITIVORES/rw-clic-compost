@@ -224,6 +224,11 @@ const AdminPage = () => {
     setSelectedBooking(booking)
   }
 
+  if (currentUser.roles !== 'admin') {
+    toast.error('Accès refusé redirection vers la page d accueil')
+    return navigate(routes.home())
+  }
+
   return (
     <>
       <MetaTags
