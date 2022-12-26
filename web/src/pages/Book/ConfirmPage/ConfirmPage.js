@@ -16,7 +16,7 @@ const ConfirmPage = () => {
       />
       <div className="text-white text-right">
         <span className="text-sm font-light">
-          [<LoginCell id={currentUser.id} />]
+          [<LoginCell id={currentUser?.id} />]
         </span>
         &nbsp;
         <Link

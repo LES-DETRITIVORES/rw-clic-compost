@@ -34,7 +34,7 @@ const SearchPage = ({ u, l, m }) => {
         {isAuthenticated && (
           <span>
             <span className="text-sm font-light">
-              [<LoginCell id={currentUser.id} />]
+              [<LoginCell id={currentUser?.id} />]
             </span>
             &nbsp;
             <Link
