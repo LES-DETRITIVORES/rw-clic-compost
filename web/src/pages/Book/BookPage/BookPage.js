@@ -124,7 +124,7 @@ const BookPage = () => {
     setSubmit(true)
 
     /* Search subscription */
-    const contract = await getContract({ variables: { user: currentUser?.id } })
+    const contract = await getContract({ variables: { user: currentUser.id } })
     const subscription = contract.data.subscription
 
     /* Search timeslot */
@@ -133,7 +133,7 @@ const BookPage = () => {
     })
 
     const bookingInput = {
-      user: currentUser?.id,
+      user: currentUser.id,
       subscription: subscription.id,
       pickedAt: data.pickedAt,
       timeslot:
@@ -174,7 +174,7 @@ const BookPage = () => {
         <div>
           <div className="text-white text-right">
             <span className="text-sm font-light">
-              [<LoginCell id={currentUser?.id} />]
+              [<LoginCell id={currentUser.id} />]
             </span>
             &nbsp;
             <Link
@@ -200,7 +200,7 @@ const BookPage = () => {
                     Votre contrat de tri des biodéchets
                   </h1>
                   <hr className="my-3 -mx-8" />
-                  <ContractCell user={currentUser?.id} />
+                  <ContractCell user={currentUser.id} />
                   <hr className="my-3 -mx-8" />
                   <p className="font-medium text-md text-center">
                     Le service est facturé pour chaque collecte réalisée :<br />{' '}
@@ -233,7 +233,7 @@ const BookPage = () => {
                       value={formatDate(deliverDate)}
                       className="block mx-auto text-center w-32 bg-gray-200 rounded-md p-2 text-sm outline-orange-300"
                     />
-                    <SlotCell user={currentUser?.id} />
+                    <SlotCell user={currentUser.id} />
                     <Label className="font-medium mt-6 block text-center">
                       Précisions sur la collecte (code, sonnerie, etc.)
                     </Label>
