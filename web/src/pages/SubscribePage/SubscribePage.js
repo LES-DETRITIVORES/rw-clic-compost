@@ -536,7 +536,11 @@ const SubscribePage = ({ u, f, n, c, e, p, l, m, o, s, r }) => {
     function rounded(num) {
       return (+(Math.round(num + 'e+2') + 'e-2')).toFixed(2)
     }
+    let paymentMethod = subscription.card
+      ? 'Carte bancaire'
+      : 'Prélèvement SEPA'
     let startedAt = new Date(subscription.startedAt).toLocaleDateString('fr')
+    let app_url = process.env.APP_URL + '/collecte'
     let txt =
       "<b>Numéro d'adhésion :</b> " +
       sub.data.subscription.id +
