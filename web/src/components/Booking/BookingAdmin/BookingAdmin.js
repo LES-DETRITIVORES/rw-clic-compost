@@ -17,10 +17,6 @@ const CREATE_PAYMENT_MUTATION = gql`
   mutation createPaymentMutation($input: CreatePaymentInput!) {
     payment: createPayment(input: $input) {
       id
-      customer
-      rate
-      payment_method
-      receipt
     }
   }
 `
@@ -110,10 +106,10 @@ const BookingAdmin = (props) => {
       console.log('Lancement du paiement:', id)
 
       /* Search subscription */
-      const contract = await getContract({
+      let contract = await getContract({
         variables: { user: props?.booking?.user },
       })
-      const subscription = contract?.data?.subscription
+      let subscription = contract?.data?.subscription
       console.log('Retrieve subscrition:', subscription)
 
       // TODO: debug here
