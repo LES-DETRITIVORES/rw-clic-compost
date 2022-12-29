@@ -112,7 +112,6 @@ const BookingAdmin = (props) => {
       const subscription = contract?.data?.subscription
       console.log('Retrieve subscrition:', subscription)
 
-      /* Create payment */
       const payment = await payBooking({
         variables: {
           input: {
