@@ -125,11 +125,10 @@ const BookingAdmin = (props) => {
           },
         },
       })
-      console.log('Payment:', JSON.stringify(payment?.data?.payment?.id))
+      console.log('Payment:', payment)
 
       if (payment?.data?.payment?.id) {
-        /* Email payment */
-        emailPayment({
+        await emailPayment({
           variables: {
             subscriptionId: subscription.id,
             bookingId: props?.booking?.id,
