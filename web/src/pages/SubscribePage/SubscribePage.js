@@ -225,7 +225,7 @@ const SubscribePage = ({ u, f, n, c, e, p, l, m, o, s, r }) => {
   }
 
   function delayDate(date, delay) {
-    const nextDate = new Date(date)
+    var nextDate = new Date(date)
     nextDate.setDate(nextDate.getDate() + delay)
     // return next day if date on weekend
     if (nextDate.getDay() == 6 || nextDate.getDay() == 0) {
@@ -313,7 +313,7 @@ const SubscribePage = ({ u, f, n, c, e, p, l, m, o, s, r }) => {
     /* Add CARD payment */
     if (elements.getElement(CardElement)) {
       /* Get customer secret */
-      let client_secret = await getClientSecret({
+      var client_secret = await getClientSecret({
         variables: {
           query: customer.data.customer.id,
         },

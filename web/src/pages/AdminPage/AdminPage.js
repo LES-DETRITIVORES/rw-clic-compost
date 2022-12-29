@@ -163,7 +163,7 @@ const AdminPage = () => {
   }
 
   function delayDate(date, delay) {
-    const nextDate = new Date(date)
+    var nextDate = new Date(date)
     nextDate.setDate(nextDate.getDate() + delay)
     // return next day if date on weekend
     if (nextDate.getDay() !== 3) {

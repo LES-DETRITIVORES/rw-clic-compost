@@ -68,10 +68,10 @@ const BookPage = () => {
   const { currentUser, isAuthenticated, logIn, logOut } = useAuth()
 
   function timeslot(geocoder) {
-    const from = turf.point([-0.548885, 44.856188])
-    const to = turf.point([geocoder.longitude, geocoder.latitude])
-    const options = { units: 'kilometers' }
-    const distance = turf.distance(from, to, options)
+    var from = turf.point([-0.548885, 44.856188])
+    var to = turf.point([geocoder.longitude, geocoder.latitude])
+    var options = { units: 'kilometers' }
+    var distance = turf.distance(from, to, options)
     return distance
   }
 
@@ -111,7 +111,7 @@ const BookPage = () => {
   }
 
   function delayDate(date, delay) {
-    const nextDate = new Date(date)
+    var nextDate = new Date(date)
     nextDate.setDate(nextDate.getDate() + delay)
     // return next day if date on weekend
     if (nextDate.getDay() !== 3) {
