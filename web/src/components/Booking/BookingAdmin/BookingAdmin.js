@@ -105,11 +105,10 @@ const BookingAdmin = (props) => {
     if (confirm('Confirmez la facturation de la demande #' + id + ' ?')) {
       console.log('Lancement du paiement:', id)
 
-      /* Search subscription */
-      let contract = await getContract({
+      const contract = await getContract({
         variables: { user: props?.booking?.user },
       })
-      let subscription = contract?.data?.subscription
+      const subscription = contract?.data?.subscription
       console.log('Retrieve subscrition:', subscription)
 
       // TODO: debug here
