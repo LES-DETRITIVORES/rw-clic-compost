@@ -233,8 +233,6 @@ const SubscribePage = ({ u, f, n, c, e, p, l, m, o, s, r }) => {
     }
     return nextDate
   }
-  const params = window.location.search
-  const urlParams = new URLSearchParams(params)
 
   const [subscription, setSubscription] = useState({
     profile: u,
@@ -269,18 +267,6 @@ const SubscribePage = ({ u, f, n, c, e, p, l, m, o, s, r }) => {
 
     /* Save user for authentification */
     // Generate a random password on 6 digits (0-9)
-
-    // change the logic to generate a random password - 09/12/2022 11:50
-    /*const hash = []
-    Array.from(Array(9).keys()).forEach((i) => {
-      hash[i] = Math.floor(Math.random() * 10).toString()
-    })
-    const password = hash.join('')
-    console.log('Password generated: ' + password)
-    const password = Array.from(Array(7).keys())
-      .map(() => Math.floor(Math.random() * 10).toString())
-      .join('')
-    console.log('Password generated: ' + password)*/
     const password =
       Math.floor(Math.random() * 10).toString() +
       Math.floor(Math.random() * 10).toString() +
@@ -288,15 +274,14 @@ const SubscribePage = ({ u, f, n, c, e, p, l, m, o, s, r }) => {
       Math.floor(Math.random() * 10).toString() +
       Math.floor(Math.random() * 10).toString() +
       Math.floor(Math.random() * 10).toString()
+
     // Check if user exist and delete it first
     const check = await getUser({ variables: { email: subscription.email } })
     if (check.data.user) {
       console.log('User already exist...', check.data.user.id)
-      toast.error('Utilisateur déjà existant')
       const old = await deleteUser({ variables: { id: check.data.user.id } })
       if (old) {
         console.log('User deleted!', JSON.stringify(old))
-        toast.success('Utilisateur supprimé')
       }
     }
 
