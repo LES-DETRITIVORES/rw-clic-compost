@@ -105,14 +105,15 @@ const BookingAdmin = (props) => {
     if (confirm('Confirmez la facturation de la demande #' + id + ' ?')) {
       console.log('Lancement du paiement:', id)
 
-      const contract = await getContract({
+      /* Search subscription */
+      var contract = await getContract({
         variables: { user: props?.booking?.user },
       })
-      const subscription = contract?.data?.subscription
+      var subscription = contract?.data?.subscription
       console.log('Retrieve subscrition:', subscription)
 
-      // TODO: debug here
-      const payment = await payBooking({
+      /* Create payment */
+      var payment = await payBooking({
         variables: {
           input: {
             customer: subscription.customer,
@@ -124,10 +125,11 @@ const BookingAdmin = (props) => {
           },
         },
       })
-      console.log('Payment:', payment)
+      console.log('Payment:', JSON.stringify(payment?.data?.payment?.id))
 
       if (payment?.data?.payment?.id) {
-        await emailPayment({
+        /* Email payment */
+        emailPayment({
           variables: {
             subscriptionId: subscription.id,
             bookingId: props?.booking?.id,

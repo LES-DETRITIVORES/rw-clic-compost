@@ -96,10 +96,10 @@ const AdminPage = () => {
   const { currentUser, isAuthenticated, logIn, logOut } = useAuth()
 
   function timeslot(geocoder) {
-    const from = turf.point([-0.548885, 44.856188])
-    const to = turf.point([geocoder.longitude, geocoder.latitude])
-    const options = { units: 'kilometers' }
-    const distance = turf.distance(from, to, options)
+    var from = turf.point([-0.548885, 44.856188])
+    var to = turf.point([geocoder.longitude, geocoder.latitude])
+    var options = { units: 'kilometers' }
+    var distance = turf.distance(from, to, options)
     return distance
   }
 
@@ -223,6 +223,7 @@ const AdminPage = () => {
     setNewBooking(false)
     setSelectedBooking(booking)
   }
+
   return (
     <>
       <MetaTags
